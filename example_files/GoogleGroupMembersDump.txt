@@ -1,0 +1,7 @@
+Membres du groupe rousseau-classe-106
+Adresse e-mail,Pseudo,État du groupe,État de l'adresse e-mail,Préférences relatives aux e-mails,Droits de publication,Année d'abonnement,Mois d'abonnement,Jour d'abonnement,Heure d'abonnement,Minute d'abonnement,Seconde d'abonnement,Fuseau horaire
+gabriel.crmr@eduge.ch,,membre,,e-mails,autorisé,2022,8,14,20,0,13,heure d’été d’Europe centrale
+dan.jn@eduge.ch,,propriétaire,,e-mails,autorisé,2022,8,14,20,0,15,heure d’été d’Europe centrale
+marie.cr@eduge.ch,,membre,,e-mails,autorisé,2022,8,14,20,0,20,heure d’été d’Europe centrale
+albert.enstn@eduge.ch,,membre,,e-mails,autorisé,2022,8,14,20,0,21,heure d’été d’Europe centrale
+richard.fynmn@eduge.ch,,membre,,e-mails,autorisé,2022,8,14,20,0,21,heure d’été d’Europe centrale

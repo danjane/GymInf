@@ -35,3 +35,8 @@ def test_ScrapeLinesFull():
 def test_ClassFileText():
     ids = fulltext
     assert scrapeClassLists.text(ids) == "dan.jn\ndan.jn3\ndan.jn4"
+
+
+def test_LoadAndScrape():
+    string = scrapeClassLists.scrape_file("../example_files/GoogleGroupMembersDump.txt")
+    assert string == "gabriel.crmr\nmarie.cr\nalbert.enstn\nrichard.fynmn"
