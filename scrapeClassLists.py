@@ -1,6 +1,7 @@
 import re
 import os
 
+
 def student_code(string):
     # "dan.jn@eduge.ch,,membre,," -> "dan.jn"
     matches = re.findall(r"^[a-z]+\.[a-z1-9]*", string)
