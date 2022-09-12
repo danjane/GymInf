@@ -13,3 +13,7 @@ def is_member(string):
 
 def student_ids(strings):
     return [student_id(s) for s in strings if is_member(s)]
+
+
+def text(strings):
+    return "\n".join(student_ids(strings))
