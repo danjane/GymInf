@@ -1,11 +1,11 @@
 import re
 
 
-def student_id(str):
-    matches = re.findall("^[a-z]+\.[a-z1-9]*", str)
+def student_id(string):
+    matches = re.findall(r"^[a-z]+\.[a-z1-9]*", string)
     return matches[0]
 
 
-def is_member(str):
-    matches = re.findall("(?!,)membre(?=,)", str)
+def is_member(string):
+    matches = re.findall(r"(?!,)membre(?=,)", string)
     return len(matches) == 1
