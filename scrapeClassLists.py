@@ -1,7 +1,7 @@
 import re
 
 
-def student_id(string):
+def student_code(string):
     # "dan.jn@eduge.ch,,membre,," -> "dan.jn"
     matches = re.findall(r"^[a-z]+\.[a-z1-9]*", string)
     return matches[0]
@@ -20,13 +20,13 @@ def alphabetic(codes):
     return codes
 
 
-def student_ids(strings):
-    ids = [student_id(s) for s in strings if is_member(s)]
+def student_codes(strings):
+    ids = [student_code(s) for s in strings if is_member(s)]
     return alphabetic(ids)
 
 
 def text(strings):
-    return "\n".join(student_ids(strings))
+    return "\n".join(student_codes(strings))
 
 
 def scrape_file(file_name):
