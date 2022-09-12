@@ -33,3 +33,10 @@ def scrape_file(file_name):
     with open(file_name) as f:
         string = f.readlines()
     return text(string)
+
+
+def outFileName(file_name):
+    file_name = file_name.replace("rousseau-cours-", "")
+    file_name = file_name.replace("rousseau-classe-", "rg")
+    file_name = file_name.replace(".csv", ".txt")
+    return file_name

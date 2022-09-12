@@ -52,3 +52,8 @@ def test_ClassFileText():
 def test_LoadAndScrape():
     string = scrapeClassLists.scrape_file("../example_files/GoogleGroupMembersDump.txt")
     assert string == "marie.cr\ngabriel.crmr\nalbert.enstn\nrichard.fynmn"
+
+
+def test_outputFileName():
+    assert scrapeClassLists.outFileName("rousseau-classe-106.csv") == "rg106.txt"
+    assert scrapeClassLists.outFileName("rousseau-cours-1ma1dfb08.csv") == "1ma1dfb08.txt"
