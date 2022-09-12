@@ -32,7 +32,7 @@ def text(strings):
 def scrape_file(file_name):
     with open(file_name) as f:
         string = f.readlines()
-    return text(string)
+    return student_codes(string)
 
 
 def outFileName(file_name):
