@@ -1,5 +1,5 @@
 import re
-
+import os
 
 def student_code(string):
     # "dan.jn@eduge.ch,,membre,," -> "dan.jn"
@@ -30,7 +30,7 @@ def text(strings):
 
 
 def scrape_file(file_name):
-    with open(file_name) as f:
+    with open(file_name, 'r') as f:
         string = f.readlines()
     return student_codes(string)
 
@@ -40,3 +40,20 @@ def outFileName(file_name):
     file_name = file_name.replace("rousseau-classe-", "rg")
     file_name = file_name.replace(".csv", ".txt")
     return file_name
+
+
+def file_paths(dump_file, in_path, out_path):
+    in_file = os.path.join(in_path, dump_file)
+    out_file = os.path.join(out_path, outFileName(dump_file))
+    return in_file, out_file
+
+
+def write_codes(file_name, codes):
+    with open(file_name, 'w') as f:
+        f.write('\n'.join(codes))
+
+
+def load_scrape_write(in_file, out_file):
+    codes = scrape_file(in_file)
+    write_codes(out_file, codes)
+

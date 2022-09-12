@@ -1,5 +1,5 @@
 import scrapeClassLists
-
+import os
 
 fulltext = """
 Membres du groupe rousseau-classe-106
@@ -52,3 +52,12 @@ def test_LoadAndScrape():
 def test_outputFileName():
     assert scrapeClassLists.outFileName("rousseau-classe-106.csv") == "rg106.txt"
     assert scrapeClassLists.outFileName("rousseau-cours-1ma1dfb08.csv") == "1ma1dfb08.txt"
+
+
+def test_fullpaths():
+    dump_file = "rousseau-classe-106.csv"
+    in_path = os.path.join("C:", "test", "dump")
+    out_path = os.path.join("C:", "Control")
+    in_file, out_file = scrapeClassLists.file_paths(dump_file, in_path, out_path)
+    assert in_file == "C:/test/dump/rousseau-classe-106.csv"
+    assert out_file == "C:/Control/rg106.txt"
