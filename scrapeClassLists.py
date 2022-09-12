@@ -13,8 +13,16 @@ def is_member(string):
     return len(matches) == 1
 
 
+def alphabetic(codes):
+    surnames = [code.split(".")[1] for code in codes]
+    # sort on surnames (in the first position) but use whole code (in second position)
+    codes = [x for _, x in sorted(zip(surnames, codes))]
+    return codes
+
+
 def student_ids(strings):
-    return [student_id(s) for s in strings if is_member(s)]
+    ids = [student_id(s) for s in strings if is_member(s)]
+    return alphabetic(ids)
 
 
 def text(strings):

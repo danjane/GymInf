@@ -27,6 +27,15 @@ def test_ScrapeLinesSimple():
     assert ids == ["dan.jn", "dan.jn"]
 
 
+def test_ScrapeLinesAlphabetic():
+    ids = scrapeClassLists.student_ids([
+        "dan.jnb,,membre,,,,",
+        "dan.jna,,membre,,,,",
+        "dan.jn,,prop,,,,"
+    ])
+    assert ids == ["dan.jna", "dan.jnb"]
+
+
 def test_ScrapeLinesFull():
     ids = fulltext
     assert scrapeClassLists.student_ids(ids) == ["dan.jn", "dan.jn3", "dan.jn4"]
@@ -39,4 +48,4 @@ def test_ClassFileText():
 
 def test_LoadAndScrape():
     string = scrapeClassLists.scrape_file("../example_files/GoogleGroupMembersDump.txt")
-    assert string == "gabriel.crmr\nmarie.cr\nalbert.enstn\nrichard.fynmn"
+    assert string == "marie.cr\ngabriel.crmr\nalbert.enstn\nrichard.fynmn"
