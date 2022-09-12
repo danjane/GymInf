@@ -9,3 +9,7 @@ def student_id(string):
 def is_member(string):
     matches = re.findall(r"(?!,)membre(?=,)", string)
     return len(matches) == 1
+
+
+def student_ids(strings):
+    return [student_id(s) for s in strings if is_member(s)]
