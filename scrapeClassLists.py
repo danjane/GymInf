@@ -1,10 +1,11 @@
-import re
+import sys
 import os
+import re
 
 
 def student_code(string):
     # "dan.jn@eduge.ch,,membre,," -> "dan.jn"
-    matches = re.findall(r"^[a-z]+\.[a-z1-9]*", string)
+    matches = re.findall(r"^[a-z\-]+\.[a-z1-9]*", string)
     return matches[0]
 
 
@@ -58,3 +59,20 @@ def load_scrape_write(in_file, out_file):
     codes = scrape_file(in_file)
     write_codes(out_file, codes)
 
+
+def main():
+    if len(sys.argv) != 3:
+        raise RuntimeError("Wrong number of args, expected 2 !!")
+    in_path = sys.argv[1]
+    out_path = sys.argv[2]
+
+    if not os.path.isdir(out_path):
+        os.mkdir(out_path)
+
+    files = os.listdir(in_path)
+    for file in files:
+        load_scrape_write(*file_paths(file, in_path, out_path))
+
+
+if __name__ == "__main__":
+    main()

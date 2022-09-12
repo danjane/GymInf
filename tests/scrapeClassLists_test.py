@@ -1,4 +1,3 @@
-import os
 from scrapeClassLists import *
 
 fulltext = """
