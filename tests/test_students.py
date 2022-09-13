@@ -13,3 +13,8 @@ def test_givenName():
 
 def test_codeToName():
     assert students.code_and_name("dan.jn") == "Dan"
+
+
+def test_codeToGivenName():
+    assert students.code_and_name("dan.jn, Danny") == "Danny"
+
