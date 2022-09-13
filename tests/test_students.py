@@ -1,6 +1,6 @@
-import students
+from students import *
 
-c = students.Students("../example_files/1ma1df01.txt")
+c = Students("../example_files/1ma1df01.txt")
 
 
 def test_oneStudent():
@@ -12,9 +12,11 @@ def test_givenName():
 
 
 def test_codeToName():
-    assert students.code_and_name("dan.jn") == "Dan"
+    c, n = code_and_name("dan.jn")
+    assert c == "Dan"
 
 
 def test_codeToGivenName():
-    assert students.code_and_name("dan.jn, Danny") == "Danny"
+    c, n = code_and_name("dan.jn, Danny")
+    assert c == "Danny"
 
