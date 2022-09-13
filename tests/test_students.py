@@ -13,10 +13,10 @@ def test_givenName():
 
 def test_codeToName():
     c, n = code_and_name("dan.jn")
-    assert c == "Dan"
+    assert n == "Dan"
 
 
 def test_codeToGivenName():
     c, n = code_and_name("dan.jn, Danny")
-    assert c == "Danny"
+    assert n == "Danny"
 

@@ -8,7 +8,7 @@ def code_and_name(s_dirty):
         name = re.search(r'^[a-z\-]+', code).group(0).capitalize()
     else:
         name = s[1]
-    return name, code
+    return code, name
 
 
 class Students:
