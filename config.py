@@ -1,2 +1,7 @@
+import yaml
+
+
 def load(filename):
-    return {"courses": ["1ma1dfb01"]}
+    with open(filename, 'r') as f:
+        config = yaml.safe_load(f)
+    return config
