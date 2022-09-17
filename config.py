@@ -1,5 +1,5 @@
 import yaml
-
+import os
 
 def load(filename):
     with open(filename, 'r') as f:
@@ -9,5 +9,8 @@ def load(filename):
 
 
 def addClassPaths(config):
-    config["class_paths"] = ["../example_files/1ma1dfb01.txt"]
+    folder = config["courses_path"]
+    courses = config["courses"]
+    paths = [os.path.join(folder, cls + ".txt") for cls in courses]
+    config["class_paths"] = paths
     return config
