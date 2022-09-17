@@ -4,7 +4,7 @@ c = config.load("../example_files/config.yaml")
 
 
 def test_loadClass():
-    assert c["courses"] == ["1ma1dfb01"]
+    assert c["courses"] == ["1ma1df01"]
 
 
 def test_coursePath():
@@ -12,7 +12,7 @@ def test_coursePath():
 
 
 def test_classPaths():
-    assert c["class_paths"] == ["../example_files/1ma1dfb01.txt"]
+    assert c["class_paths"] == ["../example_files/1ma1df01.txt"]
 
 
 def test_configPath():

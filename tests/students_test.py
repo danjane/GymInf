@@ -24,5 +24,5 @@ def test_codeToGivenName():
 
 
 def test_loadAllClassesFromConfig():
-    assert "1ma1df01.txt" in courses
+    assert "1ma1df01" in courses
 

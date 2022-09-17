@@ -1,4 +1,5 @@
 import re
+import config
 
 
 def code_and_name(s_dirty):
@@ -34,4 +35,8 @@ class Students:
 
 
 def loadClassLists(config_path):
-    return {"1ma1df01.txt": None}
+    c = config.load(config_path)
+    classes = {}
+    for cls, path in zip(c["courses"], c["class_paths"]):
+        classes[cls] = Students(path)
+    return classes
