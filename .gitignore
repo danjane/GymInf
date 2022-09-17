@@ -1,2 +1,5 @@
 # Project exclude paths
 /venv/
+/latex/thesis.synctex.gz
+/latex/thesis.log
+/latex/thesis.aux
