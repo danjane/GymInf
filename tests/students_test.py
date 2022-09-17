@@ -1,7 +1,7 @@
 from students import *
 
 c = Students("../example_files/1ma1df01.txt")
-
+courses = loadClassLists("../example_files/config.yaml")
 
 def test_oneStudent():
     assert c['albert.enstn'] == "Albert"
@@ -21,4 +21,8 @@ def test_codeToGivenName():
     code, name = code_and_name("dan.jn, Danny")
     assert name == "Danny"
     assert code == "dan.jn"
+
+
+def test_loadAllClassesFromConfig():
+    assert "1ma1df01.txt" in courses
 
