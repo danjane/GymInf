@@ -120,4 +120,4 @@ def test_panderizeTwoStudents():
         +Albert, Gabs great question""".split("\n")
     courses = {"1ma1df01": ["Albert", "Gabs"]}
     table = panderize(strings, courses)
-    assert table.size() == 10
+    assert table.size == 10

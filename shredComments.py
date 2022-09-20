@@ -1,5 +1,6 @@
 import re
 import datetime
+import pandas as pd
 
 
 def is_student(string, student):
@@ -51,4 +52,4 @@ def current_students(current_info, courses):
 
 
 def panderize(strings, courses):
-    return 0
+    return pd.DataFrame({'col1': [0]*10})
