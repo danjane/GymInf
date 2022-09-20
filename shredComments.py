@@ -30,4 +30,4 @@ def update(current_info, line, students):
 
 
 def shredder(strings):
-    return []
+    return [1]
