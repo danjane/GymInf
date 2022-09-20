@@ -27,3 +27,4 @@ def test_newDate():
     current_info = {}
     current_info = update(current_info, "d13Jan1982")
     assert current_info["Date"] == datetime.date(1982, 1, 13)
+

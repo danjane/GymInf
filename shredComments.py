@@ -11,5 +11,5 @@ def find_students(string, students):
 
 
 def update(current_info, info):
-    current_info["Date"] = datetime.date(1982, 1, 13)
+    current_info["Date"] = datetime.datetime.strptime(info[1:], "%d%b%Y").date()
     return current_info
