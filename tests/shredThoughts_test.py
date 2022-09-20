@@ -16,3 +16,6 @@ def test_findOneStudent():
 def test_findStudents():
     assert find_students("Albert, Gabs good question", ["Albert", "Gabs"]) == ["Albert", "Gabs"]
 
+
+def test_findSubsetStudents():
+    assert find_students("Marie, Gabs good question", ["Albert", "Gabs"]) == ["Gabs"]
