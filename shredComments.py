@@ -42,7 +42,9 @@ def shredder(strings, courses):
 
 
 def current_students(current_info, courses):
-    if "Courses" in current_info:
-        return 0
-    else:
+    if "Courses" not in current_info:
         return []
+    elif current_info["Courses"] not in courses:
+        return []
+    else:
+        return 0

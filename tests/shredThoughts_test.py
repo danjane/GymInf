@@ -94,11 +94,11 @@ def test_updatesForDateClassTwoStudents():
 
 def test_currentStudentsNone():
     current_info = {}
-    courses = None
+    courses = []
     assert current_students(current_info, courses) == []
 
 
 def test_currentStudentsNotFound():
     current_info = {"Courses": "Def not good"}
-    courses = None
+    courses = []
     assert current_students(current_info, courses) == []
