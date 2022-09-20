@@ -42,8 +42,15 @@ def test_newInfoForOneStudent():
     assert current_info["Sentiment"] == 1
 
 
-def test_newInfoForTwoStudent():
+def test_newInfoForTwoStudents():
     current_info = {}
     current_info = update(current_info, "+Albert, Gabs good question", ["Albert", "Gabs"])
     assert current_info["Students"] == ["Albert", "Gabs"]
     assert current_info["Sentiment"] == 1
+
+
+def test_newInfoForBadStudent():
+    current_info = {}
+    current_info = update(current_info, "-Albert faster than c", ["Albert", "Gabs"])
+    assert current_info["Students"] == ["Albert"]
+    assert current_info["Sentiment"] == -1
