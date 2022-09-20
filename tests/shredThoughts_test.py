@@ -1,8 +1,12 @@
 from shredComments import *
 
 
-def test_chkOneStudent():
+def test_chkOneStudentTrue():
     assert is_student("Albert good question", "Albert")
+
+
+def test_chkOneStudentFalse():
+    assert not is_student("Albert good question", Gabs)
 
 
 def test_findOneStudent():
