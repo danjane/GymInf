@@ -39,3 +39,9 @@ def test_newInfoForOneStudent():
     current_info = {}
     current_info = update(current_info, "+Albert good question")
     assert current_info["Students"] == ["Albert"]
+
+
+def test_newInfoForTwoStudent():
+    current_info = {}
+    current_info = update(current_info, "+Albert, Gabs good question")
+    assert current_info["Students"] == ["Albert", "Gabs"]
