@@ -48,3 +48,7 @@ def current_students(current_info, courses):
         return []
     else:
         return courses[current_info["Course"]]
+
+
+def panderize(strings, courses):
+    return 0

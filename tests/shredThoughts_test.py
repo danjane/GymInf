@@ -111,3 +111,13 @@ def test_currentStudentsInCourse():
     current_info = {"Course": "1ma1df01"}
     courses = {"1ma1df01": ["Albert", "Gabs"]}
     assert current_students(current_info, courses) == ["Albert", "Gabs"]
+
+
+def test_panderizeTwoStudents():
+    strings = \
+        """d25Dec2022
+        c1ma1df01
+        +Albert, Gabs great question""".split("\n")
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    table = panderize(strings, courses)
+    assert table.size() == 10
