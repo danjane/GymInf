@@ -19,4 +19,7 @@ def update(current_info, line, students):
     elif char == "+":
         current_info["Students"] = find_students(info, students)
         current_info["Sentiment"] = 1
+    elif char == "-":
+        current_info["Students"] = find_students(info, students)
+        current_info["Sentiment"] = -1
     return current_info
