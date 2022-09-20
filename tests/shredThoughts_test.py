@@ -56,9 +56,9 @@ def test_dnfForOneStudent():
 def test_resetDnfForOneStudent():
     current_info = {"Course": "1ma1df01"}
     courses = {"1ma1df01": ["Albert", "Gabs"]}
-    current_info = update(current_info, ">Albert", courses)
+    current_info = update(current_info, "reset Albert", courses)
     assert current_info["Students"] == ["Albert"]
-    assert current_info["DNF"] == -1
+    assert current_info["DNF"] == -2
 
 
 def test_newInfoForTwoStudents():
