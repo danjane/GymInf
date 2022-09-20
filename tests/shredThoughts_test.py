@@ -65,5 +65,8 @@ def test_updatesForDateClassOneStudent():
         +Albert great question""".split("\n")
     infos = shredder(strings)
     assert len(infos) == 1
-    assert infos[0]["Students"] == ["Albert"]
-    assert infos[0]["Sentiment"] == 1
+
+    current_info = infos[0]
+    assert current_info["Students"] == ["Albert"]
+    assert current_info["Date"] == datetime.date(2022, 12, 25)
+    assert current_info["Sentiment"] == 1
