@@ -95,4 +95,4 @@ def test_updatesForDateClassTwoStudents():
 def test_currentStudentsNone():
     current_info = {}
     courses = None
-    assert current_students(current_info, courses) is None
+    assert current_students(current_info, courses) == []
