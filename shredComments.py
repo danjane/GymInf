@@ -1,6 +1,9 @@
-def is_student(str, student):
-    return True
+import re
 
 
-def find_students(str, students):
+def is_student(string, student):
+    return re.search(student, string)
+
+
+def find_students(string, students):
     return students
