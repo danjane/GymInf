@@ -81,11 +81,11 @@ def test_updatesForDateClassTwoStudents():
     assert len(infos) == 2
 
     current_info = infos[0]
-    assert current_info["Students"] == ["Albert"]
+    assert current_info["Student"] == "Albert"
     assert current_info["Date"] == datetime.date(2022, 12, 25)
     assert current_info["Sentiment"] == 1
 
     current_info = infos[1]
-    assert current_info["Students"] == ["Gabs"]
+    assert current_info["Student"] == "Gabs"
     assert current_info["Date"] == datetime.date(2022, 12, 25)
     assert current_info["Sentiment"] == 1
