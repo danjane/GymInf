@@ -47,4 +47,4 @@ def current_students(current_info, courses):
     elif current_info["Courses"] not in courses:
         return []
     else:
-        return 0
+        return courses[current_info["Courses"]]
