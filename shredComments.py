@@ -16,10 +16,12 @@ def update(current_info, line, students):
         current_info["Date"] = datetime.datetime.strptime(info, "%d%b%Y").date()
     elif char == 'c':
         current_info["Course"] = info
-    elif char == "+":
+    else:
         current_info["Students"] = find_students(info, students)
-        current_info["Sentiment"] = 1
-    elif char == "-":
-        current_info["Students"] = find_students(info, students)
-        current_info["Sentiment"] = -1
+        if char == "+":
+            current_info["Sentiment"] = 1
+        elif char == "-":
+            current_info["Sentiment"] = -1
+        else:
+            raise NotImplementedError("These are not the droids you're looking for!!")
     return current_info
