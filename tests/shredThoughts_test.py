@@ -99,11 +99,11 @@ def test_currentStudentsNone():
 
 
 def test_currentStudentsNotFound():
-    current_info = {"Courses": "Def not good"}
+    current_info = {"Course": "Def not good"}
     courses = {}
     assert current_students(current_info, courses) == []
 
 def test_currentStudentsInCourse():
-    current_info = {"Courses": "1ma1df01"}
+    current_info = {"Course": "1ma1df01"}
     courses = {"1ma1df01": ["Albert", "Gabs"]}
     assert current_students(current_info, courses) == ["Albert", "Gabs"]
