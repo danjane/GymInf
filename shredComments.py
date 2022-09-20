@@ -29,13 +29,17 @@ def update(current_info, line, students):
     return current_info
 
 
-def shredder(strings):
+def shredder(strings, courses):
     current_info = {}
     infos = []
     for line in strings:
-        current_info = update(current_info, line.strip(), ["Albert", "Gabs"])
+        current_info = update(current_info, line.strip(), )
         for student in current_info["Students"]:
             c = current_info.copy()
             c["Student"] = student
             infos.append(c)
     return infos
+
+
+def current_students(current_info, courses):
+    return 0

@@ -62,7 +62,8 @@ def test_updatesForDateClassOneStudent():
         """d25Dec2022
         c1ma1df01
         +Albert great question""".split("\n")
-    infos = shredder(strings)
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    infos = shredder(strings, courses)
     assert len(infos) == 1
 
     current_info = infos[0]
@@ -76,7 +77,8 @@ def test_updatesForDateClassTwoStudents():
         """d25Dec2022
         c1ma1df01
         +Albert, Gabs great question""".split("\n")
-    infos = shredder(strings)
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    infos = shredder(strings, courses)
     assert len(infos) == 2
 
     current_info = infos[0]
@@ -88,3 +90,9 @@ def test_updatesForDateClassTwoStudents():
     assert current_info["Student"] == "Gabs"
     assert current_info["Date"] == datetime.date(2022, 12, 25)
     assert current_info["Sentiment"] == 1
+
+
+def test_currentStudentsNone():
+    current_info = {}
+    courses = None
+    assert current_students(current_info, courses) is None
