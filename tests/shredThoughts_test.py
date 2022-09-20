@@ -70,3 +70,17 @@ def test_updatesForDateClassOneStudent():
     assert current_info["Students"] == ["Albert"]
     assert current_info["Date"] == datetime.date(2022, 12, 25)
     assert current_info["Sentiment"] == 1
+
+
+def test_updatesForDateClassTwoStudents():
+    strings = \
+        """d25Dec2022
+        c1ma1df01
+        +Albert, Gabs great question""".split("\n")
+    infos = shredder(strings)
+    assert len(infos) == 1
+
+    current_info = infos[0]
+    assert current_info["Students"] == ["Albert"]
+    assert current_info["Date"] == datetime.date(2022, 12, 25)
+    assert current_info["Sentiment"] == 1
