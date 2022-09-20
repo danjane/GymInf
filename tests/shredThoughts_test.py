@@ -106,6 +106,7 @@ def test_currentStudentsNotFound():
     courses = {}
     assert current_students(current_info, courses) == []
 
+
 def test_currentStudentsInCourse():
     current_info = {"Course": "1ma1df01"}
     courses = {"1ma1df01": ["Albert", "Gabs"]}

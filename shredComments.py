@@ -11,13 +11,12 @@ def find_students(string, students):
 
 
 def update(current_info, line, courses):
+    current_info["Students"] = []
     char, info = line[0], line[1:]
     if char == 'd':
         current_info["Date"] = datetime.datetime.strptime(info, "%d%b%Y").date()
-        current_info["Students"] = []
     elif char == 'c':
         current_info["Course"] = info
-        current_info["Students"] = []
     else:
         students = current_students(current_info, courses)
         current_info["Students"] = find_students(info, students)
