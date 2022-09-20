@@ -10,7 +10,7 @@ def find_students(string, students):
     return [student for student in students if is_student(string, student)]
 
 
-def update(current_info, line, students):
+def update(current_info, line, courses):
     char, info = line[0], line[1:]
     if char == 'd':
         current_info["Date"] = datetime.datetime.strptime(info, "%d%b%Y").date()
@@ -19,6 +19,7 @@ def update(current_info, line, students):
         current_info["Course"] = info
         current_info["Students"] = []
     else:
+        students = current_students(current_info, courses)
         current_info["Students"] = find_students(info, students)
         if char == "+":
             current_info["Sentiment"] = 1
@@ -33,7 +34,7 @@ def shredder(strings, courses):
     current_info = {}
     infos = []
     for line in strings:
-        current_info = update(current_info, line.strip(), )
+        current_info = update(current_info, line.strip(), courses)
         for student in current_info["Students"]:
             c = current_info.copy()
             c["Student"] = student

@@ -37,22 +37,25 @@ def test_newCourse():
 
 
 def test_newInfoForOneStudent():
-    current_info = {}
-    current_info = update(current_info, "+Albert good question", ["Albert", "Gabs"])
+    current_info = {"Course": "1ma1df01"}
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    current_info = update(current_info, "+Albert good question", courses)
     assert current_info["Students"] == ["Albert"]
     assert current_info["Sentiment"] == 1
 
 
 def test_newInfoForTwoStudents():
-    current_info = {}
-    current_info = update(current_info, "+Albert, Gabs good question", ["Albert", "Gabs"])
+    current_info = {"Course": "1ma1df01"}
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    current_info = update(current_info, "+Albert, Gabs good question", courses)
     assert current_info["Students"] == ["Albert", "Gabs"]
     assert current_info["Sentiment"] == 1
 
 
 def test_newInfoForBadStudent():
-    current_info = {}
-    current_info = update(current_info, "-Albert faster than c", ["Albert", "Gabs"])
+    current_info = {"Course": "1ma1df01"}
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    current_info = update(current_info, "-Albert faster than c", courses)
     assert current_info["Students"] == ["Albert"]
     assert current_info["Sentiment"] == -1
 
