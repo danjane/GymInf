@@ -6,7 +6,7 @@ def test_chkOneStudentTrue():
 
 
 def test_chkOneStudentFalse():
-    assert not is_student("Albert good question", Gabs)
+    assert not is_student("Albert good question", "Gabs")
 
 
 def test_findOneStudent():
