@@ -32,4 +32,4 @@ def test_newDate():
 def test_newCourse():
     current_info = {}
     current_info = update(current_info, "c1ma1df01")
-    assert current_info["Course"] == "c1ma1df01"
+    assert current_info["Course"] == "1ma1df01"
