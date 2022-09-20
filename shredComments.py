@@ -29,6 +29,8 @@ def update(current_info, line, courses):
         elif char == "D":
             current_info["Sentiment"] = -1
             current_info["DNF"] = 1
+        elif char == ">":
+            current_info["DNF"] = -1
         else:
             raise NotImplementedError("These are not the droids you're looking for!!")
     return current_info
