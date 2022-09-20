@@ -21,6 +21,7 @@ def update(current_info, line, courses):
     else:
         students = current_students(current_info, courses)
         current_info["Students"] = find_students(info, students)
+        current_info["Info"] = line
         if char == "+":
             current_info["Sentiment"] = 1
         elif char == "-":
@@ -51,5 +52,10 @@ def current_students(current_info, courses):
         return courses[current_info["Course"]]
 
 
-def panderize(strings, courses):
-    return pd.DataFrame({'col1': [0]*10})
+def panderize(infos):
+    if len(infos) < 2:
+        raise NotImplementedError("Need more data!!")
+    else:
+        table = pd.DataFrame(infos)
+        table = table.drop(["Students"], axis=1)
+        return table
