@@ -16,4 +16,6 @@ def update(current_info, line):
         current_info["Date"] = datetime.datetime.strptime(info, "%d%b%Y").date()
     elif char == 'c':
         current_info["Course"] = info
+    elif char == "+":
+        current_info["Students"] = ["Albert"]
     return current_info
