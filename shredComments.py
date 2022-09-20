@@ -27,3 +27,7 @@ def update(current_info, line, students):
         else:
             raise NotImplementedError("These are not the droids you're looking for!!")
     return current_info
+
+
+def shredder(strings):
+    return []
