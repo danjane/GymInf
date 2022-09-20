@@ -30,4 +30,7 @@ def update(current_info, line, students):
 
 
 def shredder(strings):
-    return [1]
+    current_info = {}
+    for line in strings:
+        current_info = update(current_info, line.strip(), ["Albert"])
+    return [current_info]

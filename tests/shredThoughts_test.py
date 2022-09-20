@@ -59,9 +59,9 @@ def test_newInfoForBadStudent():
 
 
 def test_updatesForDateClassOneStudent():
-    strings = """
-    d25Dec2022
-    c1ma1df01
-    +Albert great question""".split("\n")
+    strings = \
+        """d25Dec2022
+        c1ma1df01
+        +Albert great question""".split("\n")
     infos = shredder(strings)
     assert len(infos) == 1
