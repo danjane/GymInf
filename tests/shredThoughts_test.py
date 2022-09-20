@@ -65,3 +65,5 @@ def test_updatesForDateClassOneStudent():
         +Albert great question""".split("\n")
     infos = shredder(strings)
     assert len(infos) == 1
+    assert infos[0]["Students"] == ["Albert"]
+    assert infos[0]["Sentiment"] == 1
