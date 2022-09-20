@@ -6,4 +6,4 @@ def is_student(string, student):
 
 
 def find_students(string, students):
-    return students
+    return [student for student in students if is_student(string, student)]
