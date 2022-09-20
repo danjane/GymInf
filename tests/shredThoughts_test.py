@@ -44,6 +44,15 @@ def test_newInfoForOneStudent():
     assert current_info["Sentiment"] == 1
 
 
+def test_dnfForOneStudent():
+    current_info = {"Course": "1ma1df01"}
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    current_info = update(current_info, "DNF Albert", courses)
+    assert current_info["Students"] == ["Albert"]
+    assert current_info["Sentiment"] == -1
+    assert current_info["DNF"] == 1
+
+
 def test_newInfoForTwoStudents():
     current_info = {"Course": "1ma1df01"}
     courses = {"1ma1df01": ["Albert", "Gabs"]}
