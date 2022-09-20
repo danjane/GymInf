@@ -14,8 +14,10 @@ def update(current_info, line, students):
     char, info = line[0], line[1:]
     if char == 'd':
         current_info["Date"] = datetime.datetime.strptime(info, "%d%b%Y").date()
+        current_info["Students"] = []
     elif char == 'c':
         current_info["Course"] = info
+        current_info["Students"] = []
     else:
         current_info["Students"] = find_students(info, students)
         if char == "+":
