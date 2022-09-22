@@ -39,10 +39,11 @@ def update(current_info, line, courses):
 def shredder(strings, courses):
     current_info = {}
     infos = []
-    for line in strings:
+    for unstripped_line in strings:
+        line = unstripped_line.strip()
         if len(line) == 0:
             continue
-        current_info = update(current_info, line.strip(), courses)
+        current_info = update(current_info, line, courses)
         for student in current_info["Students"]:
             c = current_info.copy()
             c["Student"] = student
