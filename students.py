@@ -15,6 +15,7 @@ def code_and_name(s_dirty):
 def name_conflict(name_dict):
     return False
 
+
 class Students:
 
     def __init__(self, filename):
