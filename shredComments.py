@@ -60,9 +60,8 @@ def current_students(current_info, courses):
 
 
 def panderize(infos):
-    if len(infos) < 2:
-        raise NotImplementedError("Need more data!!")
-    else:
-        table = pd.DataFrame(infos)
-        table = table.drop(["Students"], axis=1)
-        return table
+    force_columns = dict.fromkeys(["Student", "Date", "Course", "Info", "Sentiment", "DNF"])
+    table = pd.DataFrame(infos + [force_columns]*2)
+    table = table.drop(["Students"], axis=1)
+    table = table[:-2]
+    return table

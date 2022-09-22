@@ -138,12 +138,13 @@ def test_panderizeTwoStudents():
     courses = {"1ma1df01": ["Albert", "Gabs"]}
     infos = shredder(strings, courses)
     table = panderize(infos)
-    assert table.size == 10
+    assert table.size == 12
     assert "Course" in table.columns
     assert "Student" in table.columns
     assert "Date" in table.columns
     assert "Sentiment" in table.columns
     assert "Info" in table.columns
+    assert "DNF" in table.columns
     assert table["Course"][0] == "1ma1df01"
     assert table["Info"][1] == "+Albert, Gabs great question"
     assert list(table["Student"]) == ["Albert", "Gabs"]
