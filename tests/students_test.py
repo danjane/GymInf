@@ -28,3 +28,7 @@ def test_loadAllClassesFromConfig():
     assert "1ma1df01" in courses
     assert courses["1ma1df01"]['albert.enstn'] == "Albert"
     assert courses["1ma1df01"]['gabriel.crmr'] == "Gabs"
+
+
+def test_nameConflict():
+    assert not name_conflict({"gabriel.lm": "Gabriel", "gabriel.crmr": "Gabs"})
