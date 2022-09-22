@@ -1,14 +1,8 @@
 from analyseComments import *
-import shredComments
+import pandas as pd
 
 
-def test_links():
-    strings = """
-        d25Dec2022
-        c1ma1df01
-        +Albert, Gabs great question
-    """.split("\n")
-    courses = {"1ma1df01": ["Albert", "Gabs"]}
-    infos = shredComments.shredder(strings, courses)
-    table = shredComments.panderize(infos)
-    assert table.size == 12
+def test_rv():
+    d = {'Student': ["Albert"]*2, 'DNF': [1, 1]}
+    df = pd.DataFrame(data=d)
+    assert dnf_count(d)["Albert"] == 2
