@@ -18,10 +18,10 @@ def duplicate_warning(duplicates):
 
 def name_conflict(name_dict):
     names = list(name_dict.values())
-    duplicates = [name for name in names if names.count(name) > 1]
+    duplicates = set([name for name in names if names.count(name) > 1])
     if duplicates:
         duplicate_warning(duplicates)
-    return set(duplicates)
+    return duplicates
 
 
 class Students:
