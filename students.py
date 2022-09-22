@@ -12,8 +12,16 @@ def code_and_name(s_dirty):
     return code, name
 
 
+def duplicate_warning(duplicates):
+    print(f"The following names are duplicated!! {duplicates}")
+
+
 def name_conflict(name_dict):
-    return False
+    names = list(name_dict.values())
+    duplicates = [name for name in names if names.count(name) > 1]
+    if duplicates:
+        duplicate_warning(duplicates)
+    return set(duplicates)
 
 
 class Students:

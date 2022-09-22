@@ -35,4 +35,4 @@ def test_nameConflictFalse():
 
 
 def test_nameConflictTrue():
-    assert name_conflict({"gabriel.lm": "Gabs", "gabriel.crmr": "Gabs"})
+    assert name_conflict({"gabriel.lm": "Gabs", "gabriel.crmr": "Gabs"}) == {"Gabs"}
