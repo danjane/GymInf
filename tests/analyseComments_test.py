@@ -31,3 +31,11 @@ def test_positiveWeightInComments():
     d = {'Student': ["Albert"], 'Date': [datetime.date(2023, 9, 8)]}
     df = pd.DataFrame(d)
     assert weight_comments(df)["Weight"][0] > 0
+
+
+def test_recentCommentsMoreWeight():
+    d = {'Student': ["Albert"]*2,
+         'Date': [datetime.date(1990, 9, 8), datetime.date(2023, 9, 8)]}
+    df = pd.DataFrame(d)
+    df = weight_comments(df)
+    assert df["Weight"][1] > df["Weight"][0]
