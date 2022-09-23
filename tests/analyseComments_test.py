@@ -39,3 +39,8 @@ def test_recentCommentsMoreWeight():
     df = weight_comments(df)
     assert df["Weight"][1] > df["Weight"][0]
 
+
+def test_sumWeights():
+    d = {'Student': ["Albert"] * 2, 'Weight': [1, 1]}
+    df = pd.DataFrame(d)
+    assert total_weight(df)["Albert"] == 2

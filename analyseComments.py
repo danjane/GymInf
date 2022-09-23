@@ -13,3 +13,7 @@ def weight_comments(df):
     date_diffs = (df['Date'] - max(df['Date'])).apply(lambda x: x.days)
     df['Weight'] = date_diffs.apply(lambda x: np.exp(x / 10.))
     return df
+
+
+def sum_weights(df):
+    pass
