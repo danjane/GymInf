@@ -10,4 +10,5 @@ def dnf_count(df):
 
 
 def weight_comments(df):
-    return None
+    df["Weight"] = 0
+    return df

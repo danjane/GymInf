@@ -1,6 +1,6 @@
 from analyseComments import *
 import pandas as pd
-
+import datetime
 
 def test_rv():
     d = {'Student': ["Albert"]*2, 'DNF': [1, 0]}
@@ -21,7 +21,13 @@ def test_rvTwoStudents():
     assert dnf_count(df)["Gabs"] == 1
 
 
-def test_weightComments():
+def test_weightInComments():
     d = {'Student': ["Albert", "Gabs"] * 2}
     df = pd.DataFrame(d)
-    assert "Weight" in weight_comments(d)
+    assert "Weight" in weight_comments(df)
+
+
+def test_positiveWeightInComments():
+    d = {'Student': ["Albert", "Gabs"] * 2, 'Date': [datetime.date(2023, 9, 8)]*2}
+    df = pd.DataFrame(d)
+    assert weight_comments(df)["Albert"] > 0
