@@ -28,6 +28,6 @@ def test_weightInComments():
 
 
 def test_positiveWeightInComments():
-    d = {'Student': ["Albert", "Gabs"] * 2, 'Date': [datetime.date(2023, 9, 8)]*2}
+    d = {'Student': ["Albert"], 'Date': [datetime.date(2023, 9, 8)]}
     df = pd.DataFrame(d)
-    assert weight_comments(df)["Albert"] > 0
+    assert weight_comments(df)["Weight"][0] > 0
