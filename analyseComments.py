@@ -1,2 +1,9 @@
+import numpy as np
+
+
 def dnf_count(df):
-    return {"Albert": 2}
+    df2 = df.pivot(columns="Student")["DNF"]
+    dnfs = {}
+    for student in df2.columns:
+        dnfs[student] = np.nansum(df2[student])
+    return dnfs
