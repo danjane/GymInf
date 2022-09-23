@@ -12,3 +12,10 @@ def test_rv2():
     d = {'Student': ["Albert"]*2, 'DNF': [1, 1]}
     df = pd.DataFrame(data=d)
     assert dnf_count(df)["Albert"] == 2
+
+
+def test_rvTwoStudents():
+    d = {'Student': ["Albert", "Gabs"]*2, 'DNF': [1, 1, 1, 0]}
+    df = pd.DataFrame(data=d)
+    assert dnf_count(df)["Albert"] == 2
+    assert dnf_count(df)["Gabs"] == 1
