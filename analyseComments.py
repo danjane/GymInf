@@ -25,3 +25,7 @@ def sum_weights(df, students):
     for student, v in non_zero_sums.items():
         sums[student] = v
     return sums
+
+
+def students_by_least_weight(weights):
+    return None
