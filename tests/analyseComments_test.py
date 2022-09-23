@@ -22,7 +22,7 @@ def test_rvTwoStudents():
 
 
 def test_weightInComments():
-    d = {'Student': ["Albert", "Gabs"] * 2}
+    d = {'Student': ["Albert"], 'Date': [datetime.date(2023, 9, 8)]}
     df = pd.DataFrame(d)
     assert "Weight" in weight_comments(df)
 

@@ -10,5 +10,6 @@ def dnf_count(df):
 
 
 def weight_comments(df):
-    df["Weight"] = 1
+    date_diffs = (df['Date'] - max(df['Date'])).apply(lambda x: x.days)
+    df['Weight'] = date_diffs.apply(lambda x: np.exp(x / 10.))
     return df
