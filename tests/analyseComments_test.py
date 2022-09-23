@@ -19,3 +19,9 @@ def test_rvTwoStudents():
     df = pd.DataFrame(d)
     assert dnf_count(df)["Albert"] == 2
     assert dnf_count(df)["Gabs"] == 1
+
+
+def test_weightComments():
+    d = {'Student': ["Albert", "Gabs"] * 2}
+    df = pd.DataFrame(d)
+    assert "Weight" in weight_comments(d)

@@ -7,3 +7,7 @@ def dnf_count(df):
     for student in df2.columns:
         dnfs[student] = np.nansum(df2[student])
     return dnfs
+
+
+def weight_comments(df):
+    return None
