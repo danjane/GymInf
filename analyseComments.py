@@ -1,8 +1,8 @@
 import numpy as np
 
 
-def dnf_count(df):
-    df2 = df.pivot(columns="Student")["DNF"]
+def sum_by_student(df, column):
+    df2 = df.pivot(columns="Student")[column]
     dnfs = {}
     for student in df2.columns:
         dnfs[student] = np.nansum(df2[student])
@@ -15,5 +15,9 @@ def weight_comments(df):
     return df
 
 
+def dnf_count(df):
+    return sum_by_student(df, "DNF")
+
+
 def sum_weights(df):
-    pass
+    return sum_by_student(df, "Weight")
