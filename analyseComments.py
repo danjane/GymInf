@@ -28,4 +28,4 @@ def sum_weights(df, students):
 
 
 def students_by_least_weight(weights):
-    return ["Gabs", "Albert"]
+    return [k for k, v in sorted(weights.items(), key=lambda item: item[1])]

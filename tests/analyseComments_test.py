@@ -2,6 +2,7 @@ from analyseComments import *
 import pandas as pd
 import datetime
 
+
 def test_rv():
     d = {'Student': ["Albert"]*2, 'DNF': [1, 0]}
     df = pd.DataFrame(d)
@@ -49,7 +50,7 @@ def test_sumWeights():
 def test_studentWithNoComments():
     d = {'Student': ["Albert"] * 2, 'Weight': [1, 1]}
     df = pd.DataFrame(d)
-    assert sum_weights(df, ["ALbert", "Gabs"])["Gabs"] == 0
+    assert sum_weights(df, ["Albert", "Gabs"])["Gabs"] == 0
 
 
 def test_linksForWeights():
@@ -64,3 +65,8 @@ def test_linksForWeights():
 def test_studentsToComment():
     weights = {"Albert": 2, "Gabs": 1}
     assert students_by_least_weight(weights) == ["Gabs", "Albert"]
+
+
+def test_studentsToCommentThree():
+    weights = {"Albert": 2, "Gabs": 1, "Marie": 0}
+    assert students_by_least_weight(weights) == ["Marie", "Gabs", "Albert"]
