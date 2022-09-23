@@ -20,4 +20,8 @@ def dnf_count(df):
 
 
 def sum_weights(df, students):
-    return sum_by_student(df, "Weight")
+    sums = dict.fromkeys(students, 0)
+    non_zero_sums = sum_by_student(df, "Weight")
+    for student, v in non_zero_sums.items():
+        sums[student] = v
+    return sums
