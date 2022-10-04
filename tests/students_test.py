@@ -41,3 +41,7 @@ def test_nameConflictTrue():
 def test_givenNamesInCourse():
     assert firstNamesInCourse(courses["1ma1df01"]) == ["Albert", "Gabs", "Marie", "Dick"]
 
+
+def test_givenNamesInCourses():
+    gn_courses = firstNamesInCourses(courses)
+    assert gn_courses["1ma1df01"] == ["Albert", "Gabs", "Marie", "Dick"]

@@ -56,3 +56,7 @@ def loadClassLists(config_path):
 
 def firstNamesInCourse(course):
     return list(course.values.values())
+
+
+def firstNamesInCourses(courses):
+    return {}
