@@ -52,3 +52,7 @@ def loadClassLists(config_path):
     for cls, path in zip(c["courses"], c["class_paths"]):
         classes[cls] = Students(path)
     return classes
+
+
+def firstNamesOfClass():
+    return []
