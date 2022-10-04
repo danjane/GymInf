@@ -54,5 +54,5 @@ def loadClassLists(config_path):
     return classes
 
 
-def firstNamesOfClass():
+def firstNamesInCourse(course):
     return []

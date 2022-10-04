@@ -38,5 +38,5 @@ def test_nameConflictTrue():
     assert name_conflict({"gabriel.lm": "Gabs", "gabriel.crmr": "Gabs"}) == {"Gabs"}
 
 def test_givenNamesInCourse():
-    assert firstNamesOfClass(courses["1ma1df01"]) == ["Albert", "Gabs", "Marie", "Dick"]
+    assert firstNamesInCourse(courses["1ma1df01"]) == ["Albert", "Gabs", "Marie", "Dick"]
 
