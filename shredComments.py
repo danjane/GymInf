@@ -8,7 +8,7 @@ def is_student(string, student):
 
 
 def find_students(string, students):
-    return [student for student in students if is_student(string, student)]
+    return [k for k, v in students.items() if is_student(string, v)]
 
 
 def update(current_info, line, courses):
