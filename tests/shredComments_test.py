@@ -53,6 +53,16 @@ def test_dnfForOneStudent():
     assert current_info["DNF"] == 1
 
 
+def test_dnfThenGoodForOneStudent():
+    current_info = {"Course": "1ma1df01"}
+    courses = {"1ma1df01": ["Albert", "Gabs"]}
+    current_info = update(current_info, "DNF Albert", courses)
+    current_info = update(current_info, "+Albert bonne réponse", courses)
+    assert current_info["Students"] == ["Albert"]
+    assert current_info["Sentiment"] == 1
+    assert current_info["DNF"] == 0
+
+
 def test_resetDnfForOneStudent():
     current_info = {"Course": "1ma1df01"}
     courses = {"1ma1df01": ["Albert", "Gabs"]}
