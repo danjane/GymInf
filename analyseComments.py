@@ -23,7 +23,7 @@ def dnf_count_positives(df, cut_off=0):
     df = dnf_count(df)
     df_positive = {}
     for k, v in df.items():
-        if v > 0:
+        if v > cut_off:
             df_positive[k] = v
     return df_positive
 
