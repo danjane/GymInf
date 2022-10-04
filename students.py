@@ -55,4 +55,4 @@ def loadClassLists(config_path):
 
 
 def firstNamesInCourse(course):
-    return []
+    return list(course.values.values())
