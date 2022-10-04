@@ -4,22 +4,30 @@ import datetime
 
 
 def test_rv():
-    d = {'Student': ["Albert"]*2, 'DNF': [1, 0]}
+    d = {'Student': ["Albert"] * 2, 'DNF': [1, 0]}
     df = pd.DataFrame(d)
     assert dnf_count(df)["Albert"] == 1
 
 
 def test_rv2():
-    d = {'Student': ["Albert"]*2, 'DNF': [1, 1]}
+    d = {'Student': ["Albert"] * 2, 'DNF': [1, 1]}
     df = pd.DataFrame(d)
     assert dnf_count(df)["Albert"] == 2
 
 
 def test_rvTwoStudents():
-    d = {'Student': ["Albert", "Gabs"]*2, 'DNF': [1, 1, 1, 0]}
+    d = {'Student': ["Albert", "Gabs"] * 2, 'DNF': [1, 1, 1, 0]}
     df = pd.DataFrame(d)
     assert dnf_count(df)["Albert"] == 2
     assert dnf_count(df)["Gabs"] == 1
+
+
+def test_rvPositiveCount():
+    d = {'Student': ["Albert", "Gabs"] * 2, 'DNF': [0, 0, 1, 0]}
+    df = pd.DataFrame(d)
+    p = dnf_count_positives(df)
+    assert p["Albert"] == 1
+    assert "Gabs" not in p
 
 
 def test_weightInComments():

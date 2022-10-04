@@ -19,6 +19,11 @@ def dnf_count(df):
     return sum_by_student(df, "DNF")
 
 
+def dnf_count_positives(df):
+    df = dnf_count(df)
+    return df
+
+
 def sum_weights(df, students):
     sums = dict.fromkeys(students, 0)
     non_zero_sums = sum_by_student(df, "Weight")
