@@ -21,7 +21,11 @@ def dnf_count(df):
 
 def dnf_count_positives(df):
     df = dnf_count(df)
-    return df
+    df_positive = {}
+    for k, v in df.items():
+        if v > 0:
+            df_positive[k] = v
+    return df_positive
 
 
 def sum_weights(df, students):
