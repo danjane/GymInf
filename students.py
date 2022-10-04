@@ -59,4 +59,7 @@ def firstNamesInCourse(course):
 
 
 def firstNamesInCourses(courses):
-    return {}
+    courses_with_given_name = {}
+    for course_name, students in courses.items():
+        courses_with_given_name[course_name] = firstNamesInCourse(students)
+    return courses_with_given_name
