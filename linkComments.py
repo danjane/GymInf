@@ -4,8 +4,9 @@ import students
 import config
 
 
-def setup(cfg_path):
+def report_dnfs(cfg_path):
     cfg = config.load("../example_files/config.yaml")
+
     return cfg
 
 

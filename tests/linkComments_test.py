@@ -1,6 +1,7 @@
 from linkComments import *
 
 
-def test_loadCfg():
-    cfg = setup(None)
-    assert cfg["comments_path"] == "../example_files/comments.txt"
+def test_reportDnfs():
+    dnfs = report_dnfs(None)
+    assert dnfs is dict
+
