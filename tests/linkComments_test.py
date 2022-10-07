@@ -1,5 +1,6 @@
-import linkComments
+from linkComments import *
 
 
 def test_loadCfg():
-    assert linkComments.cfg["comments_path"] == "../example_files/comments.txt"
+    cfg = setup(None)
+    assert cfg["comments_path"] == "../example_files/comments.txt"

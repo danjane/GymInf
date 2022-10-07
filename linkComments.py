@@ -3,12 +3,10 @@ import analyseComments
 import students
 import config
 
-cfg = []
-comments = []
 
-
-def setup(config_path):
-    cfg = config.load("config_path")
+def setup(cfg_path):
+    cfg = config.load("../example_files/config.yaml")
+    return cfg
 
 
 
