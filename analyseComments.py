@@ -29,11 +29,11 @@ def dnf_count_positives(df, cut_off=0):
 
 
 def sum_weights(df, students):
-    sums = dict.fromkeys(students, 0)
-    non_zero_sums = sum_by_student(df, "Weight")
-    for student, v in non_zero_sums.items():
-        sums[student] = v
-    return sums
+    weights = dict.fromkeys(students, 0)
+    non_zero_weights = sum_by_student(df, "Weight")
+    for student, v in non_zero_weights.items():
+        weights[student] = v
+    return weights
 
 
 def students_by_least_weight(weights):
