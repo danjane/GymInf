@@ -5,7 +5,7 @@ import config
 
 
 def report_dnfs(cfg_path):
-    cfg = config.load("../example_files/config.yaml")
+    cfg = config.load(cfg_path)
     courses = students.loadClassLists(
         cfg["courses"],
         cfg["class_paths"])
@@ -15,4 +15,6 @@ def report_dnfs(cfg_path):
     infos = shredComments.shredder(strings, courses)
     df = shredComments.panderize(infos)
     dnfs = analyseComments.dnf_count_positives(df)
+    for student, num in dnfs.items():
+        print(f"{student}: {num}")
     return dnfs
