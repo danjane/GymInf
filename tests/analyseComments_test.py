@@ -94,3 +94,10 @@ def test_commentsNeeded():
          'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
     df = pd.DataFrame(d)
     assert comments_needed(df, students) == students
+
+
+def test_commentsDoubledNeeded():
+    d = {'Student': ["Albert"]*3 + ["Gabs"],
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
+    df = pd.DataFrame(d)
+    assert comments_needed(df, ["Albert", "Gabs"]) == ["Gabs", "Albert"]
