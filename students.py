@@ -40,7 +40,7 @@ def loadClassLists(course_names, class_paths):
 
 
 def firstNamesInCourse(course):
-    return list(course.values.values())
+    return list(course.values())
 
 
 def firstNamesInCourses(courses):
