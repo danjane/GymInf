@@ -17,3 +17,7 @@ def test_classPaths():
 
 def test_configPath():
     assert c["config_path"] == "../example_files/"
+
+
+def test_commentsPath():
+    assert c["comments_path"] == "../example_files/comments.txt"
