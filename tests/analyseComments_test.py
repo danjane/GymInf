@@ -86,3 +86,11 @@ def test_studentsToComment():
 def test_studentsToCommentThree():
     weights = {"Albert": 2, "Gabs": 1, "Marie": 0}
     assert students_by_least_weight(weights) == ["Marie", "Gabs", "Albert"]
+
+
+def test_commentsNeeded():
+    students = ["Albert", "Gabs", "Marie", "Dick"]
+    d = {'Student': students,
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
+    df = pd.DataFrame(d)
+    assert comments_needed(df) == students
