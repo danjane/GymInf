@@ -93,4 +93,4 @@ def test_commentsNeeded():
     d = {'Student': students,
          'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
     df = pd.DataFrame(d)
-    assert comments_needed(df) == students
+    assert comments_needed(df, students) == students

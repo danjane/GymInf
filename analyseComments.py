@@ -38,3 +38,10 @@ def sum_weights(df, students):
 
 def students_by_least_weight(weights):
     return [k for k, v in sorted(weights.items(), key=lambda item: item[1])]
+
+
+def comments_needed(df, students):
+    if "Weight" not in df:
+        df = weight_comments(df)
+    weights = sum_weights(df, students)
+    return students_by_least_weight(weights)
