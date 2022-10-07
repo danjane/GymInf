@@ -1,6 +1,7 @@
 from students import *
 
-c = Students("../example_files/1ma1df01.txt")
+
+c = course_list("../example_files/1ma1df01.txt")
 courses = loadClassLists(
     ["1ma1df01"],
     ["../example_files/1ma1df01.txt"])
