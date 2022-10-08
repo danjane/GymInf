@@ -50,5 +50,7 @@ def comments_needed(df, students):
 
 def latex_comments(df, student):
     df = df[df['Student'].isin([student])]
+    if len(df) == 0:
+        return "No comments yet\n"
     df['Date'] = df['Date'].dt.strftime('%d%b%Y').astype(str)
     return df[["Date", "Info"]].style.hide(axis="index").to_latex()
