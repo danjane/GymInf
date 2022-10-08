@@ -146,7 +146,7 @@ def test_buildLatexReport():
          'Info': ["Happy", "Sad"] * 2}
     df = pd.DataFrame(d)
     students = ["Marie", "Albert", "Gabs"]
-    assert latex_report(df, students, students, ["1ma1df01"]*4) == r"""Marie \hfill 1ma1df01
+    assert latex_report(df, students, students, "1ma1df01") == r"""Marie \hfill 1ma1df01
 No comments yet
 \newpage
 
