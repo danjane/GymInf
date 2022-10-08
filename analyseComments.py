@@ -59,7 +59,7 @@ def latex_comments(df, student):
 
 def latex_student_page(outline, student, name, course, comments):
     text = outline
-    keywords = ["STUDENTNAME", "STUDENTCODE", "COURSE", "STUDENTCOMMENTS"]
+    keywords = ["STUDENTCODE", "STUDENTNAME", "COURSE", "STUDENTCOMMENTS"]
     for (before, after) in zip(keywords, [student, name, course, comments]):
         text = text.replace(before, after)
     return text
