@@ -14,7 +14,7 @@ def report_dnfs(cfg_path):
         strings = f.readlines()
     infos = shredComments.shredder(strings, courses)
     df = shredComments.panderize(infos)
-    dnfs = analyseComments.dnf_count_greater_than(df, 1)
+    dnfs = analyseComments.dnf_count_greater_than(df, 0)
     for student, num in dnfs.items():
         print(f"{student}: {num}")
     return dnfs
