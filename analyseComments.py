@@ -32,7 +32,8 @@ def sum_weights(df, students):
     weights = dict.fromkeys(students, 0)
     non_zero_weights = sum_by_student(df, "Weight")
     for student, v in non_zero_weights.items():
-        weights[student] = v
+        if student in students:
+            weights[student] = v
     return weights
 
 
