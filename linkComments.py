@@ -24,15 +24,23 @@ def report_dnfs(cfg_path):
     return dnfs
 
 
+def codes_names_courseNames(courses):
+    student_codes = []
+    student_names = []
+    course_names = []
+    for course, kids in courses.items():
+        student_codes += kids.keys()
+        student_names += kids.values()
+        course_names += [course] * len(kids)
+    return student_codes, student_names, course_names
+
+
 def latex_report(cfg_path):
     cfg, courses, df = load_from_config(cfg_path)
 
     with open(cfg["report_student_path"]) as f:
         student_report_outline = f.read()
 
-    course_name = cfg["courses"][0]
-
-    codes = courses[course_name].keys()
-    names = courses[course_name].values()
-    return analyseComments.latex_report(df, student_report_outline, codes, names, course_name)
+    return analyseComments.latex_report(df, student_report_outline,
+                                        *codes_names_courseNames(courses))
 
