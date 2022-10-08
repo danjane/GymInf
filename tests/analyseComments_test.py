@@ -107,3 +107,18 @@ def test_commentsDoubledNeeded():
          'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
     df = pd.DataFrame(d)
     assert comments_needed(df, ["Albert", "Gabs"]) == ["Gabs", "Albert"]
+
+
+def test_oneStudentLatexComments():
+    d = {'Student': ["Albert"] * 3 + ["Gabs"],
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist(),
+         'Info': ["Happy", "Sad"] * 2}
+    df = pd.DataFrame(d)
+    outputAlbert = r"""\begin{tabular}{ll}
+Date & Info \\
+08Sep2023 & Happy \\
+09Sep2023 & Sad \\
+10Sep2023 & Happy \\
+11Sep2023 & Sad \\
+\end{tabular}"""
+    assert latex_comments(df, "Albert") == outputAlbert

@@ -46,3 +46,7 @@ def comments_needed(df, students):
         df = weight_comments(df)
     weights = sum_weights(df, students)
     return students_by_least_weight(weights)
+
+
+def latex_comments(df, student):
+    return ""
