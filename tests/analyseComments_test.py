@@ -119,7 +119,12 @@ Date & Info \\
 08Sep2023 & Happy \\
 09Sep2023 & Sad \\
 10Sep2023 & Happy \\
+\end{tabular}
+"""
+    outputGabs = r"""\begin{tabular}{ll}
+Date & Info \\
 11Sep2023 & Sad \\
 \end{tabular}
 """
     assert latex_comments(df, "Albert") == outputAlbert
+    assert latex_comments(df, "Gabs") == outputGabs
