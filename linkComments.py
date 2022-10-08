@@ -40,7 +40,10 @@ def latex_report(cfg_path):
 
     with open(cfg["report_student_path"]) as f:
         student_report_outline = f.read()
+    with open(cfg["report_skeleton_path"]) as f:
+        report_skeleton = f.read()
 
-    return analyseComments.latex_student_pages(df, student_report_outline,
-                                               *codes_names_courseNames(courses))
-
+    pages = analyseComments.latex_student_pages(df, student_report_outline,
+                                                *codes_names_courseNames(courses))
+    report = report_skeleton.replace("STUDENTPAGES", pages)
+    return report

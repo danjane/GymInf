@@ -13,7 +13,9 @@ def test_buildLatexReport():
     report = latex_report("../example_files/config.yaml")
     output = report
     print(output)
-    exp = r"""albert.enstn (Albert) \hfill 1ma1df01 \\
+    exp = r"""\documentclass[11pt]{article}
+\begin{document}
+albert.enstn (Albert) \hfill 1ma1df01 \\
 \begin{tabular}{ll}
 Date & Info \\
 13Jan2022 & DNF Albert, Marie \\"""
