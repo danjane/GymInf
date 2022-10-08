@@ -66,4 +66,5 @@ def panderize(infos):
     table = pd.DataFrame(infos + [force_columns]*2)
     table = table.drop(["Students"], axis=1)
     table = table[:-2]
+    table['Date'] = pd.to_datetime(table.Date, format='%Y-%m-%d')
     return table
