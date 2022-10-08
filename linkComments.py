@@ -41,6 +41,6 @@ def latex_report(cfg_path):
     with open(cfg["report_student_path"]) as f:
         student_report_outline = f.read()
 
-    return analyseComments.latex_report(df, student_report_outline,
-                                        *codes_names_courseNames(courses))
+    return analyseComments.latex_student_pages(df, student_report_outline,
+                                               *codes_names_courseNames(courses))
 
