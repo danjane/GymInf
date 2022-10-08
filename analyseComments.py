@@ -49,10 +49,5 @@ def comments_needed(df, students):
 
 
 def latex_comments(df, student):
-    return r"""\begin{tabular}{ll}
-Date & Info \\
-08Sep2023 & Happy \\
-09Sep2023 & Sad \\
-10Sep2023 & Happy \\
-11Sep2023 & Sad \\
-\end{tabular}"""
+    df['Date'] = df['Date'].dt.strftime('%d%b%Y').astype(str)
+    return df[["Date", "Info"]].style.hide(axis="index").to_latex()
