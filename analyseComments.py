@@ -57,22 +57,7 @@ def latex_comments(df, student):
 
 
 def latex_report(df, students, given_names, course):
-    return r"""Marie \hfill 1ma1df01
-No comments yet
-\newpage
-
-Albert \hfill 1ma1df01 \\
-\begin{tabular}{ll}
-Date & Info \\
-08Sep2023 & Happy \\
-09Sep2023 & Sad \\
-10Sep2023 & Happy \\
-\end{tabular}
-\newpage
-
-Gabs \hfill 1ma1df01 \\
-\begin{tabular}{ll}
-Date & Info \\
-11Sep2023 & Sad \\
-\end{tabular}
-"""
+    headers = [f"{student} \\hfill {course}" for student in students]
+    comments = [latex_comments(df, student) for student in students]
+    pages = [h + " \\\\\n" + c for h, c in zip(headers, comments)]
+    return "\\newpage\n\n".join(pages)
