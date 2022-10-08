@@ -137,3 +137,31 @@ def test_missingStudentLatexComments():
     df = pd.DataFrame(d)
     assert latex_comments(df, "Marie") == r"""No comments yet
 """
+
+
+def test_buildLatexReport():
+
+    d = {'Student': ["Albert"] * 3 + ["Gabs"],
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist(),
+         'Info': ["Happy", "Sad"] * 2}
+    df = pd.DataFrame(d)
+    students = ["Marie", "Albert", "Gabs"]
+    assert latex_report(df, students, students, ["1ma1df01"]*4) == r"""Marie \hfill 1ma1df01
+No comments yet
+\newpage
+
+Albert \hfill 1ma1df01 \\
+\begin{tabular}{ll}
+Date & Info \\
+08Sep2023 & Happy \\
+09Sep2023 & Sad \\
+10Sep2023 & Happy \\
+\end{tabular}
+\newpage
+
+Gabs \hfill 1ma1df01 \\
+\begin{tabular}{ll}
+Date & Info \\
+11Sep2023 & Sad \\
+\end{tabular}
+"""
