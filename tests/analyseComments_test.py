@@ -140,13 +140,16 @@ def test_missingStudentLatexComments():
 
 
 def test_buildLatexReport():
-
     d = {'Student': ["Albert"] * 3 + ["Gabs"],
          'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist(),
          'Info': ["Happy", "Sad"] * 2}
     df = pd.DataFrame(d)
     students = ["Marie", "Albert", "Gabs"]
-    assert latex_report(df, students, students, "1ma1df01") == r"""Marie (Marie) \hfill 1ma1df01 \\
+
+    student_report_outline = r"""STUDENTNAME (STUDENTCODE) \hfill COURSE \\
+STUDENTCOMMENTS"""
+
+    assert latex_report(df, student_report_outline, students, students, "1ma1df01") == r"""Marie (Marie) \hfill 1ma1df01 \\
 No comments yet
 \newpage
 

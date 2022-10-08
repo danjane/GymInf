@@ -56,8 +56,17 @@ def latex_comments(df, student):
     return df[["Date", "Info"]].style.hide(axis="index").to_latex()
 
 
-def latex_report(df, students, given_names, course):
-    headers = [f"{student} ({gn}) \\hfill {course}" for student, gn in zip(students, given_names)]
-    comments = [latex_comments(df, student) for student in students]
-    pages = [h + " \\\\\n" + c for h, c in zip(headers, comments)]
+def latex_page(outline, student, name, course, comments):
+    text = outline
+    keywords = ["STUDENTNAME", "STUDENTCODE", "COURSE", "STUDENTCOMMENTS"]
+    for (before, after) in zip(keywords, [student, name, course, comments]):
+        text = text.replace(before, after)
+    return text
+
+
+def latex_report(df, outline, students, given_names, course):
+    pages = []
+    for student, name in zip(students, given_names):
+        pages.append(latex_page(outline, student, name, course,
+                                latex_comments(df, student)))
     return "\\newpage\n\n".join(pages)
