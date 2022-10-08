@@ -25,7 +25,7 @@ def test_rvTwoStudents():
 def test_rvPositiveCount():
     d = {'Student': ["Albert", "Gabs"] * 2, 'DNF': [0, 0, 1, 0]}
     df = pd.DataFrame(d)
-    p = dnf_count_positives(df)
+    p = dnf_count_greater_than(df)
     assert p["Albert"] == 1
     assert "Gabs" not in p
 
@@ -33,7 +33,7 @@ def test_rvPositiveCount():
 def test_rvCountCutOff():
     d = {'Student': ["Albert", "Gabs"] * 2, 'DNF': [1, 1, 1, 0]}
     df = pd.DataFrame(d)
-    p = dnf_count_positives(df, 1)
+    p = dnf_count_greater_than(df, 1)
     assert p["Albert"] == 2
     assert "Gabs" not in p
 

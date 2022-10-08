@@ -19,7 +19,7 @@ def dnf_count(df):
     return sum_by_student(df, "DNF")
 
 
-def dnf_count_positives(df, cut_off=0):
+def dnf_count_greater_than(df, cut_off=0):
     df = dnf_count(df)
     df_positive = {}
     for k, v in df.items():
