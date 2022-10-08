@@ -128,3 +128,12 @@ Date & Info \\
 """
     assert latex_comments(df, "Albert") == outputAlbert
     assert latex_comments(df, "Gabs") == outputGabs
+
+
+def test_missingStudentLatexComments():
+    d = {'Student': ["Albert"] * 3 + ["Gabs"],
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist(),
+         'Info': ["Happy", "Sad"] * 2}
+    df = pd.DataFrame(d)
+    assert latex_comments(df, "Marie") == r"""No comments yet
+"""
