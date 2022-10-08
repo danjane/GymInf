@@ -146,11 +146,11 @@ def test_buildLatexReport():
          'Info': ["Happy", "Sad"] * 2}
     df = pd.DataFrame(d)
     students = ["Marie", "Albert", "Gabs"]
-    assert latex_report(df, students, students, "1ma1df01") == r"""Marie \hfill 1ma1df01 \\
+    assert latex_report(df, students, students, "1ma1df01") == r"""Marie (Marie) \hfill 1ma1df01 \\
 No comments yet
 \newpage
 
-Albert \hfill 1ma1df01 \\
+Albert (Albert) \hfill 1ma1df01 \\
 \begin{tabular}{ll}
 Date & Info \\
 08Sep2023 & Happy \\
@@ -159,7 +159,7 @@ Date & Info \\
 \end{tabular}
 \newpage
 
-Gabs \hfill 1ma1df01 \\
+Gabs (Gabs) \hfill 1ma1df01 \\
 \begin{tabular}{ll}
 Date & Info \\
 11Sep2023 & Sad \\

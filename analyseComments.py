@@ -57,7 +57,7 @@ def latex_comments(df, student):
 
 
 def latex_report(df, students, given_names, course):
-    headers = [f"{student} \\hfill {course}" for student in students]
+    headers = [f"{student} ({gn}) \\hfill {course}" for student, gn in zip(students, given_names)]
     comments = [latex_comments(df, student) for student in students]
     pages = [h + " \\\\\n" + c for h, c in zip(headers, comments)]
     return "\\newpage\n\n".join(pages)
