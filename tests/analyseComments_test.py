@@ -69,6 +69,12 @@ def test_studentWithNoComments():
     assert sum_weights(df, ["Albert", "Gabs"])["Gabs"] == 0
 
 
+def test_subsetStudentsForWeights():
+    d = {'Student': ["Albert", "Gabs"], 'Weight': [1, 1]}
+    df = pd.DataFrame(d)
+    assert "Gabs" not in sum_weights(df, ["Albert"])
+
+
 def test_linksForWeights():
     d = {'Student': ["Albert", "Gabs"] * 2,
          'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
