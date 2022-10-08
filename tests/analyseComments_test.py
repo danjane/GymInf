@@ -149,7 +149,7 @@ def test_buildLatexReport():
     student_report_outline = r"""STUDENTNAME (STUDENTCODE) \hfill COURSE \\
 STUDENTCOMMENTS"""
 
-    assert latex_report(df, student_report_outline, students, students, "1ma1df01") == r"""Marie (Marie) \hfill 1ma1df01 \\
+    assert latex_report(df, student_report_outline, students, students, ["1ma1df01"]*4) == r"""Marie (Marie) \hfill 1ma1df01 \\
 No comments yet
 \newpage
 
