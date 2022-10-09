@@ -10,7 +10,7 @@ def test_reportDnfs():
 
 
 def test_buildLatexReport():
-    report = latex_report("../example_files/config.yaml")
+    report = latex_report_from_config_path("../example_files/config.yaml")
     output = report
     print(output)
     exp = r"""\documentclass[11pt]{article}
