@@ -68,6 +68,7 @@ def latex_student_page(outline, student, name, course, comments):
 def latex_student_pages(df, outline, students, given_names, courses):
     pages = []
     for student, name, course in zip(students, given_names, courses):
-        pages.append(latex_student_page(outline, student, name, course,
-                                        latex_comments(df, student)))
+        comments = latex_comments(df, student)
+        this_student_latex_page = latex_student_page(outline, student, name, course, comments)
+        pages.append(this_student_latex_page)
     return "\\newpage\n\n".join(pages)
