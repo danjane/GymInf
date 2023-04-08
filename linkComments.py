@@ -40,7 +40,7 @@ def codes_names_courseNames(courses):
     return student_codes, student_names, course_names
 
 
-def create_latex_report(cfg, courses, df):
+def build_latex_report(cfg, courses, df):
     with open(cfg["report_student_path"]) as f:
         student_report_outline = f.read()
     with open(cfg["report_skeleton_path"]) as f:
@@ -53,5 +53,5 @@ def create_latex_report(cfg, courses, df):
 
 def latex_report_from_config_path(cfg_path):
     cfg, courses, df = load_from_config_path(cfg_path)
-    report = create_latex_report(cfg, courses, df)
+    report = build_latex_report(cfg, courses, df)
     return report

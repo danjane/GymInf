@@ -1,20 +1,20 @@
-from linkComments import *
+from linkComments import report_dnfs, latex_report_from_config_path
 
 
-def test_reportDnfs():
+def test_report_dnf():
     output = report_dnfs("../example_files/config.yaml")
     print(output)
-    assert type(output) is dict
+    assert isinstance(output, dict)
     assert output["albert.enstn"] == 1
 
 
-def test_buildLatexReport():
+def test_build_latex_report():
     output = latex_report_from_config_path("../example_files/config.yaml")
-    exp = r"""\documentclass[11pt]{article}
+    expected = r"""\documentclass[11pt]{article}
 \begin{document}
 albert.enstn (Albert) \hfill 1ma1df01 \\
 \begin{tabular}{ll}
 Date & Info \\
 13Jan2022 & DNF Albert, Marie \\"""
-    assert type(output) is str
-    assert output[:len(exp)] == exp
+    assert isinstance(output, str)
+    assert output[:len(expected)] == expected
