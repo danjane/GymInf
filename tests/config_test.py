@@ -3,21 +3,21 @@ import config
 c = config.load("../example_files/config.yaml")
 
 
-def test_loadClass():
+def test_load_class():
     assert c["courses"] == ["1ma1df01"]
 
 
-def test_coursePath():
+def test_course_path():
     assert c["courses_path"] == "../example_files/"
 
 
-def test_classPaths():
+def test_class_paths():
     assert c["class_paths"] == ["../example_files/1ma1df01.txt"]
 
 
-def test_configPath():
+def test_config_path():
     assert c["config_path"] == "../example_files/"
 
 
-def test_commentsPath():
+def test_comments_path():
     assert c["comments_path"] == "../example_files/comments.txt"
