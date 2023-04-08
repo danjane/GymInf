@@ -32,7 +32,10 @@ def update(current_info, line, courses):
             current_info["DNF"] = 1
         elif char == "r":
             current_info["DNF"] = -2
+        elif char == "":
+            pass
         else:
+            print(line)
             raise NotImplementedError("These are not the droids you're looking for!!")
     return current_info
 
