@@ -54,5 +54,7 @@ def test_given_names_in_courses():
 
 
 def test_dip_email_from_name():
-    # This test does not contain any assertions, so it should be removed or modified.
-    pass
+    assert create_alias("Albert Einstein") == "albert.enstn"
+    assert create_alias("Gabriel Lame Cramer") == "gabriel.crmr"
+    assert create_alias("Marie Curie") == "marie.cr"
+    assert create_alias("Richard Feynman") == "richard.fynmn"
