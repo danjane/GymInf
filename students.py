@@ -1,6 +1,5 @@
 import re
 
-
 def code_and_name(s_dirty):
     s = s_dirty.strip().split(', ')
     code = s[0]
@@ -48,3 +47,14 @@ def firstNamesInCourses(courses):
     for course_name, students in courses.items():
         courses_with_given_name[course_name] = firstNamesInCourse(students)
     return courses_with_given_name
+
+
+def create_alias(full_name: str) -> str:
+    first_name, *surnames = full_name.split()
+    surname = surnames[-1]
+    first_letter = surname[0]
+    vowels = "AEIOUaeiou"
+    surname_alias = "".join([c for c in surname if c not in vowels])
+    if first_letter in vowels:
+        surname_alias = first_letter + surname_alias
+    return f"{first_name.lower()}.{surname_alias.lower()}"

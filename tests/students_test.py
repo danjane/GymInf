@@ -1,5 +1,5 @@
 from students import course_list, loadClassLists, code_and_name, name_conflict, \
-    firstNamesInCourse, firstNamesInCourses
+    firstNamesInCourse, firstNamesInCourses, create_alias
 
 
 def test_one_student():
