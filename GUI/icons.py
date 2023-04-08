@@ -6,7 +6,8 @@ YELLOW = (255, 255, 0)
 RED = (255, 0, 0)
 ORANGE = (255, 100, 0)
 
-font = pygame.font.SysFont('chalkduster.ttf', 36)
+font = pygame.font.SysFont('chalkduster.ttf', 18)
+
 
 def xy_place_in_desks(place, desk_layout):
     x, y = place // desk_layout[0], place % desk_layout[0]
@@ -17,6 +18,7 @@ def xy_place_in_desks(place, desk_layout):
 def screen_position_from_xy_and_size(x, y, desk_layout, height_width):
     def rescale(t, real_length, given_length):
         return t * real_length / given_length
+
     return [rescale(z, r, g) for z, r, g in zip((x, y), height_width, desk_layout)]
 
 
@@ -31,7 +33,7 @@ def deltas(xy0, xy1):
 
 def distance2(xy0, xy1):
     dx, dy = deltas(xy0, xy1)
-    return dx**2 + dy**2
+    return dx ** 2 + dy ** 2
 
 
 def nearest_desk(loadsa_desks, xy):
@@ -95,7 +97,7 @@ class Desk(ParentDesk):
     def __init__(self, place, name, desk_layout, height_width):
         super().__init__()
         self.color = YELLOW
-        self.size = (height_width[0]//desk_layout[0], height_width[1]//desk_layout[1])
+        self.size = (height_width[0] // desk_layout[0], height_width[1] // desk_layout[1])
 
         self.pos = screen_position_from_xy_and_size(*place, desk_layout, height_width)
         self.home = self.pos
@@ -116,7 +118,9 @@ class Desk(ParentDesk):
             self.slide()
         self.rect = pygame.Rect(*self.pos, *self.size)
         pygame.draw.rect(surface, self.color, self.rect)
-        surface.blit(self.name_img, self.pos)
+        center_pos = (self.rect.left + self.rect.width // 2, self.rect.top + self.rect.height // 2)
+        name_pos = (center_pos[0] - self.name_img.get_width() // 2, center_pos[1] - self.name_img.get_height() // 2)
+        surface.blit(self.name_img, name_pos)
 
     def clicked(self):
         self.color = RED
@@ -152,11 +156,11 @@ class Desk(ParentDesk):
 
     def slide(self):
         dx, dy = deltas(self.target_for_sliding, self.pos)
-        if dx**2 + dy**2 < 36:
+        if dx ** 2 + dy ** 2 < 36:
             self.pos = self.target_for_sliding
             self.sliding = False
         else:
-            self.move(dx/8, dy/8)
+            self.move(dx / 8, dy / 8)
 
     def check_collisions(self, desks, selected_desk):
         collisions = pygame.sprite.spritecollide(self, desks, False)
@@ -189,7 +193,7 @@ class Button(pygame.sprite.Sprite):
             color = self.color_unclicked
         else:
             f = self.fade_from_1_to_0
-            color = [u*(1-f) + c*f for u, c in zip(self.color_unclicked, self.color_clicked)]
+            color = [u * (1 - f) + c * f for u, c in zip(self.color_unclicked, self.color_clicked)]
             self.fade_from_1_to_0 = f * 0.95
 
         pygame.draw.rect(surface, color, self.rect)
