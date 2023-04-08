@@ -14,9 +14,7 @@ def load_comments_as_DataFrame(comments_path, courses):
 
 def load_from_config_path(cfg_path):
     cfg = config.load(cfg_path)
-    courses = students.loadClassLists(
-        cfg["courses"],
-        cfg["class_paths"])
+    courses = students.load_class_lists(cfg["courses"], cfg["class_paths"])
     df = load_comments_as_DataFrame(cfg["comments_path"], courses)
     return cfg, courses, df
 

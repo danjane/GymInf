@@ -1,51 +1,53 @@
 import re
+from typing import Dict, List, Tuple
 
-def code_and_name(s_dirty):
-    s = s_dirty.strip().split(', ')
-    code = s[0]
-    if len(s) == 1:
-        name = re.search(r"^[a-z\-]+", code).group(0).capitalize()
+
+def get_code_and_name(course_info: str) -> Tuple[str, str]:
+    course_info = course_info.strip().split(', ')
+    course_code = course_info[0]
+    if len(course_info) == 1:
+        course_name = re.search(r"^[a-z\-]+", course_code).group(0).capitalize()
     else:
-        name = s[1]
-    return code, name
+        course_name = course_info[1]
+    return course_code, course_name
 
 
-def duplicate_warning(duplicates):
+def warn_about_duplicates(duplicates: set) -> None:
     print(f"The following names are duplicated!! {duplicates}")
 
 
-def name_conflict(name_dict):
+def check_name_conflicts(name_dict: Dict[str, str]) -> set:
     names = list(name_dict.values())
     duplicates = set([name for name in names if names.count(name) > 1])
     if duplicates:
-        duplicate_warning(duplicates)
+        warn_about_duplicates(duplicates)
     return duplicates
 
 
-def course_list(filename):
+def parse_course_list(filename: str) -> Dict[str, str]:
     with open(filename, 'r') as f:
         values = {}
-        for s_dirty in f.readlines():
-            c, n = code_and_name(s_dirty)
-            values[c] = n
+        for course_info in f.readlines():
+            course_code, course_name = get_code_and_name(course_info)
+            values[course_code] = course_name
     return values
 
 
-def loadClassLists(course_names, class_paths):
+def load_class_lists(course_names: List[str], class_paths: List[str]) -> Dict[str, Dict[str, str]]:
     classes = {}
-    for cls, path in zip(course_names, class_paths):
-        classes[cls] = course_list(path)
+    for course_name, path in zip(course_names, class_paths):
+        classes[course_name] = parse_course_list(path)
     return classes
 
 
-def firstNamesInCourse(course):
+def get_first_names_in_course(course: Dict[str, str]) -> List[str]:
     return list(course.values())
 
 
-def firstNamesInCourses(courses):
+def get_first_names_in_courses(courses: Dict[str, Dict[str, str]]) -> Dict[str, List[str]]:
     courses_with_given_name = {}
     for course_name, students in courses.items():
-        courses_with_given_name[course_name] = firstNamesInCourse(students)
+        courses_with_given_name[course_name] = get_first_names_in_course(students)
     return courses_with_given_name
 
 
