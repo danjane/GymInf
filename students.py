@@ -2,13 +2,13 @@ import re
 from typing import Dict, List, Tuple
 
 
-def get_code_and_name(course_info: str) -> Tuple[str, str]:
-    course_info = course_info.strip().split(', ')
-    course_code = course_info[0]
-    if len(course_info) == 1:
+def get_code_and_name(student_code: str) -> Tuple[str, str]:
+    student_code = student_code.strip().split(', ')
+    course_code = student_code[0]
+    if len(student_code) == 1:
         course_name = re.search(r"^[a-z\-]+", course_code).group(0).capitalize()
     else:
-        course_name = course_info[1]
+        course_name = student_code[1]
     return course_code, course_name
 
 
@@ -27,9 +27,9 @@ def check_name_conflicts(name_dict: Dict[str, str]) -> set:
 def parse_course_list(filename: str) -> Dict[str, str]:
     with open(filename, 'r') as f:
         values = {}
-        for course_info in f.readlines():
-            course_code, course_name = get_code_and_name(course_info)
-            values[course_code] = course_name
+        for student_info in f.readlines():
+            student_code, student_name = get_code_and_name(student_info)
+            values[student_code] = student_name
     return values
 
 
