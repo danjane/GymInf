@@ -23,7 +23,7 @@ def load_from_config_path(cfg_path):
 
 def report_dnfs(cfg_path, cut_off=0):
     cfg, courses, df = load_from_config_path(cfg_path)
-    dnfs = analyseComments.dnf_count_greater_than(df, cut_off)
+    dnfs = analyseComments.count_dnf_greater_than(df, cut_off)
     for student, num in dnfs.items():
         print(f"{student}: {num}")
     return dnfs

@@ -15,12 +15,12 @@ def weight_comments(df):
     return df
 
 
-def dnf_count(df):
+def count_dnf_by_student(df):
     return sum_by_student(df, "DNF")
 
 
-def dnf_count_greater_than(df, cut_off=0):
-    df = dnf_count(df)
+def count_dnf_greater_than(df, cut_off=0):
+    df = count_dnf_by_student(df)
     df_positive = {}
     for k, v in df.items():
         if v > cut_off:
@@ -28,7 +28,7 @@ def dnf_count_greater_than(df, cut_off=0):
     return df_positive
 
 
-def sum_weights(df, students):
+def sum_weights_by_student(df, students):
     weights = dict.fromkeys(students, 0)
     non_zero_weights = sum_by_student(df, "Weight")
     for student, v in non_zero_weights.items():
@@ -44,7 +44,7 @@ def students_by_least_weight(weights):
 def comments_needed(df, students):
     if "Weight" not in df:
         df = weight_comments(df)
-    weights = sum_weights(df, students)
+    weights = sum_weights_by_student(df, students)
     return students_by_least_weight(weights)
 
 
