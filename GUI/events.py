@@ -1,7 +1,7 @@
 import icons
 
 
-def mouse_button_down_desks(x, y, desks, selected_desks):
+def handle_mouse_button_down_desks(x, y, desks, selected_desks):
     for desk in desks:
         if desk.rect.collidepoint(x, y):
             desk.clicked()
@@ -10,7 +10,7 @@ def mouse_button_down_desks(x, y, desks, selected_desks):
     return icons.UnclickedDesk(), selected_desks
 
 
-def mouse_button_down_buttons(x, y, desks, selected_desks):
+def handle_mouse_button_down_buttons(x, y, desks, selected_desks):
     for desk in desks:
         if desk.rect.collidepoint(x, y):
             desk.clicked()
@@ -19,9 +19,10 @@ def mouse_button_down_buttons(x, y, desks, selected_desks):
             return set()
     return selected_desks
 
+
 def update_swapping_desk(desks, clicked_desk, swapping_desk):
     new_swapping_desk = clicked_desk.check_collisions(desks, swapping_desk)
-    #print(new_swapping_desk, swapping_desk, clicked_desk)
+    # print(new_swapping_desk, swapping_desk, clicked_desk)
     if new_swapping_desk != swapping_desk:
         clicked_desk.changing_position = True
         new_swapping_desk.bothered(clicked_desk)
@@ -29,7 +30,7 @@ def update_swapping_desk(desks, clicked_desk, swapping_desk):
     return new_swapping_desk
 
 
-def mouse_button_up(clicked_desk, swapping_desk, selected_desks):
+def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
     if swapping_desk.is_swapping:
         clicked_desk = clicked_desk.unclicked(swapping_desk)
         for desk in selected_desks:
