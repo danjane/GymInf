@@ -10,8 +10,8 @@ import desk_functions
 
 BACKGROUND: Tuple[int, int, int] = (0, 0, 0)
 
-places = desk_functions.standard_pairs_layout(6, 4)
-desk_layout = (places[-1][0] + 1, places[-1][1] + 1)
+seating_plan = desk_functions.load_basic_seating_plan_from_file("../example_files/2ma2dfb01.txt")
+desk_layout = max(v[0] for v in seating_plan.values()) + 1, max(v[1] for v in seating_plan.values()) + 1
 WIDTH_HEIGHT_DESKS = (desk_layout[0] * 80, desk_layout[1] * 50)
 
 WIDTH_HEIGHT = (WIDTH_HEIGHT_DESKS[0] + 300, WIDTH_HEIGHT_DESKS[1])
@@ -20,8 +20,8 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode(WIDTH_HEIGHT)
 
 desks = []
-for place in places:
-    desk = icons.Desk(place, str(place), desk_layout, WIDTH_HEIGHT_DESKS)
+for student, place in seating_plan.items():
+    desk = icons.Desk(place, student, desk_layout, WIDTH_HEIGHT_DESKS)
     desks.append(desk)
 
 clicked_desk = icons.UnclickedDesk()
