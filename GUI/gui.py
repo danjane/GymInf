@@ -29,8 +29,8 @@ swapping_desk = icons.UnclickedDesk()
 selected_desks = set()
 
 buttons = [
-    icons.Button((700, 25), (200, 75), "positive"),
-    icons.Button((700, 140), (200, 75), "negative"),
+    icons.PositiveButton((700, 25), (200, 75)),
+    icons.NegativeButton((700, 140), (200, 75)),
     icons.Button((700, 255), (200, 75), "suggestions")
 ]
 
