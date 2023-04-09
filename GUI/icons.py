@@ -183,17 +183,16 @@ class Desk(ParentDesk):
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, pos, size, text):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         self.pos = pos
         self.size = size
-
         self.color_unclicked = YELLOW
         self.color_clicked = RED
         self.rect = pygame.Rect(*self.pos, *self.size)
         self.fade_from_1_to_0 = 0.
-
         self.name_img = font.render(text, True, (0, 0, 0))
         self.name_pos = self.name_img.get_rect(center=self.rect.center)
+        self.comment_file = "../example_files/testing_comments.txt"
 
     def update(self, surface):
         self.rect = pygame.Rect(*self.pos, *self.size)
@@ -201,15 +200,32 @@ class Button(pygame.sprite.Sprite):
             color = self.color_unclicked
         else:
             f = self.fade_from_1_to_0
-            color = [u * (1 - f) + c * f for u, c in zip(self.color_unclicked, self.color_clicked)]
-            self.fade_from_1_to_0 = f * 0.95
-
+            color = [int(u * (1 - f) + c * f) for u, c in zip(self.color_unclicked, self.color_clicked)]
+            self.fade_from_1_to_0 *= 0.95
         pygame.draw.rect(surface, color, self.rect)
         surface.blit(self.name_img, self.name_pos)
 
     def clicked(self, selected_desks):
-        self.fade_from_1_to_0 = 1
-        updateComments.add_negative_comments("../example_files/testing_comments.txt",
-                                             [desk.name for desk in selected_desks])
+        self.fade_from_1_to_0 = 1.
         for desk in selected_desks:
             desk.color = YELLOW
+
+
+class PositiveButton(Button):
+    def __init__(self, pos, size):
+        super().__init__(pos, size, "positive")
+
+    def clicked(self, selected_desks):
+        updateComments.add_positive_comments(self.comment_file,
+                                             [desk.name for desk in selected_desks])
+        super().clicked(selected_desks)
+
+
+class NegativeButton(Button):
+    def __init__(self, pos, size):
+        super().__init__(pos, size, "negative")
+
+    def clicked(self, selected_desks):
+        updateComments.add_negative_comments(self.comment_file,
+                                             [desk.name for desk in selected_desks])
+        super().clicked(selected_desks)
