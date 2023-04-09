@@ -1,6 +1,6 @@
 import os
 import pytest
-from updateComments import add_positive_comments
+from updateComments import *
 
 
 @pytest.fixture(scope="function")
