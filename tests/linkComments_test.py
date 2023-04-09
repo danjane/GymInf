@@ -1,4 +1,4 @@
-from linkComments import report_dnfs, get_latex_report_from_config_path
+from linkComments import *
 
 
 def test_report_dnf():
@@ -21,5 +21,6 @@ Date & Info \\
 
 
 def test_students_needing_comments():
-    students = get_students_needing_comments_from_config_path("../example_files/config.yaml")
-    assert students == ["Marie", "Dick", "Albert", "Gabs"]
+    students_needing_comments = get_students_needing_comments_from_config_path(
+        "../example_files/config.yaml", "1ma1df01")
+    assert students_needing_comments == ["Marie", "Dick", "Albert", "Gabs"]

@@ -14,6 +14,7 @@ def sum_by_student(df: pd.DataFrame, column: str) -> Dict[str, float]:
 def weight_comments(df: pd.DataFrame) -> pd.DataFrame:
     date_diffs = (df['Date'] - max(df['Date'])).apply(lambda x: x.days)
     df['Weight'] = date_diffs.apply(lambda x: np.exp(x / 10.))
+    df.loc[df["Sentiment"] < 1, "Weight"] = 0
     return df
 
 

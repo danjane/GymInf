@@ -39,19 +39,19 @@ def test_count_dnf_with_cutoff():
 
 
 def test_find_weight_comment():
-    d = {'Date': [datetime.date(2023, 9, 8)]}
+    d = {'Date': [datetime.date(2023, 9, 8)], 'Sentiment': 1}
     df = pd.DataFrame(d)
     assert "Weight" in weight_comments(df)
 
 
 def test_positive_weight_in_comments():
-    d = {'Date': [datetime.date(2023, 9, 8)]}
+    d = {'Date': [datetime.date(2023, 9, 8)], 'Sentiment': 1}
     df = pd.DataFrame(d)
     assert weight_comments(df)["Weight"][0] > 0
 
 
 def test_recent_comments_more_weight():
-    d = {'Date': [datetime.date(1990, 9, 8), datetime.date(2023, 9, 8)]}
+    d = {'Date': [datetime.date(1990, 9, 8), datetime.date(2023, 9, 8)], 'Sentiment': 1}
     df = pd.DataFrame(d)
     df = weight_comments(df)
     assert df["Weight"][1] > df["Weight"][0]
@@ -77,7 +77,8 @@ def test_subset_students_for_weights():
 
 def test_student_order_by_weight():
     d = {'Student': ["Albert", "Gabs"] * 2,
-         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist(),
+         'Sentiment': 1}
     df = pd.DataFrame(d)
     df = weight_comments(df)
     weights = sum_weights_by_student(df, ["Albert", "Gabs"])
@@ -97,14 +98,16 @@ def test_three_students_that_need_comments():
 def test_comments_needed():
     students = ["Albert", "Gabs", "Marie", "Dick"]
     d = {'Student': students,
-         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist(),
+         'Sentiment': 1}
     df = pd.DataFrame(d)
     assert comments_needed(df, students) == students
 
 
 def test_double_comments_needed():
     d = {'Student': ["Albert"]*3 + ["Gabs"],
-         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist()}
+         'Date': pd.date_range(datetime.date(2023, 9, 8), periods=4).tolist(),
+         'Sentiment': 1}
     df = pd.DataFrame(d)
     assert comments_needed(df, ["Albert", "Gabs"]) == ["Gabs", "Albert"]
 
