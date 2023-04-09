@@ -6,12 +6,11 @@ pygame.init()
 
 import icons
 import events
-import desk_functions
+import link_gui_backend
 
 BACKGROUND: Tuple[int, int, int] = (0, 0, 0)
 
-seating_plan = desk_functions.load_basic_seating_plan_from_file("../example_files/2ma2dfb01.txt")
-desk_layout = max(v[0] for v in seating_plan.values()) + 1, max(v[1] for v in seating_plan.values()) + 1
+seating_plan, desk_layout = link_gui_backend.setup("../example_files/config_GUI.yaml", "2ma2dfb01")
 WIDTH_HEIGHT_DESKS = (desk_layout[0] * 80, desk_layout[1] * 50)
 
 WIDTH_HEIGHT = (WIDTH_HEIGHT_DESKS[0] + 300, WIDTH_HEIGHT_DESKS[1])
@@ -56,6 +55,8 @@ while running:
             print(selected_desks)
         if event.type == MOUSEMOTION:
             clicked_desk.move(*event.rel)
+        if event.type == KEYDOWN:
+            buttons[0].handle_keydown(event, selected_desks)
 
     swapping_desk = events.update_swapping_desk(desks, clicked_desk, swapping_desk)
 

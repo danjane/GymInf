@@ -7,6 +7,7 @@ LIGHT_BLUE = (0, 255, 255)
 YELLOW = (255, 255, 0)
 RED = (255, 0, 0)
 ORANGE = (255, 100, 0)
+WHITE = (240, 240, 240)
 
 font = pygame.font.SysFont('chalkduster.ttf', 18)
 
@@ -198,6 +199,8 @@ class Button(pygame.sprite.Sprite):
         self.name_img = font.render(text, True, (0, 0, 0))
         self.name_pos = self.name_img.get_rect(center=self.rect.center)
         self.comment_file = "../example_files/testing_comments.txt"
+        self.text_editor_active = False
+        self.text = ""
 
     def update(self, surface):
         self.rect = pygame.Rect(*self.pos, *self.size)
@@ -208,7 +211,24 @@ class Button(pygame.sprite.Sprite):
             color = [int(u * (1 - f) + c * f) for u, c in zip(self.color_unclicked, self.color_clicked)]
             self.fade_from_1_to_0 *= 0.95
         pygame.draw.rect(surface, color, self.rect)
-        surface.blit(self.name_img, self.name_pos)
+        if self.text_editor_active:
+            pygame.draw.rect(surface, WHITE, self.rect.inflate(-4, -4))
+            text_img = font.render(self.text, True, (0, 0, 0))
+            text_pos = text_img.get_rect(center=self.rect.center)
+            surface.blit(text_img, text_pos)
+        else:
+            surface.blit(self.name_img, self.name_pos)
+
+    def handle_keydown(self, event, selected_desks):
+        self.text_editor_active = True
+        if event.key == pygame.K_RETURN:
+            self.clicked(selected_desks)
+            self.text_editor_active = False
+            self.text = ""
+        elif event.key == pygame.K_BACKSPACE:
+            self.text = self.text[:-1]
+        else:
+            self.text += event.unicode
 
     def clicked(self, selected_desks):
         self.fade_from_1_to_0 = 1.
@@ -222,7 +242,7 @@ class PositiveButton(Button):
 
     def clicked(self, selected_desks):
         updateComments.add_positive_comments(self.comment_file,
-                                             [desk.name for desk in selected_desks])
+                                             [desk.name for desk in selected_desks], self.text)
         super().clicked(selected_desks)
         return set()
 
@@ -231,9 +251,9 @@ class NegativeButton(Button):
     def __init__(self, pos, size):
         super().__init__(pos, size, "negative")
 
-    def clicked(self, selected_desks):
+    def clicked(self, selected_desks, comment=""):
         updateComments.add_negative_comments(self.comment_file,
-                                             [desk.name for desk in selected_desks])
+                                             [desk.name for desk in selected_desks], comment)
         super().clicked(selected_desks)
         return set()
 
