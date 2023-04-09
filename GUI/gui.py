@@ -53,6 +53,7 @@ while running:
         if event.type == MOUSEBUTTONUP:
             clicked_desk, selected_desks = \
                 events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)
+            print(selected_desks)
         if event.type == MOUSEMOTION:
             clicked_desk.move(*event.rel)
 

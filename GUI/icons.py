@@ -1,4 +1,5 @@
 import pygame
+import updateComments
 
 BLACK = (0, 0, 0)
 LIGHT_BLUE = (0, 255, 255)
@@ -75,6 +76,9 @@ class ParentDesk(pygame.sprite.Sprite):
 
     def check_new(self, *args, **kwargs):
         return self
+
+    def append(self, selected_desks):
+        return selected_desks
 
 
 class UnclickedDesk(ParentDesk):
@@ -172,6 +176,10 @@ class Desk(ParentDesk):
     def check_new(self, desks, selected_desk, xy):
         return nearest_desk([selected_desk] + desks, xy)
 
+    def append(self, selected_desks):
+        selected_desks.add(self)
+        return selected_desks
+
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, pos, size, text):
@@ -199,5 +207,9 @@ class Button(pygame.sprite.Sprite):
         pygame.draw.rect(surface, color, self.rect)
         surface.blit(self.name_img, self.name_pos)
 
-    def clicked(self):
+    def clicked(self, selected_desks):
         self.fade_from_1_to_0 = 1
+        updateComments.add_negative_comments("../example_files/testing_comments.txt",
+                                             [desk.name for desk in selected_desks])
+        for desk in selected_desks:
+            desk.color = YELLOW

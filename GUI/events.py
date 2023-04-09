@@ -5,7 +5,7 @@ def handle_mouse_button_down_desks(x, y, desks, selected_desks):
     for desk in desks:
         if desk.rect.collidepoint(x, y):
             desk.clicked()
-            selected_desks.add(desk)
+            # selected_desks.add(desk)
             return desk, selected_desks
     return icons.UnclickedDesk(), selected_desks
 
@@ -13,9 +13,7 @@ def handle_mouse_button_down_desks(x, y, desks, selected_desks):
 def handle_mouse_button_down_buttons(x, y, desks, selected_desks):
     for desk in desks:
         if desk.rect.collidepoint(x, y):
-            desk.clicked()
-            for desk in selected_desks:
-                desk.color = icons.YELLOW
+            desk.clicked(selected_desks)
             return set()
     return selected_desks
 
@@ -37,7 +35,7 @@ def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
             desk.color = icons.YELLOW
         return clicked_desk, set()
     else:
-        selected_desks.add(clicked_desk)
+        selected_desks = clicked_desk.append(selected_desks)
         new_clicked_desk = clicked_desk.unclicked(swapping_desk)
         clicked_desk.color = icons.LIGHT_BLUE
         return new_clicked_desk, selected_desks
