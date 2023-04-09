@@ -31,7 +31,7 @@ selected_desks = set()
 buttons = [
     icons.PositiveButton((700, 25), (200, 75)),
     icons.NegativeButton((700, 140), (200, 75)),
-    icons.Button((700, 255), (200, 75), "suggestions")
+    icons.SuggestionsButton((700, 255), (200, 75), desks)
 ]
 
 sprites = pygame.sprite.Group(desks + buttons)

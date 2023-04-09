@@ -59,6 +59,6 @@ def get_latex_report_from_config_path(cfg_path: str) -> str:
 
 def get_students_needing_comments_from_config_path(cfg_path: str, course: str) -> List[str]:
     cfg, courses, df = load_data_from_config_path(cfg_path)
-    ss = analyseComments.comments_needed(df, courses[course].keys())
+    ss = analyseComments.comments_needed(df, list(courses[course].keys()))
     return [courses[course][s] for s in ss]
 

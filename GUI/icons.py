@@ -1,5 +1,6 @@
 import pygame
 import updateComments
+import linkComments
 
 BLACK = (0, 0, 0)
 LIGHT_BLUE = (0, 255, 255)
@@ -133,7 +134,6 @@ class Desk(ParentDesk):
 
     def unclicked(self, other):
         self.button_down = False
-        self.color = YELLOW
         self.sliding = True
         if self.changing_position:
             self.home, other.home = other.home, self.home
@@ -177,7 +177,12 @@ class Desk(ParentDesk):
         return nearest_desk([selected_desk] + desks, xy)
 
     def append(self, selected_desks):
-        selected_desks.add(self)
+        if self in selected_desks:
+            selected_desks.discard(self)
+            self.color = YELLOW
+        else:
+            selected_desks.add(self)
+            self.color = LIGHT_BLUE
         return selected_desks
 
 
@@ -219,6 +224,7 @@ class PositiveButton(Button):
         updateComments.add_positive_comments(self.comment_file,
                                              [desk.name for desk in selected_desks])
         super().clicked(selected_desks)
+        return set()
 
 
 class NegativeButton(Button):
@@ -229,3 +235,21 @@ class NegativeButton(Button):
         updateComments.add_negative_comments(self.comment_file,
                                              [desk.name for desk in selected_desks])
         super().clicked(selected_desks)
+        return set()
+
+
+class SuggestionsButton(Button):
+    def __init__(self, pos, size, desks):
+        super().__init__(pos, size, "suggestions")
+        self.desks = desks
+
+    def clicked(self, selected_desks):
+        students_for_comments = linkComments.get_students_needing_comments_from_config_path(
+            "../example_files/config_GUI.yaml", "2ma2dfb01")
+        students_for_comments = students_for_comments[:5]
+        for desk in selected_desks:
+            desk.color = YELLOW
+        selected_desks = set(desk for desk in self.desks if desk.name in students_for_comments)
+        for desk in selected_desks:
+            desk.color = LIGHT_BLUE
+        return selected_desks
