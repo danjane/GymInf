@@ -40,7 +40,7 @@ def update(current_info, line, courses):
     return current_info
 
 
-def shredder(strings, courses):
+def shred(strings, courses):
     current_info = {}
     infos = []
     for unstripped_line in strings:

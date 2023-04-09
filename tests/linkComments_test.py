@@ -1,4 +1,4 @@
-from linkComments import report_dnfs, latex_report_from_config_path
+from linkComments import report_dnfs, get_latex_report_from_config_path
 
 
 def test_report_dnf():
@@ -9,7 +9,7 @@ def test_report_dnf():
 
 
 def test_build_latex_report():
-    output = latex_report_from_config_path("../example_files/config.yaml")
+    output = get_latex_report_from_config_path("../example_files/config.yaml")
     expected = r"""\documentclass[11pt]{article}
 \begin{document}
 albert.enstn (Albert) \hfill 1ma1df01 \\

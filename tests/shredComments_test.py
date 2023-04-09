@@ -88,7 +88,7 @@ def test_updatesForDateClassOneStudent():
         """d25Dec2022
         c1ma1df01
         +Albert great question""".split("\n")
-    infos = shredder(strings, courses)
+    infos = shred(strings, courses)
     assert len(infos) == 1
 
     current_info = infos[0]
@@ -102,7 +102,7 @@ def test_updatesForDateClassTwoStudents():
         """d25Dec2022
         c1ma1df01
         +Albert, Gabs great question""".split("\n")
-    infos = shredder(strings, courses)
+    infos = shred(strings, courses)
     assert len(infos) == 2
 
     current_info = infos[0]
@@ -131,7 +131,7 @@ def test_panderizeTwoStudents():
         """d25Dec2022
         c1ma1df01
         +Albert, Gabs great question""".split("\n")
-    infos = shredder(strings, courses)
+    infos = shred(strings, courses)
     table = panderize(infos)
     assert table.size == 12
     assert "Course" in table.columns
