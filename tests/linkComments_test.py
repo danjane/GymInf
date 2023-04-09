@@ -18,3 +18,8 @@ Date & Info \\
 13Jan2022 & DNF Albert, Marie \\"""
     assert isinstance(output, str)
     assert output[:len(expected)] == expected
+
+
+def test_students_needing_comments():
+    students = get_students_needing_comments_from_config_path("../example_files/config.yaml")
+    assert students == ["Marie", "Dick", "Albert", "Gabs"]
