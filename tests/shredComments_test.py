@@ -66,7 +66,7 @@ def test_dnf_then_good_for_one_student() -> None:
     assert current_info["DNF"] == 0
 
 
-def test_reset_dnf_for_one_student() -> None:
+def test_reduce_dnf_for_one_student() -> None:
     current_info: Dict[str, any] = {"Course": "1ma1df01"}
     current_info = update(current_info, "reset Albert", courses)
     assert current_info["Students"] == ["albert.enstn"]
