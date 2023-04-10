@@ -46,10 +46,12 @@ def students_by_least_weight(weights: Dict[str, float]) -> List[str]:
 
 
 def comments_needed(df: pd.DataFrame, students: List[str]) -> List[str]:
-    if "Weight" not in df:
+    if df.empty:
+        return students
+    else:
         df = weight_comments(df)
-    weights = sum_weights_by_student(df, students)
-    return students_by_least_weight(weights)
+        weights = sum_weights_by_student(df, students)
+        return students_by_least_weight(weights)
 
 
 def latex_comments(df: pd.DataFrame, student: str) -> str:
