@@ -211,6 +211,7 @@ class EmptyDesk(Desk):
         self.color_default = DARK_BLUE
         self.color = self.color_default
         self.color_selected = self.color_default
+        # TODO make the empty desk smaller - will require Desk.pos being center
 
 
 class Button(pygame.sprite.Sprite):
