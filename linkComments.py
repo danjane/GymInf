@@ -3,7 +3,7 @@ import analyseComments
 import students
 import config
 import pandas as pd
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 
 def load_comments_as_dataframe(comments_path: str, courses: Dict[str, Dict[str, str]]) -> pd.DataFrame:
@@ -40,7 +40,7 @@ def get_student_codes_names_course_names(courses: Dict[str, Dict[str, str]]) -> 
     return student_codes, student_names, course_names
 
 
-def build_latex_report(cfg: Dict[str, List[str]], courses: Dict[str, Dict[str, str]], df: pd.DataFrame) -> str:
+def build_latex_report(cfg: Dict[str, Union[str, List[str]]], courses: Dict[str, Dict[str, str]], df: pd.DataFrame) -> str:
     with open(cfg["report_student_path"]) as f:
         student_report_outline = f.read()
     with open(cfg["report_skeleton_path"]) as f:

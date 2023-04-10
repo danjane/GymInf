@@ -3,9 +3,9 @@ import pandas as pd
 from typing import Dict, List
 
 
-def sum_by_student(df: pd.DataFrame, column: str) -> Dict[str, float]:
+def sum_by_student(df: pd.DataFrame, column: str) -> Dict[str, int]:
     df2 = df.pivot(columns="Student")[column]
-    sums: Dict[str, float] = {}
+    sums: Dict[str, int] = {}
     for student in df2.columns:
         sums[student] = np.nansum(df2[student])
     return sums
@@ -18,13 +18,13 @@ def weight_comments(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def count_dnf_by_student(df: pd.DataFrame) -> Dict[str, float]:
+def count_dnf_by_student(df: pd.DataFrame) -> Dict[str, int]:
     return sum_by_student(df, "DNF")
 
 
-def count_dnf_greater_than(df: pd.DataFrame, cut_off: float = 0) -> Dict[str, float]:
+def count_dnf_greater_than(df: pd.DataFrame, cut_off: float = 0) -> Dict[str, int]:
     df = count_dnf_by_student(df)
-    df_positive: Dict[str, float] = {}
+    df_positive: Dict[str, int] = {}
     for k, v in df.items():
         if v > cut_off:
             df_positive[k] = v
