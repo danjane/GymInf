@@ -4,6 +4,7 @@ import linkComments
 
 BLACK = (0, 0, 0)
 LIGHT_BLUE = (0, 255, 255)
+DARK_BLUE = (0, 100, 100)
 YELLOW = (255, 255, 0)
 RED = (255, 0, 0)
 ORANGE = (255, 100, 0)
@@ -102,7 +103,9 @@ class UnselectedDesk(ParentDesk):
 class Desk(ParentDesk):
     def __init__(self, place, name, desk_layout, height_width):
         super().__init__()
-        self.color = YELLOW
+        self.color_default = YELLOW
+        self.color = self.color_default
+        self.color_selected = LIGHT_BLUE
         self.size = (height_width[0] // desk_layout[0], height_width[1] // desk_layout[1])
 
         self.pos = screen_position_from_xy_and_size(*place, desk_layout, height_width)
@@ -128,21 +131,6 @@ class Desk(ParentDesk):
         name_pos = (center_pos[0] - self.name_img.get_width() // 2, center_pos[1] - self.name_img.get_height() // 2)
         surface.blit(self.name_img, name_pos)
 
-    def clicked(self):
-        self.color = RED
-        self.button_down = True
-        self.sliding = False
-
-    def unclicked(self, other):
-        self.button_down = False
-        self.sliding = True
-        if self.changing_position:
-            self.home, other.home = other.home, self.home
-            self.target_for_sliding, other.target_for_sliding = self.home, other.home
-            other.sliding = True
-            self.changing_position = False
-        return UnclickedDesk()
-
     def bothered(self, target):
         self.is_swapping = True
         self.color = ORANGE
@@ -152,7 +140,7 @@ class Desk(ParentDesk):
 
     def unbothered(self):
         self.is_swapping = False
-        self.color = YELLOW
+        self.color = self.color_default
         self.target_for_sliding = self.home
         self.sliding = True
 
@@ -165,7 +153,7 @@ class Desk(ParentDesk):
             self.pos = self.target_for_sliding
             self.sliding = False
         else:
-            self.move(dx / 8, dy / 8)
+            self.move(dx / 10, dy / 10)
 
     def check_collisions(self, desks, selected_desk):
         collisions = pygame.sprite.spritecollide(self, desks, False)
@@ -177,6 +165,36 @@ class Desk(ParentDesk):
     def check_new(self, desks, selected_desk, xy):
         return nearest_desk([selected_desk] + desks, xy)
 
+    def unclicked(self, other):
+        self.button_down = False
+        self.sliding = True
+        if self.changing_position:
+            self.home, other.home = other.home, self.home
+            self.target_for_sliding, other.target_for_sliding = self.home, other.home
+            other.sliding = True
+            self.changing_position = False
+            self.color = self.color_default
+        else:
+            self.color = self.color_selected
+        return UnclickedDesk()
+
+    @classmethod
+    def create_desk(cls, place, name, desk_layout, height_width):
+        if name == 'empty':
+            return EmptyDesk(place, desk_layout, height_width)
+        else:
+            return FilledDesk(place, name, desk_layout, height_width)
+
+
+class FilledDesk(Desk):
+    def __init__(self, place, name, desk_layout, height_width):
+        super().__init__(place, name, desk_layout, height_width)
+
+    def clicked(self):
+        self.color = RED
+        self.button_down = True
+        self.sliding = False
+
     def append(self, selected_desks):
         if self in selected_desks:
             selected_desks.discard(self)
@@ -185,6 +203,14 @@ class Desk(ParentDesk):
             selected_desks.add(self)
             self.color = LIGHT_BLUE
         return selected_desks
+
+
+class EmptyDesk(Desk):
+    def __init__(self, place, desk_layout, height_width):
+        super().__init__(place, "", desk_layout, height_width)
+        self.color_default = DARK_BLUE
+        self.color = self.color_default
+        self.color_selected = self.color_default
 
 
 class Button(pygame.sprite.Sprite):

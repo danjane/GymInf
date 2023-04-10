@@ -28,10 +28,10 @@ def update_swapping_desk(desks, clicked_desk, swapping_desk):
 def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
     # TODO is_swapping flag should be handled by desk object
     if swapping_desk.is_swapping:
-        clicked_desk.color = icons.YELLOW
+        clicked_desk.color = clicked_desk.color_default
         clicked_desk = clicked_desk.unclicked(swapping_desk)
         for desk in selected_desks:
-            desk.color = icons.YELLOW
+            desk.color = desk.color_default
         return clicked_desk, set()
     else:
         selected_desks = clicked_desk.append(selected_desks)

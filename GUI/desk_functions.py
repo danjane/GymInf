@@ -13,6 +13,10 @@ def standard_pairs_layout(columns, rows):
 
 
 def load_basic_seating_plan_from_file(filename: str) -> Dict[str, Tuple]:
-    student_list = students.parse_course_list(filename)
+    student_list = list(students.parse_course_list(filename).values())
     pairs = standard_pairs_layout(6, 4)
-    return dict(zip(student_list.values(), pairs))
+    number_empties = len(pairs) - len(student_list)
+    if number_empties < 0:
+        raise NotImplementedError("Cannot handle more than 24 students, legal limit in gva!!")
+    padded_student_list = ["empty"]*number_empties + student_list[::-1]
+    return dict(zip(padded_student_list, pairs))

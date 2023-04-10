@@ -20,7 +20,7 @@ screen = pygame.display.set_mode(WIDTH_HEIGHT)
 
 desks = []
 for student, place in seating_plan.items():
-    desk = icons.Desk(place, student, desk_layout, WIDTH_HEIGHT_DESKS)
+    desk = icons.Desk.create_desk(place, student, desk_layout, WIDTH_HEIGHT_DESKS)
     desks.append(desk)
 
 clicked_desk = icons.UnclickedDesk()
