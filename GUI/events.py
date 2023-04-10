@@ -1,5 +1,5 @@
 import icons
-
+import pygame
 
 def handle_mouse_button_down_desks(x, y, desks, selected_desks):
     for desk in desks:
@@ -37,3 +37,14 @@ def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
         selected_desks = clicked_desk.append(selected_desks)
         new_clicked_desk = clicked_desk.unclicked(swapping_desk)
         return new_clicked_desk, selected_desks
+
+
+def handle_keydown(event, selected_desks, selected_button, buttons):
+    if event.key == pygame.K_UP:
+        selected_button = 0
+    elif event.key == pygame.K_DOWN:
+        selected_button = 1
+    for button in buttons:
+        button.text_editor_active = False
+    buttons[selected_button].handle_keydown(event, selected_desks)
+    return selected_button

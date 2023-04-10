@@ -201,6 +201,10 @@ class Button(pygame.sprite.Sprite):
         self.comment_file = "../example_files/testing_comments.txt"
         self.text_editor_active = False
         self.text = ""
+        self.text_rect = self.rect.inflate(-50, -50).move(0, 20)
+        self.cursor_visible = True
+        self.cursor_blink_interval_millis = 500
+        self.cursor_blink_timer = 0
 
     def update(self, surface):
         self.rect = pygame.Rect(*self.pos, *self.size)
@@ -211,13 +215,24 @@ class Button(pygame.sprite.Sprite):
             color = [int(u * (1 - f) + c * f) for u, c in zip(self.color_unclicked, self.color_clicked)]
             self.fade_from_1_to_0 *= 0.95
         pygame.draw.rect(surface, color, self.rect)
+        surface.blit(self.name_img, self.name_pos)
         if self.text_editor_active:
-            pygame.draw.rect(surface, WHITE, self.rect.inflate(-4, -4))
+            pygame.draw.rect(surface, WHITE, self.text_rect)
             text_img = font.render(self.text, True, (0, 0, 0))
-            text_pos = text_img.get_rect(center=self.rect.center)
+            text_pos = text_img.get_rect(center=self.text_rect.center)
             surface.blit(text_img, text_pos)
-        else:
-            surface.blit(self.name_img, self.name_pos)
+            self.draw_cursor(surface, text_pos)
+
+    def draw_cursor(self, surface, text_pos):
+        if pygame.time.get_ticks() - self.cursor_blink_timer >= self.cursor_blink_interval_millis:
+            self.cursor_visible = not self.cursor_visible
+            self.cursor_blink_timer = pygame.time.get_ticks()
+
+        if self.cursor_visible:
+            cursor_pos = text_pos.right + 1
+            cursor_width = 2
+            cursor_rect = pygame.Rect(cursor_pos, text_pos.top, cursor_width, text_pos.height)
+            pygame.draw.rect(surface, BLACK, cursor_rect)
 
     def handle_keydown(self, event, selected_desks):
         self.text_editor_active = True

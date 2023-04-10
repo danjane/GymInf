@@ -9,8 +9,7 @@ def start_new_day(cfg: Dict, course: str):
     file_path = cfg["comments_path"]
     today = datetime.today().strftime('%d%b%Y').lower()
     with open(file_path, 'a') as f:
-        f.write(f"d{today}\n")
-        f.write(f"c{course}\n")
+        f.write(f"\nd{today}\nc{course}\n")
 
 
 def setup(cfg_path: str, course: str):

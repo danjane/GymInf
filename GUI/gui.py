@@ -32,6 +32,7 @@ buttons = [
     icons.NegativeButton((700, 140), (200, 75)),
     icons.SuggestionsButton((700, 255), (200, 75), desks)
 ]
+selected_button = 0
 
 sprites = pygame.sprite.Group(desks + buttons)
 
@@ -55,7 +56,7 @@ while running:
         if event.type == MOUSEMOTION:
             clicked_desk.move(*event.rel)
         if event.type == KEYDOWN:
-            buttons[0].handle_keydown(event, selected_desks)
+            selected_button = events.handle_keydown(event, selected_desks, selected_button, buttons)
 
     swapping_desk = events.update_swapping_desk(desks, clicked_desk, swapping_desk)
 
