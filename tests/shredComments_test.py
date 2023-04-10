@@ -143,3 +143,18 @@ def test_panderizeTwoStudents():
     assert table["Course"][0] == "1ma1df01"
     assert table["Info"][1] == "+Albert, Gabs great question"
     assert list(table["Student"]) == ["albert.enstn", "gabriel.crmr"]
+
+
+def test_panderize_with_no_students_only_class_date():
+    strings = \
+        """d25Dec2022
+        c1ma1df01""".split("\n")
+    infos = shred(strings, courses)
+    table = panderize(infos)
+    assert table.shape == (0, 6)
+    assert "Course" in table.columns
+    assert "Student" in table.columns
+    assert "Date" in table.columns
+    assert "Sentiment" in table.columns
+    assert "Info" in table.columns
+    assert "DNF" in table.columns
