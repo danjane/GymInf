@@ -65,9 +65,9 @@ def current_students(current_info, courses):
 
 
 def panderize(infos):
-    force_columns = dict.fromkeys(["Student", "Date", "Course", "Info", "Sentiment", "DNF"])
-    table = pd.DataFrame(infos + [force_columns]*2)
+    force_columns = dict.fromkeys(["Students", "Student", "Date", "Course", "Info", "Sentiment", "DNF"])
+    table = pd.DataFrame(infos + [force_columns] * 2)
     table = table.drop(["Students"], axis=1)
     table = table[:-2]
-    table['Date'] = pd.to_datetime(table.Date, format='%Y-%m-%d')
+    table['Date'] = pd.to_datetime(table.Date, format='%Y-%m-%d')  # TODO should this be %d%b%Y ?
     return table
