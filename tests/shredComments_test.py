@@ -176,3 +176,17 @@ def test_reset_dnfs_one_student():
     assert sum(table.loc[table["Student"] == "gabriel.crmr", "DNF"]) == 2
 
 
+def test_reset_dnfs_all_students():
+    strings = \
+        """d25Dec2022
+        c1ma1df01
+        DNF Albert, Gabs
+        DNF Gabs
+        Reset all
+        """.split("\n")
+    infos = shred(strings, courses)
+    table = panderize(infos)
+    assert sum(table.loc[table["Student"] == "albert.enstn", "DNF"]) == 0
+    assert sum(table.loc[table["Student"] == "gabriel.crmr", "DNF"]) == 0
+
+
