@@ -14,6 +14,7 @@ def find_students(string, students):
 def update(current_info, line, courses):
     current_info["Students"] = []
     current_info["DNF"] = 0
+    current_info["Sentiment"] = 0
     char, info = line[0], line[1:]
     if char == 'd':
         current_info["Date"] = datetime.datetime.strptime(info, "%d%b%Y").date()
@@ -32,6 +33,8 @@ def update(current_info, line, courses):
             current_info["DNF"] = 1
         elif char == "r":
             current_info["DNF"] = -2
+        elif char == "R":
+            current_info["DNF"] = -10
         elif char == "":
             pass
         else:
@@ -64,10 +67,27 @@ def current_students(current_info, courses):
         return courses[current_info["Course"]]
 
 
+def reset_dnfs(df):
+    for student in df["Student"].unique():
+        student_idx = df["Student"] == student
+        dnf_list = list(df.loc[student_idx, 'DNF'])
+        df.loc[student_idx, 'DNF'] = reset_dnf_list_one_student(dnf_list)
+    return df
+
+
+def reset_dnf_list_one_student(dnfs):
+    for i in range(len(dnfs)-1, 0, -1):
+        if dnfs[i] == -10:
+            dnfs[:i + 1] = [0] * (i + 1)
+            break
+    return dnfs
+
+
 def panderize(infos):
     force_columns = dict.fromkeys(["Students", "Student", "Date", "Course", "Info", "Sentiment", "DNF"])
     table = pd.DataFrame(infos + [force_columns] * 2)
     table = table.drop(["Students"], axis=1)
     table = table[:-2]
     table['Date'] = pd.to_datetime(table.Date, format='%Y-%m-%d')  # TODO should this be %d%b%Y ?
+    table = reset_dnfs(table)
     return table

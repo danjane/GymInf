@@ -160,3 +160,19 @@ def test_panderize_with_no_students_only_class_date():
     assert "Sentiment" in table.columns
     assert "Info" in table.columns
     assert "DNF" in table.columns
+
+
+def test_reset_dnfs_one_student():
+    strings = \
+        """d25Dec2022
+        c1ma1df01
+        DNF Albert, Gabs
+        DNF Gabs
+        Reset Albert
+        """.split("\n")
+    infos = shred(strings, courses)
+    table = panderize(infos)
+    assert sum(table.loc[table["Student"] == "albert.enstn", "DNF"]) == 0
+    assert sum(table.loc[table["Student"] == "gabriel.crmr", "DNF"]) == 2
+
+
