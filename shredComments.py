@@ -21,8 +21,8 @@ def update(current_info, line, courses):
     elif char == 'c':
         current_info["Course"] = info
     else:
-        students = current_students(current_info, courses)
-        current_info["Students"] = find_students(info, students)
+        all_students = current_students(current_info, courses)
+        current_info["Students"] = find_students(info, all_students)
         current_info["Info"] = line
         if char == "+":
             current_info["Sentiment"] = 1
@@ -35,6 +35,8 @@ def update(current_info, line, courses):
             current_info["DNF"] = -2
         elif char == "R":
             current_info["DNF"] = -10
+            if not current_info["Students"]:
+                current_info["Students"] = all_students
         elif char == "":
             pass
         else:
