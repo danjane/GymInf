@@ -42,17 +42,16 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == MOUSEBUTTONDOWN:
+            # TODO merge events.handle_mouse_button_down
             clicked_desk, selected_desks = events.handle_mouse_button_down_desks(
                 *event.pos, desks, selected_desks
             )
             selected_desks = events.handle_mouse_button_down_buttons(
                 *event.pos, buttons, selected_desks
             )
-            print(selected_desks)
         if event.type == MOUSEBUTTONUP:
             clicked_desk, selected_desks = \
                 events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)
-            print(selected_desks)
         if event.type == MOUSEMOTION:
             clicked_desk.move(*event.rel)
         if event.type == KEYDOWN:
