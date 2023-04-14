@@ -308,8 +308,8 @@ class SuggestionsButton(Button):
             "../example_files/config_GUI.yaml", "2ma2dfb01")
         students_for_comments = students_for_comments[:5]
         for desk in selected_desks:
-            desk.color = YELLOW
+            desk.color = desk.color_default
         selected_desks = set(desk for desk in self.desks if desk.name in students_for_comments)
         for desk in selected_desks:
-            desk.color = LIGHT_BLUE
+            desk.color = desk.color_selected
         return selected_desks
