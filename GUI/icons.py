@@ -273,7 +273,7 @@ class Button(pygame.sprite.Sprite):
     def clicked(self, selected_desks):
         self.fade_from_1_to_0 = 1.
         for desk in selected_desks:
-            desk.color = YELLOW
+            desk.color = desk.color_default
 
 
 class PositiveButton(Button):
