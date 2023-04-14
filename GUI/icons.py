@@ -174,8 +174,6 @@ class Desk(ParentDesk):
             other.sliding = True
             self.changing_position = False
             self.color = self.color_default
-        else:
-            self.color = self.color_selected
         return UnclickedDesk()
 
     @classmethod
@@ -198,10 +196,10 @@ class FilledDesk(Desk):
     def append(self, selected_desks):
         if self in selected_desks:
             selected_desks.discard(self)
-            self.color = YELLOW
+            self.color = self.color_default
         else:
             selected_desks.add(self)
-            self.color = LIGHT_BLUE
+            self.color = self.color_selected
         return selected_desks
 
 
