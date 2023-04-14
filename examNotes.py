@@ -1,5 +1,6 @@
 import xlsxwriter
 from typing import List
+import pandas as pd
 
 
 def create_empty_spreadsheet_for_student_notes(student_codes: List[str], question_names: List[str],
@@ -81,3 +82,11 @@ def _add_formulae_to_calculate_notes(worksheet, num_students, num_questions, row
     worksheet.conditional_format(note_range, {'type': 'cell', 'criteria': '<', 'value': 4, 'format': red})
 
 
+def load_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
+    if file_path.endswith('.xlsx'):
+        df = pd.read_excel(file_path)
+    elif file_path.endswith('.ods'):
+        df = pd.read_excel(file_path, engine='odf')
+    else:
+        raise ValueError(f"Unsupported file format: {file_path}")
+    return df

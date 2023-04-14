@@ -16,3 +16,4 @@ six==1.16.0
 tomli==2.0.1
 pygame~=2.3.0
 XlsxWriter~=3.1.0
+openpyxl~=3.1.2
