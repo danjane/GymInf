@@ -97,7 +97,7 @@ def create_empty_spreadsheet_for_student_notes_flat_weights(
 
 
 def load_raw_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
-    if file_path.endswith('.xlsx'):
+    if file_path.endswith('.xlsx') or file_path.endswith('.xls'):
         df = pd.read_excel(file_path)
     elif file_path.endswith('.ods'):
         df = pd.read_excel(file_path, engine='odf')
@@ -173,5 +173,6 @@ def merge_notes_for_one_course(exam_folder, students):
 
 def find_all_exam_files(exam_folder):
     files = os.listdir(exam_folder)
-    return [os.path.join(exam_folder, f) for f in files if f.endswith("Notes.ods") or f.endswith("Notes.xlsx")]
+    return [os.path.join(exam_folder, f) for f in files if
+            f.endswith("Notes.ods") or f.endswith("Notes.xlsx") or f.endswith("Notes.xls")]
 

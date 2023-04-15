@@ -4,6 +4,7 @@ courses:
 rg_class:
 courses_path: ../example_files/
 config_path: ../example_files/
+exam_path: ../example_files/
 comments_path: ../example_files/testing_comments.txt
 report_student_path: ../example_files/report_outline_student.tex
 report_skeleton_path: ../example_files/report_skeleton.tex
