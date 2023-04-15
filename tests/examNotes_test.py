@@ -34,5 +34,6 @@ def test_read_notes_from_filename():
     data = {"Student": ["albert.enstn", "gabriel.crmr", "marie.cr", "richard.fynmn"],
             "Note": [3, 2.5, 4, 6]}
     expected = pd.DataFrame(data)
+    expected.set_index('Student', inplace=True)
     loaded = read_notes_from_filename(test_file)
     assert expected.equals(loaded)

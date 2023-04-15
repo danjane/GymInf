@@ -113,6 +113,37 @@ def file_info(exam_file: str) -> Tuple[datetime.datetime, str]:
 
 
 def read_notes_from_filename(exam_file: str) -> pd.DataFrame:
-    data = {"Student": ["albert.enstn", "gabriel.crmr", "marie.cr", "richard.fynmn"],
-            "Note": [3, 2.5, 4, 6]}
-    return pd.DataFrame(data)
+    df = load_raw_spreadsheet_to_dataframe(exam_file)
+    df = prepare_student_rows(df)
+    return df
+
+
+def prepare_student_rows(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.rename(columns={'Questions': 'Student'})
+    df = keep_student_rows(df)
+    return df[["Note"]]
+
+
+def keep_student_rows(df: pd.DataFrame) -> pd.DataFrame:
+    def find_first_student():
+        key_word = "Student"
+        for i, v in enumerate(possible_students):
+            if v == key_word:
+                return i + 1
+        raise LookupError(f"Cannot find key word '{key_word}' in first column of exam file!!")
+
+    def count_students(rest_of_column):
+        for i, v in enumerate(rest_of_column):
+            if type(v) != str:
+                return i
+            if v == "Working":
+                return i
+        raise LookupError(f"Cannot figure out students in first column of exam file!!")
+
+    possible_students = df["Student"]
+    first_student_pos = find_first_student()
+    num_students = count_students(possible_students[first_student_pos:])
+    df = df[first_student_pos:first_student_pos + num_students]
+    df.set_index('Student', inplace=True)
+    return df
+
