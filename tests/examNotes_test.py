@@ -26,3 +26,13 @@ def test_read_info_from_filename():
     exam_date, exam_name = file_info(test_file)
     assert exam_date == datetime.datetime(2020, 4, 20)
     assert exam_name == "ExampleExam"
+
+
+def test_read_notes_from_filename():
+    test_file = "../example_files/1ma1df01/20Apr2020_ExampleExam_Notes.ods"
+
+    data = {"Student": ["albert.enstn", "gabriel.crmr", "marie.cr", "richard.fynmn"],
+            "Note": [3, 2.5, 4, 6]}
+    expected = pd.DataFrame(data)
+    loaded = read_notes_from_filename(test_file)
+    assert expected.equals(loaded)
