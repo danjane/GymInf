@@ -121,6 +121,8 @@ def read_notes_from_filename(exam_file: str) -> pd.DataFrame:
 def prepare_student_rows(df: pd.DataFrame) -> pd.DataFrame:
     df = df.rename(columns={'Questions': 'Student'})
     df = keep_student_rows(df)
+    df = remove_name_after_comma(df)
+    df.set_index('Student', inplace=True)
     return df[["Note"]]
 
 
@@ -144,6 +146,11 @@ def keep_student_rows(df: pd.DataFrame) -> pd.DataFrame:
     first_student_pos = find_first_student()
     num_students = count_students(possible_students[first_student_pos:])
     df = df[first_student_pos:first_student_pos + num_students]
-    df.set_index('Student', inplace=True)
     return df
 
+
+def remove_name_after_comma(df: pd.DataFrame) -> pd.DataFrame:
+    dirty_strings = df["Student"]
+    clean_strings = [s.split(",")[0] for s in dirty_strings]
+    df["Student"] = clean_strings
+    return df
