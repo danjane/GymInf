@@ -22,21 +22,26 @@ def dump_all(cfg_path, output_file):
 
     for course in courses.keys():
         exam_folder = os.path.join(cfg["exam_path"], course)
-        notes, exam_names = examNotes.merge_notes_for_one_course(exam_folder, list(courses[course].keys()))
+        notes, exam_names, exam_files = examNotes.merge_notes_for_one_course(exam_folder, list(courses[course].keys()))
         exam_dates = notes.columns
         student_codes = list(courses[course].keys())
+        spaces_before_average = 0
 
         num_exams = len(exam_dates)
         num_students = len(student_codes)
 
+        noted_exams = identify_noted_exams_if_possible(exam_files, cfg)
+
         worksheet = workbook.add_worksheet(course)
+        formats = examNotes.create_workbook_formats(workbook)
 
         averages = ["NIP", "S1", "S2"]
 
         num_averages = len(averages)
-        weights_s1 = [int(first_semester(d)) for d in exam_dates]
-        weights_s2 = [int(not first_semester(d)) for d in exam_dates]
-        weights = [weights_s1] * 2 + [weights_s2]
+        weights_nip = [int(first_semester(d)) for d in exam_dates]
+        weights_s1 = [int(first_semester(d) & n) for d, n in zip(exam_dates, noted_exams)]
+        weights_s2 = [int((not first_semester(d)) & n) for d, n in zip(exam_dates, noted_exams)]
+        weights = [weights_nip, weights_s1, weights_s2]
 
         headers = ["Date", "Name"] + [h + " weight" for h in averages]
 
@@ -52,17 +57,33 @@ def dump_all(cfg_path, output_file):
             for j, note in enumerate(notes.loc[student_code]):
                 if note > 0:
                     worksheet.write(i+row_for_notes, j+1, note)
+                else:
+                    worksheet.write(i + row_for_notes, j + 1, -100, formats["red"])
 
-        worksheet.write_row(row_for_notes - 1, num_exams + 2, averages)
+        worksheet.write_row(row_for_notes - 1, num_exams + spaces_before_average + 2, averages)
         for i in range(num_averages):
             weight_range = xlsxwriter.utility.xl_range_abs(i + 2, 1, i + 2, num_exams)
             formula = f'=IF(SUM({weight_range})>0,SUM({weight_range}),1)'
-            worksheet.write_formula(row_for_notes - 2, num_exams + 2 + i, formula)
-            sum_weight_range = xlsxwriter.utility.xl_rowcol_to_cell(row_for_notes - 2, num_exams + 2 + i, row_abs=True)
+            worksheet.write_formula(row_for_notes - 2, num_exams + spaces_before_average + 2 + i, formula)
+            sum_weight_range = xlsxwriter.utility.xl_rowcol_to_cell(
+                row_for_notes - 2, num_exams + spaces_before_average + 2 + i, row_abs=True)
 
             for j in range(num_students):
                 note_range = xlsxwriter.utility.xl_range(row_for_notes + j, 1, row_for_notes + j, num_exams)
                 formula = f'=SUMPRODUCT({weight_range}, {note_range})/{sum_weight_range}'
-                worksheet.write_formula(row_for_notes + j, num_exams + 2 + i, formula)
+                worksheet.write_formula(
+                    row_for_notes + j, num_exams + spaces_before_average + 2 + i, formula, formats["round1b"])
+
+        average_range = xlsxwriter.utility.xl_range(
+            row_for_notes, num_exams + spaces_before_average + 2, row_for_notes + num_students - 1,
+            num_exams + spaces_before_average + 2 + num_averages - 1)
+        worksheet.conditional_format(average_range, formats["failing"])
 
     workbook.close()
+
+
+def identify_noted_exams_if_possible(exam_files, cfg):
+    if "noted_exams" in cfg:
+        return [f in cfg["noted_exams"] for f in exam_files]
+    else:
+        return [True] * len(exam_files)

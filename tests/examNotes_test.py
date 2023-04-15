@@ -44,7 +44,7 @@ def test_read_notes_from_filename():
 def test_merge_notes_for_one_course():
     exam_folder = "../example_files/1ma1df01/"
     student_codes = ["albert.enstn", "gabriel.crmr", "marie.cr", "richard.fynmn"]
-    loaded, exam_names = merge_notes_for_one_course(exam_folder, student_codes)
+    loaded, exam_names, exam_files = merge_notes_for_one_course(exam_folder, student_codes)
 
     data = {"Student": ["albert.enstn", "gabriel.crmr", "marie.cr", "richard.fynmn"],
             "20Apr2020": [3, 2.5, 4, 6],
@@ -54,6 +54,7 @@ def test_merge_notes_for_one_course():
 
     assert exam_names == ("ExampleExam", "SecondExam")
     assert expected.equals(loaded)
+    # TODO check exam_files
 
 
 def test_dump_all(tmp_path):
