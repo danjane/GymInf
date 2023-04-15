@@ -154,3 +154,24 @@ def remove_name_after_comma(df: pd.DataFrame) -> pd.DataFrame:
     clean_strings = [s.split(",")[0] for s in dirty_strings]
     df["Student"] = clean_strings
     return df
+
+
+def merge_notes_for_one_course(exam_folder, students):
+    exam_filepaths = find_all_exam_files(exam_folder)
+    exam_info = [(*file_info(f), f) for f in exam_filepaths]
+    exam_info.sort(key=lambda x: x[0])
+    exam_dates, exam_names, exam_filepaths = zip(*exam_info)
+    notes = []
+    for (f, d) in zip(exam_filepaths, exam_dates):
+        n = read_notes_from_filename(f)
+        n = n.rename(columns={'Note': d.strftime('%d%b%Y')})
+        notes.append(n)
+    merged = pd.concat(notes, axis=1)
+    loaded = pd.DataFrame(index=students).join(merged)
+    return loaded, exam_names
+
+
+def find_all_exam_files(exam_folder):
+    files = os.listdir(exam_folder)
+    return [os.path.join(exam_folder, f) for f in files if f.endswith("Notes.ods") or f.endswith("Notes.xlsx")]
+
