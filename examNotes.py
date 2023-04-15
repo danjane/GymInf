@@ -93,7 +93,7 @@ def create_empty_spreadsheet_for_student_notes_flat_weights(
     return None
 
 
-def load_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
+def load_raw_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
     if file_path.endswith('.xlsx'):
         df = pd.read_excel(file_path)
     elif file_path.endswith('.ods'):

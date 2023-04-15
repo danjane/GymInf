@@ -14,7 +14,7 @@ def test_create_empty_spreadsheet_for_notes(tmp_path):
     create_empty_spreadsheet_for_student_notes_flat_weights(
         student_codes, question_names, question_marks, spreadsheet_file)
 
-    expected = load_spreadsheet_to_dataframe("../example_files/1ma1df01/empty_for_notes.xlsx")
-    actual = load_spreadsheet_to_dataframe(spreadsheet_file)
+    expected = load_raw_spreadsheet_to_dataframe("../example_files/1ma1df01/empty_for_notes.xlsx")
+    actual = load_raw_spreadsheet_to_dataframe(spreadsheet_file)
 
     assert expected.equals(actual)
