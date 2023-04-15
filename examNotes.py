@@ -1,3 +1,5 @@
+import os.path
+import re
 import xlsxwriter
 from typing import List
 import pandas as pd
@@ -104,5 +106,7 @@ def load_raw_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
     return df
 
 
-def file_info(test_file):
-    return datetime.datetime(2020, 4, 20), "ExampleExam"
+def file_info(exam_file):
+    _, file_name = os.path.split(exam_file)
+    date_str, exam_name, notes_str, extension = re.split('[_.]', file_name)
+    return datetime.datetime.strptime(date_str, "%d%b%Y"), exam_name
