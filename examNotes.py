@@ -1,7 +1,7 @@
 import os.path
 import re
 import xlsxwriter
-from typing import List
+from typing import List, Tuple
 import pandas as pd
 import datetime
 
@@ -106,7 +106,13 @@ def load_raw_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
     return df
 
 
-def file_info(exam_file):
+def file_info(exam_file: str) -> Tuple[datetime.datetime, str]:
     _, file_name = os.path.split(exam_file)
     date_str, exam_name, notes_str, extension = re.split('[_.]', file_name)
     return datetime.datetime.strptime(date_str, "%d%b%Y"), exam_name
+
+
+def read_notes_from_filename(exam_file: str) -> pd.DataFrame:
+    data = {"Student": ["albert.enstn", "gabriel.crmr", "marie.cr", "richard.fynmn"],
+            "Note": [3, 2.5, 4, 6]}
+    return pd.DataFrame(data)
