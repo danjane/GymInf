@@ -11,7 +11,7 @@ def create_empty_spreadsheet_for_student_notes(student_codes: List[str], questio
     col_for_total = num_questions + 2
     col_for_unrounded_note = col_for_total + 1
     col_for_note = col_for_unrounded_note + 1
-    row_for_students = 4
+    row_for_students = 5
 
     workbook = xlsxwriter.Workbook(spreadsheet_file)
     worksheet = workbook.add_worksheet()
@@ -25,7 +25,7 @@ def create_empty_spreadsheet_for_student_notes(student_codes: List[str], questio
                      workbook.add_format({'num_format': '0.0', 'bold': True})]
     red = workbook.add_format({'bg_color': 'red'})
 
-    _write_headers(worksheet, question_names, question_weights, question_marks,
+    _write_headers(worksheet, question_names, question_weights, question_marks, row_for_students,
                    light_green_format)
     _write_student_names_and_empty_cells(worksheet, student_codes, row_for_students, num_questions,
                                          bold, light_green_format)
@@ -35,13 +35,15 @@ def create_empty_spreadsheet_for_student_notes(student_codes: List[str], questio
     workbook.close()
 
 
-def _write_headers(worksheet, question_names, question_weights, question_marks, light_green_format) -> None:
+def _write_headers(worksheet, question_names, question_weights, question_marks, row_for_students,
+                   light_green_format) -> None:
     worksheet.write(0, 0, "Questions")
     worksheet.write_row(0, 1, question_names)
     worksheet.write(1, 0, "Weights")
     worksheet.write_row(1, 1, question_weights, light_green_format)
     worksheet.write(2, 0, "Marks")
     worksheet.write_row(2, 1, question_marks, light_green_format)
+    worksheet.write(row_for_students-1, 0, "Student")
 
 
 def _write_student_names_and_empty_cells(worksheet, student_codes, row_for_students, num_questions, bold, light_green_format) -> None:
