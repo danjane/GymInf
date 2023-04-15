@@ -25,7 +25,7 @@ def dump_all(cfg_path, output_file):
         notes, exam_names, exam_files = examNotes.merge_notes_for_one_course(exam_folder, list(courses[course].keys()))
         exam_dates = notes.columns
         student_codes = list(courses[course].keys())
-        spaces_before_average = 0
+        spaces_before_average = 1
 
         num_exams = len(exam_dates)
         num_students = len(student_codes)
@@ -61,6 +61,7 @@ def dump_all(cfg_path, output_file):
                     worksheet.write(i + row_for_notes, j + 1, -100, formats["red"])
 
         worksheet.write_row(row_for_notes - 1, num_exams + spaces_before_average + 2, averages)
+        worksheet.write_column(row_for_notes, num_exams + spaces_before_average + 1, student_codes)
         for i in range(num_averages):
             weight_range = xlsxwriter.utility.xl_range_abs(i + 2, 1, i + 2, num_exams)
             formula = f'=IF(SUM({weight_range})>0,SUM({weight_range}),1)'
