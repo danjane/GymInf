@@ -1,6 +1,7 @@
 import xlsxwriter
 from typing import List
 import pandas as pd
+import datetime
 
 
 def create_empty_spreadsheet_for_student_notes(student_codes: List[str], question_names: List[str],
@@ -101,3 +102,7 @@ def load_raw_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
     else:
         raise ValueError(f"Unsupported file format: {file_path}")
     return df
+
+
+def file_info(test_file):
+    return datetime.datetime(2020, 4, 20), "ExampleExam"
