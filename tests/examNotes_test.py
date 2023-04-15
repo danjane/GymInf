@@ -1,7 +1,7 @@
 from examNotes import *
 import students
 import os
-
+import datetime
 
 def test_create_empty_spreadsheet_for_notes(tmp_path):
     student_dict = students.parse_course_list("../example_files/1ma1df01.txt")
@@ -18,3 +18,11 @@ def test_create_empty_spreadsheet_for_notes(tmp_path):
     actual = load_raw_spreadsheet_to_dataframe(spreadsheet_file)
 
     assert expected.equals(actual)
+
+
+def test_read_info_from_filename():
+    test_file = "../example_files/1ma1df01/20Apr2020_ExampleExam_Notes.ods"
+
+    exam_date, exam_name = file_info(test_file)
+    assert exam_date == datetime.datetime(2020, 4, 20)
+    assert exam_name == "ExampleExam"
