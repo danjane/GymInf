@@ -80,6 +80,19 @@ def dump_all(cfg_path, output_file):
             num_exams + spaces_before_average + 2 + num_averages - 1)
         worksheet.conditional_format(average_range, formats["failing"])
 
+        worksheet.write(row_for_notes - 1, num_exams + 2*spaces_before_average + num_averages + 2,
+                        "EOY", formats["round1b"])
+        for j in range(num_students):
+            s1 = xlsxwriter.utility.xl_rowcol_to_cell(row_for_notes + j, num_exams + spaces_before_average + 3)
+            s2 = xlsxwriter.utility.xl_rowcol_to_cell(row_for_notes + j, num_exams + spaces_before_average + 4)
+            formula = f'=ROUND(AVERAGE(ROUND({s1}*10)/10, ROUND({s2}*10)/10)*10)/10'
+            worksheet.write_formula(
+                row_for_notes + j, num_exams + 2*spaces_before_average + num_averages + 2, formula, formats["round1b"])
+        worksheet.conditional_format(
+            row_for_notes, num_exams + 2 * spaces_before_average + num_averages + 2,
+            row_for_notes + num_students - 1, num_exams + 2 * spaces_before_average + num_averages + 2,
+            formats["failing"])
+
     workbook.close()
 
 
