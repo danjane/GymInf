@@ -84,6 +84,15 @@ def _add_formulae_to_calculate_notes(worksheet, num_students, num_questions, row
     worksheet.conditional_format(note_range, {'type': 'cell', 'criteria': '<', 'value': 4, 'format': red})
 
 
+def create_empty_spreadsheet_for_student_notes_flat_weights(
+        student_codes: List[str], question_names: List[str], question_marks: List[int], spreadsheet_file: str) -> None:
+    total_marks = sum(question_marks)
+    question_weights = [mark/total_marks for mark in question_marks]
+    create_empty_spreadsheet_for_student_notes(
+        student_codes, question_names, question_weights, question_marks, spreadsheet_file)
+    return None
+
+
 def load_spreadsheet_to_dataframe(file_path: str) -> pd.DataFrame:
     if file_path.endswith('.xlsx'):
         df = pd.read_excel(file_path)
