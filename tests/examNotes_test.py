@@ -59,7 +59,7 @@ def test_merge_notes_for_one_course():
 def test_dump_all(tmp_path):
     spreadsheet_file = os.path.join(tmp_path, "testing_empty_spreadsheet_for_notes.xlsx")
     cfg_path = "../example_files/config.yaml"
-    analyseNotes.dump_all(cfg_path, "../example_files/test.xlsx")
+    analyseNotes.dump_all(cfg_path, spreadsheet_file)
 
     expected = load_raw_spreadsheet_to_dataframe("../example_files/dump_of_all_notes.xlsx")
     actual = load_raw_spreadsheet_to_dataframe(spreadsheet_file)
