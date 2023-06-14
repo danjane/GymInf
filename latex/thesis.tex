@@ -57,7 +57,7 @@ I also wanted to use this thesis to improve my coding style, exploring the indus
 Given the limited resources of this masters' thesis, not all of the desired functionality has been delivered. These missing features are described in section \ref{notdone}. Please note that the current codebase was designed with these features in mind, and that existing code should require minimal changes to incorporate these features as they are added.
 
 
-\section{System plan from inputs and outputs} \label{inout}
+\section{System plan: inputs and outputs} \label{inout}
 
 We can analyse a system by connecting its (physical or virtual) inputs and outputs. In this project, we have
 
@@ -112,7 +112,7 @@ The inputs clearly contain sensitive information, and the relevant laws and best
 
 
 
-\section{System plan from user actions} \label{actions}
+\section{System plan: user actions} \label{actions}
 
 We can also model a system by considering the possible actions. We can then analyse the sub-processes inside the actions, which can suggest a natural architecture for the system.
 
@@ -230,6 +230,52 @@ The teacher is expected to have a strong background in the coding language being
 
 \subsection{Implementation style}
 
+\subsection{Views}
+A classic GUI structure is to use \emph{views}, different screens designed for different use cases.
+ 
+TODO: citation needed.
+
+I based the GUI views on the three phases defined when reviewing the types of actions in section \ref{actions}: configuration, teaching, and planning. I wanted to be able to use some of the planning actions while teaching, for example suggesting students for interaction, so I moved these to the teaching view. This meant "planning" only left those actions directly related to proposing seating plans, so the "planning" phase is really only "planning the seating plan". Thus I have called the respective views the \textbf{control view}, the \textbf{class view}, and the \textbf{seating plan view}.
+
+\subsubsection{Control view}
+
+Possible events: 
+\begin{enumerate}
+\item Select the active class.
+\item Pass to the class view of the active class.
+\item Create a new class.
+\item Edit the class list.
+\item Export student reports.
+\item Calculate average notes.
+\end{enumerate}
+
+\subsubsection{Class view}
+
+The class view includes the seating plan, both as a reminder for names and as a visual cue for interactions.
+
+Possible events: 
+\begin{enumerate}
+\item Pass back to the control view.
+\item Pass to the seating plan view of this class.
+\item Select/ deselect a student.
+\item Record a positive comment.
+\item Record a negative comment.
+\item Suggest students.
+\end{enumerate}
+
+\subsubsection{Seating plan view}
+
+Possible events: 
+\begin{enumerate}
+\item Pass back to the control view.
+\item Pass to the class view of this class.
+\item Change the seating plan.
+\item Save the seating plan.
+\item Load previous seating plans.
+\item Suggest a seating plan.
+\end{enumerate}
+
+
 \section{Instruction booklet} \label{instructions}
 
 \section{Missing features} \label{notdone}
@@ -241,6 +287,8 @@ instruction booklet
 exam buttons
 
 export seating plan to latex to pdf
+
+handling students who leave
 
 using the data to make predictions about students. For example: their behaviour in class has changed dramatically (for the better or for the worse); students who might need extra support in order to pass the year; students who should consider accelerated learning programs. There are lots of resources available to the students and to the teachers, and it is difficult for young teachers to suggest
 
