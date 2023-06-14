@@ -8,6 +8,247 @@
 
 \begin{document}
 
+\tableofcontents
+
+
+
+
+
+
+\section{Introduction}
+
+Bucheton and Soulé have descriped the act of teaching as a multiagenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. And yet many of the teacher's most time'consuming tasks do not take place in the classroom: good preparation and strong follow-ups (auto-reflection, marking, parent-teacher interactions) work to support and complement the overall success of the student learning process.
+
+For example, teacher responsibilities include the ability to
+\begin{itemize}
+\item plan and implement effective classroom management practices,
+\item design and implement effective strategies to develop independent learners,
+\item engage students in active, hands-on, creative problem-based learning,
+\item build students’ ability to work collaboratively with others,
+\item maintain a safe, orderly environment conducive to learning,
+\item adapt instruction/support to students’ differences in development, learning styles, strengths and needs, and
+\item write student reports to guide changes in instruction and practice, and to improve student learning.
+\end{itemize}
+
+Many of these tasks are ripe for automation \cite{Swei15}, although I would also accept that some of these tasks should \textbf{not} be automated (even if they can be). As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
+
+For the Master's thesis project undertaken for the GymInf formation, I intend to build a suite of tools to support a range of teacher tasks including organising seating plans, building individual student reports, suggesting teacher-student interactions for upcoming classes, and creating spreadsheets of marks. In sections \ref{inout} and \ref{actions} I outline the planned architecture of the system, and how it can be built incrementally.
+
+The tools will be coded in Python, as this is the language we teach our students and I would like to take this opportunity to improve my competences in Python, see section \ref{language}.
+
+I also wanted to use this thesis to improve my coding style, see section \ref{tdd}.
+
+Given the limited resources of this masters' thesis, not all of the desired functionality has been delivered. These missing features are described in section \ref{notdone}. Please note that the current codebase was designed with these features in mind, and that existing code should require minimal changes to incorporate these features as they are added.
+
+
+\section{System plan from inputs and outputs} \label{inout}
+
+We can analyse a system by connecting its (physical or virtual) inputs and outputs. In this project, we have
+
+\
+
+\begin{minipage}[t]{0.38\textwidth}
+
+\textbf{Inputs}
+
+\begin{itemize}
+\item Class lists
+\item Commentary on students
+\item Seating plan used in class
+\item Exam notes
+\end{itemize}
+
+
+\end{minipage}
+\hfill
+\vline
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+
+\textbf{Outputs}
+
+\begin{itemize}
+\item Suggested students for focus
+\item Suggested seating plans
+\item Average notes for the semester
+\item Individual student reports
+\end{itemize}
+
+\end{minipage}
+
+\vspace{5mm}
+
+The inputs clearly contain sensitive information, and the relevant laws and best practices with regards to student data will be discussed further in Section \ref{dataprivacy}. It is also worth pointing out that the processed data (data during calculations and the outputs) is also sensitive.
+
+\subsection{Implied structure}
+
+\subsection{Data}
+
+\subsubsection{Files}
+
+
+\subsubsection{Databases}
+
+
+\subsubsection{Data privacy} \label{dataprivacy}
+
+
+
+
+
+\section{System plan from user actions} \label{actions}
+
+We can also model a system by considering the possible actions. We can then analyse the sub-processes inside the actions, which can suggest a natural architecture for the system.
+
+
+
+\subsection{Actions during teaching}
+
+\subsubsection{Record a remark about a set of students}
+
+\subsubsection{Suggest students for interpolation}
+
+\subsubsection{Modify the seating plan}
+ 
+ 
+ 
+ 
+\subsection{Actions outside of teaching}
+ 
+\subsubsection{Prepare student reports}
+
+\subsubsection{Suggest a seating plan}
+
+\subsubsection{Review previous seating plans}
+
+\subsubsection{Prepare spreadsheets for noting an exam}
+
+\subsubsection{Collate marks and calculate semester note}
+
+
+
+
+
+\subsection{Actions to set up the classes}
+ 
+\subsubsection{Add a class to the list of classes taught}
+
+\subsubsection{Configure the class lists}
+The \emph{class list} is the list of students in a given class.
+
+\subsubsection{Suggest a seating plan}
+
+\subsubsection{Configure constraints in a seating plan}
+I would like to be able to take into account the needs of certain students. For example, short-sighted students often ask to sit in the front row, as do students with hearing difficulties. More rarely, students have asked to sit away from the windows because of hay-fever. These constraints could be handled by specifying particular seats as "preferable" for a given student.
+
+Pairs of students often asked to be sat together. The decision as to whether or not these requests are accepted should rest with the teacher, but it would be a nice to have when automatically generating seating plans.
+
+
+\section{Choice of programming language} \label{language}
+
+\subsection{Previous personal experience}
+
+I have experience programming in a number of languages : I used \textbf{Basic} and a bit of \textbf{assembler} as a child, then \textbf{Delphi} (Visual Pascal) as a teenager, next \textbf{C++} as a grad student, and then I used \textbf{Java} and \textbf{Matlab} extensively when I worked in industry. I tried \textbf{Scala}, \textbf{Clojure} and \textbf{Julia} during my years transitioning to teaching, and more recently during my GymInf studies I have also had to learn \textbf{Python} and \textbf{Prolog}.
+
+In general, apart from Prolog, these languages feel quite similar. Some are more weighted towards object-oriented programming (Delphi, Java and Scala) but in general the virtual machine can be modelled as storing the program as a text file and executing the instructions line by line. Variables are declared and assigned values, and expressions are evaluated using iterative rules. Except for Basic and Assembler, which still allow Djikstra's nemesis the \texttt{GOTO} command, the virtual machine has control of the general flow of the execution using \emph{functions} or \emph{events} (the latter are in some sense just functions owned or controlled by objects). If we ignore naughty tricks, the programmer can only use switch statements, \texttt{if-elif-else}, \texttt{switch}, or \texttt{case}, to adjust the execution path at a very local level.
+
+The other distinction between the languages is whether or not they are \emph{functional}. Functional languages do not allow the redefinition of a variable, such as Prolog, Clojure and Scala. 
+
+
+TODO discussion of functional languages.
+
+I considered the following factors when choosing the language for my project:
+\begin{itemize}
+\item my current proficiency,
+\item my interest for improving my proficiency,
+\item ease for finding solutions to coding problems,
+\item readability of the code,
+\item maintainability of the code,
+\item future applications of improved coding abilities.
+\end{itemize}
+
+There are other factors which did not affect my decision at the start of coding : for example, creating the GUI (graphical user interface), deployability of the code, the speed and reactivity of the program, or whether the code would be scalable. I will comment on these oversights in the conclusion.
+
+
+
+\subsection{New languages}
+Alongside \textbf{Scala} (syntactic sugar over Java with a functional feel) and \textbf{Julia} (Matlab maths functionality built directly on C++), the other \emph{new} languages I considered using were \textbf{Swift}, \textbf{Clojure} and \textbf{Rust}.
+
+
+
+\subsection{Python}
+At Collège Rousseau, where I teach, we decided to teach the students Python. This was a difficult decision, with each language having advantages and disadvantages. Like the vast majority of Secondary II schools in Switzerland, we decided that the low barrier to entry, the wide use of Python in industry, the teachers' current abilities, the large support community, and the focus of readability narrowly outweighed the use of weak (duck) typing with beginners.
+
+The teacher is expected to have a strong background in the coding language being taught :
+\begin{itemize}
+\item for the pedagogical benefits of "live coding", modelling how to create code for the students to discuss and learn from, TODO citation needed
+\item creating well written code for students to study,
+\item for ease of marking and correcting (lots of) student code,
+\item for spotting mistakes in student code during class time, in order to suggest hints, and
+\item for recognising bad coding practices and explaining to students the potential pitfalls and how to avoid them,
+\item for understanding error messages.
+\end{itemize}
+
+
+
+
+
+\section{Test driven development} \label{tdd}
+
+\subsection{Building IT systems}
+
+\subsection{The waterfall method}
+
+\subsection{Reducing the distance between clients and developers}
+
+\subsection{TDD}
+
+\subsection{And next...?}
+
+
+
+
+\section{The graphical user interface} \label{gui}
+
+\subsection{Choice of language}
+
+\subsection{Implementation style}
+
+\section{Instruction booklet} \label{instructions}
+
+\section{Further developments} \label{notdone}
+
+Simple executable file
+
+instruction booklet
+
+exam buttons
+
+export seating plan to latex to pdf
+
+\begin{thebibliography}{2}
+
+\bibitem{Anaya18} Anaya, M. (2018). Clean code in Python. Packt Publishing
+
+\bibitem{Beck03} Beck, K. (2003). Test driven development by example. Addison-Wesley.
+
+\bibitem{Bloom79} Bloom, B. S. (1976). Human characteristics and school learning. McGraw-Hill.
+
+\bibitem{Bryant20} Bryant, J., Heitz, C., Sanghvi, S., \& Wagle, D. (2020). How artificial intelligence will impact K-12 teachers. Retrieved May, 12, 2020.
+
+\bibitem{BS09} Bucheton D. \& Soulé Y. (2009). Les gestes professionnels et le jeu des postures de l’enseignant dans la classe : un multi-agenda de préoccupations enchâssées.
+
+\bibitem{Hat12} Hattie, J. (2012). Visible learning for teachers: Maximizing impact on learning. Routledge.
+
+\bibitem{Mart08} Martin, R. (2008). Clean Code. Pearson.
+
+\bibitem{MM78} McCorskey, J. C., \& McVetta, R. W. (1978). Classroom seating arrangements: Instructional communication theory versus student preferences. Communication education, 27(2), 99-111.
+
+\bibitem{Swei15} Sweigart, A. (2015). Automate the Boring Stuff with Python.
+\end{thebibliography}
+
+\appendix
+
 \section{Project proposal}
 
 Bucheton and Soulé have described the act of teaching as a multi-agenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controlling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. And yet many of the teacher's most time-consuming tasks do not take place in the classroom \cite{Bryant20}: good preparation and strong follow-ups (for example auto-reflection, marking and parent-teacher interactions) work to support and complement the pillars identified in the student learning process.
@@ -32,74 +273,6 @@ I will implement this project using \emph{Test Driven Development.} This is a st
 \indent \textbf{Refactor.} Clean the code, removing duplication and renaming functions. \\
 Coding is driven by testing. In the thesis I will explore testing in more detail.
 
-
-
-
-\section{Introduction}
-
-Bucheton and Soulé have descriped the act of teaching as a multiagenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. And yet many of the teacher's most time'consuming tasks do not take place in the classroom: good preparation and strong follow-ups (auto-reflection, marking, parent-teacher interactions) work to support and complement the overall success of the student learning process.
-
-For example, teacher responsibilities include the ability
-\begin{itemize}
-\item To plan and implement effective classroom management practices
-\item To design and implement effective strategies to develop independent learners
-\item To engage students in active, hands-on, creative problem-based learning
-\item To build students’ ability to work collaboratively with others
-\item To maintain a safe, orderly environment conducive to learning
-\item To adapt instruction/support to students’ differences in development, learning styles, strengths and needs
-\item To write student reports to guide changes in instruction and practice, and to improve student learning
-\end{itemize}
-
-Many of these tasks are ripe for automation \cite{Swei15}. I would argue that some of these tasks should \textbf{not} be automated. As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
-
-For the Master's thesis project undertaken for the GymInf formation, I intend to build a suite of tools to support a range of teacher tasks including organising seating plans, building individual student reports, suggesting teacher-student interactions for upcoming classes, and creating spreadsheets of marks.
-
-\section{System plan}
-
-\subsection{InOut}
-
-We can analyse a system by connecting its (physical or virtual) inputs and outputs. In this project, we have
-
-\
-
-\begin{minipage}[t]{0.45\textwidth}
-
-\textbf{Inputs}
-
-\begin{itemize}
-\item Class lists
-\item Commentary on students \\
-(during class)
-\item Exam notes
-\end{itemize}
-
-
-\end{minipage}
-\hfill
-\vline
-\hfill
-\begin{minipage}[t]{0.45\textwidth}
-
-\textbf{Outputs}
-
-\begin{itemize}
-\item Seating plans
-\item Suggested students for focus \\
-(during planning)
-\item Average notes for the semester
-\item Individual student reports
-\end{itemize}
-
-
-
-\end{minipage}
-
-\section{Choice of programming language}
-
-\section{Testing}
-
-\section{Test driven development}
-
 \section{Useful quotes}
  
 \begin{center} 
@@ -113,26 +286,5 @@ We can analyse a system by connecting its (physical or virtual) inputs and outpu
 \begin{verbatim}
 https://github.com/zedr/clean-code-python#table-of-contents
 \end{verbatim}
-
-\begin{thebibliography}{2}
-
-\bibitem{Anaya18} Anaya, M. (2018). Clean code in Python. Packt Publishing
-
-\bibitem{Beck03} Beck, K. (2003). Test driven development by example. Addison-Wesley.
-
-\bibitem{Bloom79} Bloom, B. S. (1976). Human characteristics and school learning. McGraw-Hill.
-
-\bibitem{Bryant20} Bryant, J., Heitz, C., Sanghvi, S., \& Wagle, D. (2020). How artificial intelligence will impact K-12 teachers. Retrieved May, 12, 2020.
-
-\bibitem{BS09} Bucheton D. \& Soulé Y. (2009). Les gestes professionnels et le jeu des postures de l’enseignant dans la classe : un multi-agenda de préoccupations enchâssées.
-
-\bibitem{Hat12} Hattie, J. (2012). Visible learning for teachers: Maximizing impact on learning. Routledge.
-
-\bibitem{Mart08} Martin, R. (2008). Clean Code. Pearson.
-
-\bibitem{MM78} McCorskey, J. C., \& McVetta, R. W. (1978). Classroom seating arrangements: Instructional communication theory versus student preferences. Communication education, 27(2), 99-111.
-
-\bibitem{Swei15} Sweigart, A. (2015). Automate the Boring Stuff with Python.
-\end{thebibliography}
 
 \end{document}
