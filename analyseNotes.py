@@ -80,17 +80,30 @@ def dump_all(cfg_path, output_file):
             num_exams + spaces_before_average + 2 + num_averages - 1)
         worksheet.conditional_format(average_range, formats["failing"])
 
-        worksheet.write(row_for_notes - 1, num_exams + 2*spaces_before_average + num_averages + 2,
-                        "EOY", formats["round1b"])
+        worksheet.write(row_for_notes - 2, num_exams + 2*spaces_before_average + num_averages + 2,
+                        "Rounded Notes", formats["round1b"])
+        for i, header in enumerate(["S1", "S2", "EOY"]):
+            worksheet.write(row_for_notes - 1, num_exams + 3*spaces_before_average + num_averages + 1 + i,
+                            header, formats["round1b"])
+
         for j in range(num_students):
-            s1 = xlsxwriter.utility.xl_rowcol_to_cell(row_for_notes + j, num_exams + spaces_before_average + 3)
-            s2 = xlsxwriter.utility.xl_rowcol_to_cell(row_for_notes + j, num_exams + spaces_before_average + 4)
-            formula = f'=ROUND(AVERAGE(ROUND({s1}*10)/10, ROUND({s2}*10)/10)*10)/10'
+            s_positions = []
+            for s in [1, 2]:
+                s_position_old = xlsxwriter.utility.xl_rowcol_to_cell(row_for_notes + j,
+                                                                      num_exams + spaces_before_average + 2 + s)
+                formula = f'ROUND({s_position_old}*10)/10'
+                s_position_new = num_exams + 2*spaces_before_average + num_averages + 1 + s
+                worksheet.write_formula(
+                    row_for_notes + j, s_position_new, formula, formats["round1b"])
+                s_positions.append(xlsxwriter.utility.xl_rowcol_to_cell(row_for_notes + j, s_position_new))
+
+            formula = f'=ROUND(AVERAGE({s_positions[0]},{s_positions[1]})*10)/10'
             worksheet.write_formula(
-                row_for_notes + j, num_exams + 2*spaces_before_average + num_averages + 2, formula, formats["round1b"])
+                row_for_notes + j, num_exams + 2 * spaces_before_average + num_averages + 4,
+                formula, formats["round1b"])
         worksheet.conditional_format(
             row_for_notes, num_exams + 2 * spaces_before_average + num_averages + 2,
-            row_for_notes + num_students - 1, num_exams + 2 * spaces_before_average + num_averages + 2,
+            row_for_notes + num_students - 1, num_exams + 3 * spaces_before_average + 2 * num_averages,
             formats["failing"])
 
     workbook.close()
