@@ -3,10 +3,23 @@
 
 \documentclass[10pt]{article}
 
-\usepackage{amsmath}
+\usepackage{amsmath, amsfonts}
 \usepackage{cmbright}
 
 \usepackage{tcolorbox}
+
+
+\usepackage{tikz}
+\tikzset{
+  desk/.style={
+    shape=rectangle,
+    draw,
+    font=\footnotesize,
+    minimum width=2cm,
+    minimum height=1cm,
+  },
+}
+\usepackage{adjustbox}
 
 \begin{document}
 
@@ -18,7 +31,7 @@
 
 Bucheton and Soulé have described the act of teaching as a multi-agenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controlling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. And yet many of the teacher's most time-consuming tasks do not take place in the classroom: good preparation and strong follow-ups (auto-reflection, marking, parent-teacher interactions) work to support and complement the overall success of the student learning process.
 
-For example, teacher responsibilities include the ability to
+For example, teacher responsibilities include the ability to [TODO: citation needed]
 \begin{itemize}
 \item plan and implement effective classroom management practices,
 \item design and implement effective strategies to develop independent learners,
@@ -97,9 +110,124 @@ We can analyse a system by connecting its (physical or virtual) inputs and outpu
 
 \vspace{5mm}
 
-The inputs clearly contain sensitive information, and the relevant laws and best practices with regards to student data will be discussed further in Section \ref{dataprivacy}. It is also worth pointing out that the processed data (data during calculations and the outputs) is also sensitive.
+The inputs clearly contain sensitive information, and the relevant laws and best practices with regards to student data will be discussed further in Section \ref{dataprivacy}. It is also worth pointing out that the processed data (data during calculations and the outputs) is also sensitive. In general we should try to store as little personal data as possible. TODO citation needed.
 
-\subsection{Implied structure}
+\subsection{Explanation of inputs}
+
+\subsubsection{Class lists}
+For each class of interest, we need to have a list of students who are members of this class. For each student, it is often useful to store a "given" name with which they like to be called in class. Other information is not essential (gender, age, etc.), and so we will not store it.
+
+\subsubsection{Commentary on students}
+During the teaching process, the teacher makes useful judgements about students and groups of students. The teaching process obviously includes contact time during classes, but it can also include thoughts and decisions during the planning process, while marking homework or exams, or while evaluating a lesson \emph{ex-post}.
+
+Comments could take the form
+\begin{itemize}
+\item Excellent definition of Pythagoras' Theorem
+\item Good explanation of photosynthesis on blackboard
+\item Very quick with past continuous exercises
+\item Chatting
+\item DNF \emph{(homework not done)}
+\item Seemed unashamed that he did not know the formula for the area of a triangle.
+\end{itemize}
+
+To each comment should be associated the student, the class and the date. Thinking ahead, It would be very useful to also include whether or not the comment was positive or negative: see the "focus" and "report" outputs, respectively sections \ref{output_focus} and \ref{output_report}.
+
+\subsubsection{Seating plan used in class}
+Especially at the start of the year, but also just after holidays, it can be difficult to remember the given names of students. By asking the students to follow a seating plan \emph{and then having this seating plan to hand,} the teacher has an easy way to refer to students by their given name. At the start of the year this also helps the teacher in learning the names. See figure \ref{seatingplan} on page \pageref{seatingplan} for an example of a seating plan created using the tikz package of LaTeX. As far as possible, I followed the format of seating plans used during exams at Collège Rousseau : thus the seating plan layout should be familiar to both students and teachers.
+
+\begin{figure} \label{seatingplan} \centering
+\begin{adjustbox}{width=0.8\textwidth, frame=1pt 10pt}
+\begin{tikzpicture}
+
+% Students
+\node[desk] at (0,0) {Ginny};
+\node[desk] at (2,0) {Hermione};
+\node[desk] at (5,0) {Percy};
+\node[desk] at (7,0) {Crabbe};
+\node[desk] at (10,0) {Neville};
+\node[desk] at (12,0) {Alec};
+\node[desk] at (0,2) {Luna};
+\node[desk] at (2,2) {Fred};
+\node[desk] at (5,2) {George};
+\node[desk] at (7,2) {Ron};
+\node[desk] at (10,2) {Draco};
+\node[desk] at (12,2) {Goyle};
+\node[desk] at (0,4) {Gilderoy};
+\node[desk] at (2,4) {Harry};
+\node[desk] at (5,4) {Cedric};
+\node[desk] at (7,4) {Oliver};
+\node[desk] at (10,4) {Cho};
+\node[desk] at (12,4) {Seamus};
+\node[desk] at (0,6) {Hagrid};
+\node[desk] at (2,6) {Dumbledore};
+\node[desk] at (5,6) {Snape};
+\node[desk] at (7,6) {McGonagall};
+\node[desk] at (10,6) {Hedwig};
+\node[desk] at (12,6) {Hagrid};
+
+
+% Prof
+\node[desk, ultra thick] at (11, -1.5) {\bfseries Prof};
+
+% Door
+\draw[ultra thick] (-1.5,1) -- (-1.5, -1);
+\draw[ultra thick] (-1.5,-2) -- (-1.5, -3);
+\draw (-1.5,-2) arc (270:180:1) -- (-1.5,-1) node[below] {entrée};
+
+\end{tikzpicture}
+\end{adjustbox}
+
+\caption{Example of a seating plan, created with the Tikz package of \LaTeX}
+
+\end{figure}
+
+
+
+
+
+\subsubsection{Exam notes}
+
+The individual exam results will be needed in order to calculate the average note for each student for each semester, section \ref{output_notes}. We will also need the weighting associated with each exam, and by including the date of the exam we can check the progression of students, section \ref{output_report}.
+
+
+
+
+\subsection{Explanation of outputs}
+
+\subsubsection{Suggested students for focus} \label{output_focus}
+
+As a student teacher, I found it hard to balance my time equitably among the students in a class. Certain students, perhaps those who were louder or more confident, tended to capture my attention. By keeping a record of my interactions with students, it was possible to estimate an ordering of students by recent interactions, and so indicate students who require teacher \emph{focus} during the next set of teacher-student interactions (probably during the next class).
+
+This \emph{focus} can be very simple: these are the students to whom the teacher addresses the opening questions. These opening questions can revise topics from the last lesson or prepare the students for the ideas to be tackled in this lesson. Students who respond positively to an early question are much more likely to volunteer answers later in the class TODO citation needed.
+
+\
+
+Let us model the interactions with a given student by simply counting the number of interactions on a given day.
+
+\begin{tcolorbox}
+Comments:
+
+01/06/2023 Harry gives conclusion of Pythag \\
+01/06/2023 Harry, Ron correct calc litt \\
+08/06/2023 Harry calculates hypotenuse.
+\end{tcolorbox}
+We define a function $f_H : \mbox{Dates} \to \mathbb{N}$ to count the interactions with Harry
+$$ f_{H}(d) = \left\{ \begin{matrix} 2 &  \mbox{if} & d=\mbox{01/06/2023} \\ 1 & \mbox{if} & d=\mbox{08/06/2023}  \\ 0 && \mbox{otherwise.} \end{matrix} \right. $$
+and a corresponding function $f_R$ for the interactions with Ron
+$$ f_{R}(d) = \left\{ \begin{matrix} 1 &  \mbox{if} & d=\mbox{01/06/2023}  \\ 0 && \mbox{otherwise.} \end{matrix} \right. $$
+
+We would like to create a weight operator, $W$, which would map these functions to a real number. This operator should measure the number of recent interactions, giving more weight if there have been more interactions. For example, Harry has had more interactions than Ron and so we expect $W(f_H) > W(f_R)$.
+
+Ideally negative interactions should \textbf{not} be counted in this weighting; otherwise "difficult" students would be unlikely to be chosen for positive interactions.
+
+\subsubsection{Suggested seating plans}
+
+\subsubsection{Average notes for the semester} \label{output_notes}
+
+\subsubsection{Individual student reports} \label{output_report}
+
+
+\subsection{Implied structure of backend}
 
 \subsection{Data}
 
@@ -111,7 +239,15 @@ The inputs clearly contain sensitive information, and the relevant laws and best
 
 \subsubsection{Data privacy} \label{dataprivacy}
 
+\texttt{https://www.ge.ch/organisation/protection-donnees-transparence}
 
+\begin{center} 
+\emph{"Les institutions publiques genevoises sont soumises à la LIPAD, s'agissant du traitement des données personnelles (art. 3 LIPAD). Elles doivent donc respecter les dispositions prévues par cette loi dans tout traitement de données personnelles."}\cite[p. 1]{PPDT18}
+\end{center}
+
+\begin{center} 
+\emph{"Ainsi, ne sont en principe pas soumises au RGPD les situations suivantes... L’instruction publique accueille des élèves qui résident et/ou ont la nationalité d’un Etat membre de l’UE, sans avoir fait de promotion sur le territoire de l’UE."}\cite[p. 3]{PPDT18}
+\end{center}
 
 
 
@@ -357,6 +493,8 @@ using the data to make predictions about students. For example: their behaviour 
 \bibitem[MM78]{MM78} McCorskey, J. C., \& McVetta, R. W. (1978). Classroom seating arrangements: Instructional communication theory versus student preferences. Communication education, 27(2), 99-111.
 
 \bibitem[MSB11]{MSB11} Myers, G. J., Sandler, C., \& Badgett, T. (2011). The art of software testing. John Wiley \& Sons.
+
+\bibitem[PPDT18]{PPDT18} Le PPDT - Guide pratique RGPD à l'attention des institutions publiques genevoises (2018).
 
 \bibitem[Swei15]{Swei15} Sweigart, A. (2015). Automate the Boring Stuff with Python.
 \end{thebibliography}
