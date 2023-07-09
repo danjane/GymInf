@@ -209,20 +209,44 @@ Comments:
 
 01/06/2023 Harry gives conclusion of Pythag \\
 01/06/2023 Harry, Ron correct calc litt \\
+04/06/2023 Ron calculates angles in triangle \\
 08/06/2023 Harry calculates hypotenuse.
 \end{tcolorbox}
 We define a function $f_H : \mbox{Dates} \to \mathbb{N}$ to count the interactions with Harry
 $$ f_{H}(d) = \left\{ \begin{matrix} 2 &  \mbox{if} & d=\mbox{01/06/2023} \\ 1 & \mbox{if} & d=\mbox{08/06/2023}  \\ 0 && \mbox{otherwise.} \end{matrix} \right. $$
 and a corresponding function $f_R$ for the interactions with Ron
-$$ f_{R}(d) = \left\{ \begin{matrix} 1 &  \mbox{if} & d=\mbox{01/06/2023}  \\ 0 && \mbox{otherwise.} \end{matrix} \right. $$
+$$ f_{R}(d) = \left\{ \begin{matrix} 1 &  \mbox{if} & d=\mbox{01/06/2023}  \\ 1 &  \mbox{if} & d=\mbox{04/06/2023}  \\  0 && \mbox{otherwise.} \end{matrix} \right. $$
 
-We would like to create a weight operator, $W$, which would map these functions to a real number. This operator should measure the number of recent interactions, giving more weight if there have been more interactions. For example, Harry has had more interactions than Ron and so we expect $W(f_H) > W(f_R)$.
+On a given date $t$ we would like to create a weight operator, $W_t$, which would map these functions to a real number. This operator should measure the number of recent interactions, giving more weight if there have been more interactions. For example, Harry has had more interactions than Ron and so we expect $W_t(f_H) > W_t(f_R)$.
 
-Ideally negative interactions should \textbf{not} be counted in this weighting; otherwise "difficult" students would be unlikely to be chosen for positive interactions.
+Consider calculating the students for focus just before the holidays or just after the holidays. Assuming the list of comments has not changed, then ideally the \textbf{ordering} of the students by weight would not change. Thus the students for focus should not be dependant on when the algorithm was run. A straightforward property with this behaviour is that all weights change by the same constant. In probability, this is called the \emph{memoryless} property \cite{Norr98} and implies an exponential weighting of the counts:
+$$ W_t(f) = \sum_{d \in \mathcal{D}} f(d) \, e^{k(d-t)} $$
+where we sum over all dates\footnote{Clearly, as the number of comments is finite this is really a finite sum.}  and $k>0$ is a constant. Then recalculating the weights after $n$ days gives
+$$W_{t+n}(f) = \sum_{d \in \mathcal{D}} f(d) \, e^{k(d-(t+n))} =  e^{-kn} \cdot \sum_{d \in \mathcal{D}} f(d) \, e^{k(d-t)} = e^{-kn} \cdot  W_t(f),$$
+so all weights are rescaled by $e^{-kn}$ which does not depend on $f$.
+
+To pick the constant $k$, consider the desired relative weighting between a student to whom we made a comment yesterday, and another who received two comments quite a while ago (but two comments on the same day). How much time should pass in order that both students receive the same weight? Completely subjectively, I assume one week should pass, which gives
+$$1 e^{0k} = 2 e^{-7k} \Rightarrow k = \frac{1}{7} \ln {2}  \approx 0.1.$$ 
+
+Ideally negative interactions should \textbf{not} be counted in this weighting; otherwise "difficult" students would be unlikely to ever be chosen for positive interactions.
 
 \subsubsection{Suggested seating plans}
 
 \subsubsection{Average notes for the semester} \label{output_notes}
+
+The notes in Genevan institutions range between 1.5 and 6.0. The average note for the semester is a weighted sum of the individual notes of the marked exams of the semester. The individual notes are rounded to the nearest half, whereas the \emph{semestriel} notes are rounded to the nearest tenth. Mathematically, 
+$$ n_s = R_{0.1} \Bigg(\frac{\sum_{i \in \mathcal{I}_s} \, w_i \cdot n_i }{\sum_{i \in \mathcal{I}_s} \, w_i}\Bigg)$$
+where the index runs over the marked exams of the semester, and $R_s$ is function that rounds to the nearest multiple of $s$.
+
+It is worth pointing out that the rounding function is \emph{not} continuous. While this is obvious, it can make the semestriel note surprisingly sensitive to small changes in individual exam notes. This also true for the end of year note, which is the \textbf{rounded} average of the semestriel notes:
+$$n_y = R_{0.1} \Bigg( \frac{n_{s_1} + n_{s_2}}{2} \Bigg).$$
+In general the pass mark is 4.0, and the rounding functions are a big advantage for weak students. Consider a concrete example, where before rounding a student receives $3.85$ for the first semester and $3.95$ for the second. Then the final end of year note is
+$$n_y = R_{0.1}  \Bigg( \frac{R_{0.1}(3.85) +R_{0.1}(3.95)}{2} \Bigg) = R_{0.1} \Bigg( \frac{3.9 + 4.0}{2} \Bigg) = R_{0.1}(3.95) = 4.0$$
+and the student passes! Fingers crossed this also applies to Master's theses.
+
+\
+
+
 
 \subsubsection{Individual student reports} \label{output_report}
 
@@ -493,6 +517,8 @@ using the data to make predictions about students. For example: their behaviour 
 \bibitem[MM78]{MM78} McCorskey, J. C., \& McVetta, R. W. (1978). Classroom seating arrangements: Instructional communication theory versus student preferences. Communication education, 27(2), 99-111.
 
 \bibitem[MSB11]{MSB11} Myers, G. J., Sandler, C., \& Badgett, T. (2011). The art of software testing. John Wiley \& Sons.
+
+\bibitem{Norr98}[Norr98] Norris, J. R. (1998). Markov chains (No. 2). Cambridge university press.
 
 \bibitem[PPDT18]{PPDT18} Le PPDT - Guide pratique RGPD à l'attention des institutions publiques genevoises (2018).
 
