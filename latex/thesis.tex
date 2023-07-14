@@ -391,38 +391,25 @@ By "backend" I mean the data access layer of the system. By connecting the input
 \
 
 \begin{center}
-\begin{tikzpicture}
-    \node (box) [block] {System}
-    node (in1)     [above left=-.5cm and 1.5cm of box]     {$\vec{u}_1$}
-    node (in2)     [below left=-.5cm and 1.5cm of box]     {$\vec{u}_2$}
-    node (out1)    [above right=-.5cm and 1.5cm of box]    {$\vec{v}_1$}
-    node (out2)    [below right=-.5cm and 1.5cm of box]    {$\vec{v}_2$}
-    foreach \X in {1,2}
-    {(in\X) edge[->] (box.west |- in\X)
-    (box.east |- out\X) edge[->] (out\X)};
-\end{tikzpicture}
 
-\
-
-\begin{tikzpicture}
-    \node (box) [block] {Alphabetic seating plan}
-    node (in1)     [left= 1.5cm of box]     {Class list}
-    node (out1)    [right=1.5cm of box]    {Basic seating plan}
-    (in1) edge[->] (box.west |- in1)
-    (box.east |- out1) edge[->] (out1);
-\end{tikzpicture}
-
-\begin{tikzpicture}[node distance=30mm, every node/.style={draw, circle, text centered, minimum height=1.5cm, align=center, text width=1cm, font=\fontsize{6}{8}\selectfont}]
+\begin{tikzpicture}[node distance=18mm, every node/.style={draw, circle, text centered, minimum height=12mm, align=center, text width=1cm, font=\fontsize{6}{8}\selectfont}]
   % Nodes
   \node (students) {list of students};
-  \node (process) [below right of=students, yshift=10mm, rectangle] {Process};
-  \node (comments) [below left of=process, yshift=10mm,] {list of comments};
-  \node (output) [right of=process] {comment table};
+  \node (process) [below right of=students, yshift=5mm, xshift=5mm, rectangle] {shred comments};
+  \node (comments) [below left of=process, yshift=5mm,xshift=-5mm] {raw comments as text };
+  \node (comment_table) [right of=process] {comment table};
+  \node (analyze) [right of=comment_table, rectangle] {analyze comments};
+  \node (data) [right of=analyze] {student data};
 
   % Arrows
   \draw[->] (students) -- (process);
   \draw[->] (comments) -- (process);
-  \draw[->] (process) -- (output);
+  \draw[->] (process) -- (comment_table);
+  \draw[->] (comment_table) -- (analyze);
+  \draw[->] (analyze) -- (data);
+
+%    {(in\X) edge[->] (box.west |- in\X)
+
 \end{tikzpicture}
 
 \end{center}
