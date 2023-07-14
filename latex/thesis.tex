@@ -10,6 +10,7 @@
 
 
 \usepackage{tikz}
+\usetikzlibrary{positioning}
 \tikzset{
   desk/.style={
     shape=rectangle,
@@ -18,6 +19,9 @@
     minimum width=2cm,
     minimum height=1cm,
   },
+  block/.style={
+  draw, rectangle, minimum height=1cm
+  }
 }
 \usepackage{adjustbox}
 
@@ -29,7 +33,7 @@
 
 \section{Introduction}
 
-Bucheton and Soulé have described the act of teaching as a multi-agenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controlling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. And yet many of the teacher's most time-consuming tasks do not take place in the classroom: good preparation and strong follow-ups (auto-reflection, marking, parent-teacher interactions) work to support and complement the overall success of the student learning process.
+From the classic teaching literature, Bucheton and Soulé have described the act of teaching as a multi-agenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controlling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. Many of the teacher's most time-consuming tasks do not take place in the classroom: good preparation and strong follow-ups (auto-reflection, marking, parent-teacher interactions) work to support and complement the overall success of the student learning process.
 
 For example, teacher responsibilities include the ability to [TODO: citation needed]
 \begin{itemize}
@@ -42,15 +46,15 @@ For example, teacher responsibilities include the ability to [TODO: citation nee
 \item write student reports to guide changes in instruction and practice, and to improve student learning.
 \end{itemize}
 
-Many of these tasks are ripe for automation \cite{Swei15}, although I would also accept that some of these tasks should \textbf{not} be automated (even if they can be). As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
+Many of these tasks are "ripe for automation" \cite[p.?]{Swei15}, although I would also accept that some of these tasks should \textbf{not} be automated (even if they can be). As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
 
 So which tasks should be automated? Why? And for whom? When I first started teaching, my natural character led to two bad teaching practices: I found it difficult to engage with the quieter, more reserved students; and I was so busy answering student questions that I left little time for taking notes. I felt my teaching (and so hopefully also my students' learning experience) would benefit from a tool which tracked my interactions in class in an attempt to shift the focus away from the "louder" students. 
 
 TODO: discussion on equality for students, and \cite{Hat12} on answering too quickly.
 
-But if I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: an incredibly useful trick when planning lessons, writing reports, and especially for parent evenings.
+But if I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: a useful capability when planning lessons, writing reports, and especially for parent evenings.
 
-For the Master's thesis project undertaken for the GymInf formation, I built a suite of tools to support a range of teacher tasks including organising seating plans, building individual student reports, suggesting teacher-student interactions for upcoming classes, and creating spreadsheets of marks. 
+For the Master's thesis project undertaken for the GymInf formation, I chose to build a suite of tools to support a range of teacher tasks including capturing key interaction information, building individual student reports, suggesting teacher-student interactions for upcoming classes, organising seating plans, and creating spreadsheets of marks. 
 
 \
 
@@ -72,8 +76,98 @@ I also wanted to use this thesis to improve my coding style, exploring the indus
 
 Given the limited resources of this masters' thesis, not all of the desired functionality has been delivered. These missing features are described in section \ref{notdone}. Please note that the current codebase was designed with these features in mind, and that existing code should require minimal changes to incorporate these features as they are added.
 
+\section{BOSCARD}
+
+
+\subsection{Background}
+\emph{Provide background information that includes the reasons for creating the project and mentions the key stakeholders who will benefit from the project result.}
+
+I am doing master's thesis in Computing and have chosen to create a suite of tools to aid teachers. These will be implemented through the \emph{teacher assisting tools} system, called TAT. This will be aimed at assisting  myself and other teachers in their daily work.
+
+\subsection{Objectives} 
+\emph{Describe the project goals and link each of them with related, SMART project objectives.}
+
+
+There are common mistakes made by many new teachers, for example 
+\begin{itemize}
+\item answering student questions immediately,
+\item allowing a subset of students to monopolise class interactions, and
+\item taking inadequate notes during class.
+\end{itemize}
+I will build the TAT system to help teachers to overcome these issues. As well as recording student interaction information, the system will also build individual student reports, suggest future teacher-student interactions for upcoming classes, suggest seating plans, and create spreadsheets of marks.
+
+\subsection{Scope} 
+\emph{Provide a high-level description of the features and functions that characterize the product, service, or result the project is meant to deliver.}
+
+TAT will be able to:
+\begin{itemize}
+\item Actions during teaching.
+\begin{itemize}
+  \item Record, during class, an interaction with a set of students.
+  \item Suggest students for focus, see section \ref{output_focus}.
+  \item Manually modify the seating plan as required.
+ \end{itemize}
+ \item Actions outside of teaching.
+ \begin{itemize}
+  \item Prepare student reports.
+  \item Suggest a seating plan.
+  \item Review previous seating plans.
+  \item Prepare an empty spreadsheet for marking and noting an exam.
+  \item Collate marks and calculate semester note.
+\end{itemize}
+\item Actions to set up the class.
+\begin{itemize}
+  \item Add a class to the list of classes taught.
+  \item Configure the class lists.
+  \item Suggest a seating plan.
+\end{itemize}
+\end{itemize}
+
+The TAT backend will be linked to a GUI, run from a single executable file, with a local instance per teacher.
+
+\
+
+TAT will not connect to the internet. TAT will not cover data privacy concerns beyond what is currently used in standard teaching practices in Geneva, see section TODO \ref{data_privacy}.
+
+\
+
+All development and testing will be done on my personal machine, a MacBook Air, and be delivered to the examiner on this platform as he has the same operating system. Any work required to migrate to the school system will not be in the scope of this thesis.
+
+\subsection{Constraints} 
+\emph{Identify the specific constraints or restrictions that limit or place conditions on the project, especially those associated with project scope.}
+
+The thesis must be defended and marked by September 8$^{th}$, 2023. Therefore the TAT system must be delivered to my thesis advisor before August 14$^{th}$ 2023. I am writing this thesis and the code for the TAT system alone: while a basic functionality is essential for all objectives, I anticipate future enhancements and even functional additions will occur.
+
+The TAT system must run on the school computers. TODO: find out what they are running.
+
+\subsection{Assumptions} 
+\emph{Specify all factors that are, for planning purposes, considered to be true. During the planning process, these assumptions will be validated.}
+
+
+\subsection{Risks} 
+\emph{Outline the risks identified at the start of the project. Include a quick assessment of the significance of each risk and how to deal with them.}
+
+\subsection{Deliverables} 
+\emph{Define the key deliverables the project is required to produce to achieve the stated objectives.}
+
+
 
 \section{System plan: inputs and outputs} \label{inout}
+
+“Design Patterns: Elements of Reusable Object-Oriented Software” by Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides \\
+“The Design of Everyday Things” by Don Norman \\
+“Systems Analysis and Design” by Alan Dennis and Barbara Haley Wixom\\
+“Clean Architecture: A Craftsman’s Guide to Software Structure and Design” by Robert C. Martin\\
+“Software Architecture in Practice” by Len Bass, Paul Clements, and Rick Kazman
+
+\
+
+In his 2017 book "Clean Architecture" Robert Martin\footnote{Martin likes to be called "Uncle Bob".} is very clear about why we invest time in the planning phase of an IT system:
+
+\begin{center}
+\emph{"The goal of software architecture is to minimize the human resources required to build and maintain the required system."} \cite[p. 5]{Mart17}
+\end{center}
+
 
 We can analyse a system by connecting its (physical or virtual) inputs and outputs. In this project, we have
 
@@ -87,7 +181,7 @@ We can analyse a system by connecting its (physical or virtual) inputs and outpu
 \item Class lists
 \item Commentary on students
 \item Seating plan used in class
-\item Exam notes
+\item Exam notes and weights
 \end{itemize}
 
 
@@ -210,7 +304,7 @@ Comments:
 01/06/2023 Harry gives conclusion of Pythag \\
 01/06/2023 Harry, Ron correct calc litt \\
 04/06/2023 Ron calculates angles in triangle \\
-08/06/2023 Harry calculates hypotenuse.
+08/06/2023 Harry calculates hypotenuse
 \end{tcolorbox}
 We define a function $f_H : \mbox{Dates} \to \mathbb{N}$ to count the interactions with Harry
 $$ f_{H}(d) = \left\{ \begin{matrix} 2 &  \mbox{if} & d=\mbox{01/06/2023} \\ 1 & \mbox{if} & d=\mbox{08/06/2023}  \\ 0 && \mbox{otherwise.} \end{matrix} \right. $$
@@ -232,11 +326,15 @@ Ideally negative interactions should \textbf{not} be counted in this weighting; 
 
 \subsubsection{Suggested seating plans}
 
+Most classes have 24 students arranged in 12 pairs, with the 12 pairs at desks arranged in 3 columns by 4 rows, see figure \ref{seatingplan} on page \pageref{seatingplan}. There are two obvious seating arrangements : using the ordering from the class list\footnote{The class list is alphabetic on surname. However, due to data privacy concerns the system does not have access to the surname: it only has the email username, see section \ref{dataprivacy}. The alphabetic ordering of the usernames is not necessarily the same as the alphabetic ordering of the fullnames. To avoid this problem I use the class list ordering directly rather than the usernames.} or using a random seating plan. For testing and repeatability it is much easier to use a deterministic algorithm, and so I have preferred using the class list as a default seating plan.
+
+As the year progresses we have more information about the students: pairs that work well together, students who work at similar speeds, students which have different strengths. Could we use the student comments and the exam results to suggest seating plans suited to particular lessons?
+
 \subsubsection{Average notes for the semester} \label{output_notes}
 
 The notes in Genevan institutions range between 1.5 and 6.0. The average note for the semester is a weighted sum of the individual notes of the marked exams of the semester. The individual notes are rounded to the nearest half, whereas the \emph{semestriel} notes are rounded to the nearest tenth. Mathematically, 
 $$ n_s = R_{0.1} \Bigg(\frac{\sum_{i \in \mathcal{I}_s} \, w_i \cdot n_i }{\sum_{i \in \mathcal{I}_s} \, w_i}\Bigg)$$
-where the index runs over the marked exams of the semester, and $R_s$ is function that rounds to the nearest multiple of $s$.
+where the index runs over the marked exams of the semester, and $R_s$ is the function that rounds to the nearest multiple of $s$.
 
 It is worth pointing out that the rounding function is \emph{not} continuous. While this is obvious, it can make the semestriel note surprisingly sensitive to small changes in individual exam notes. This also true for the end of year note, which is the \textbf{rounded} average of the semestriel notes:
 $$n_y = R_{0.1} \Bigg( \frac{n_{s_1} + n_{s_2}}{2} \Bigg).$$
@@ -246,12 +344,89 @@ and the student passes! Fingers crossed this also applies to Master's theses.
 
 \
 
-
+I would like the system to calculate the semestriel and end of year notes for each student.
 
 \subsubsection{Individual student reports} \label{output_report}
 
+It is often useful to have a quick overview of an individual student's progress. Perhaps beforehand, while planning which students will tackle which activities, or afterwards, when analysing the efficacy of a sequence of lessons. More concretely, such an overview would be very useful when meeting parents, when giving notes, and when asked to comment on their progress in the \emph{conseils de classes} at the end of each semester.
+
+Information that would be useful would be the student name, their given name, the class, a list of the comments concerning this student, their exam notes over time, and a graphical visualisation of their progress. Roughly, the overview would include an A4 page per student which looks something like this:
+
+\begin{center}
+\begin{tcolorbox}
+
+harry.pttr \hfill \textbf{Harry} \hfill 1ma1df01
+
+\
+
+\small{
+01/06/2023 Harry gives conclusion of Pythag \\
+01/06/2023 Harry, Ron correct calc litt \\
+08/06/2023 Harry calculates hypotenuse
+}
+
+\vspace{10mm}
+
+\begin{center}
+\begin{tikzpicture}
+
+\draw[thick, fill=black!10!white] (0,0) rectangle (3,3) node[pos=0.5] {progress};
+\draw[thick, fill=black!10!white] (6,0) rectangle (9,3) node[pos=0.5] {notes};
+
+\end{tikzpicture}
+\end{center}
+
+\end{tcolorbox}
+\end{center}
+
 
 \subsection{Implied structure of backend}
+
+By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what functionality will be required, and what functionality can be shared.
+
+\
+
+\texttt{https://tikz.net/product-architecture/}
+
+\
+
+\begin{center}
+\begin{tikzpicture}
+    \node (box) [block] {System}
+    node (in1)     [above left=-.5cm and 1.5cm of box]     {$\vec{u}_1$}
+    node (in2)     [below left=-.5cm and 1.5cm of box]     {$\vec{u}_2$}
+    node (out1)    [above right=-.5cm and 1.5cm of box]    {$\vec{v}_1$}
+    node (out2)    [below right=-.5cm and 1.5cm of box]    {$\vec{v}_2$}
+    foreach \X in {1,2}
+    {(in\X) edge[->] (box.west |- in\X)
+    (box.east |- out\X) edge[->] (out\X)};
+\end{tikzpicture}
+
+\
+
+\begin{tikzpicture}
+    \node (box) [block] {Alphabetic seating plan}
+    node (in1)     [left= 1.5cm of box]     {Class list}
+    node (out1)    [right=1.5cm of box]    {Basic seating plan}
+    (in1) edge[->] (box.west |- in1)
+    (box.east |- out1) edge[->] (out1);
+\end{tikzpicture}
+
+\begin{tikzpicture}[node distance=30mm, every node/.style={draw, circle, text centered, minimum height=1.5cm, align=center, text width=1cm, font=\fontsize{6}{8}\selectfont}]
+  % Nodes
+  \node (students) {list of students};
+  \node (process) [below right of=students, yshift=10mm, rectangle] {Process};
+  \node (comments) [below left of=process, yshift=10mm,] {list of comments};
+  \node (output) [right of=process] {comment table};
+
+  % Arrows
+  \draw[->] (students) -- (process);
+  \draw[->] (comments) -- (process);
+  \draw[->] (process) -- (output);
+\end{tikzpicture}
+
+\end{center}
+
 
 \subsection{Data}
 
@@ -285,7 +460,7 @@ We can also model a system by considering the possible actions. We can then anal
 
 \subsubsection{Record a remark about a set of students}
 
-\subsubsection{Suggest students for interpolation}
+\subsubsection{Suggest students for focus}
 
 \subsubsection{Modify the seating plan}
  
@@ -514,6 +689,8 @@ using the data to make predictions about students. For example: their behaviour 
 
 \bibitem[Mart08]{Mart08} Martin, R. (2008). Clean Code. Pearson.
 
+\bibitem[Mart17]{Mart17} Martin, R. (2017). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Pearson
+
 \bibitem[MM78]{MM78} McCorskey, J. C., \& McVetta, R. W. (1978). Classroom seating arrangements: Instructional communication theory versus student preferences. Communication education, 27(2), 99-111.
 
 \bibitem[MSB11]{MSB11} Myers, G. J., Sandler, C., \& Badgett, T. (2011). The art of software testing. John Wiley \& Sons.
@@ -522,8 +699,12 @@ using the data to make predictions about students. For example: their behaviour 
 
 \bibitem[PPDT18]{PPDT18} Le PPDT - Guide pratique RGPD à l'attention des institutions publiques genevoises (2018).
 
+
+\bibitem[Rob19]{Rob19} Robinson, M. (2019). BOSCARD: A Scoping Tool for Lean Continuous Improvement Projects. In Global Lean for Higher Education (pp. 181-195). Productivity Press.
+
 \bibitem[Swei15]{Swei15} Sweigart, A. (2015). Automate the Boring Stuff with Python.
 \end{thebibliography}
+
 
 \appendix
 
