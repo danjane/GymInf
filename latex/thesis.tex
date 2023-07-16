@@ -382,10 +382,10 @@ harry.pttr \hfill \textbf{Harry} \hfill 1ma1df01
 
 \subsection{Implied structure of backend}
 
-By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what functionality will be required, and what functionality can be shared. In the following schematic, I have used Yourdon-DeMarco notation for a \emph{Data Flow Diagram}, where the processes (functions) are circles and data is represented as a rectangle. Flow of control (transfer of information) is represented by arrows. TODO citation needed.
+By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what functionality will be required, and what functionality can be shared. In the schematic in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, I have used Yourdon-DeMarco notation for a \emph{Data Flow Diagram}, where the processes (functions) are circles and data is represented as a rectangle. Flow of control (transfer of information) is represented by arrows. TODO citation needed.
 
+\begin{figure}[h] \label{dataflowdiagram}
 \begin{center}
-
 \begin{tikzpicture}[node distance=18mm, every node/.style={draw, text centered, minimum height=12mm, align=center, text width=1cm, font=\fontsize{6}{8}\selectfont}]
 
 \def\datagapmm{40}
@@ -436,7 +436,8 @@ By "backend" I mean the data access layer of the system. By connecting the input
 \end{tikzpicture}
 
 \end{center}
-
+\caption{Data flow diagram for the backend of the TAT system.}
+\end{figure}
 
 \subsection{Data}
 
