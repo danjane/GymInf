@@ -382,32 +382,55 @@ harry.pttr \hfill \textbf{Harry} \hfill 1ma1df01
 
 \subsection{Implied structure of backend}
 
-By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what functionality will be required, and what functionality can be shared.
-
-\
-
-\texttt{https://tikz.net/product-architecture/}
-
-\
+By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what functionality will be required, and what functionality can be shared. In the following schematic, I have used Yourdon-DeMarco notation for a \emph{Data Flow Diagram}, where the processes (functions) are circles and data is represented as a rectangle. Flow of control (transfer of information) is represented by arrows. TODO citation needed.
 
 \begin{center}
 
-\begin{tikzpicture}[node distance=18mm, every node/.style={draw, circle, text centered, minimum height=12mm, align=center, text width=1cm, font=\fontsize{6}{8}\selectfont}]
+\begin{tikzpicture}[node distance=18mm, every node/.style={draw, text centered, minimum height=12mm, align=center, text width=1cm, font=\fontsize{6}{8}\selectfont}]
+
+\def\datagapmm{40}
+
+\def\function{circle}
+\def\datastore{rectangle}
   % Nodes
-  \node (students) {list of students};
-  \node (process) [below right of=students, yshift=5mm, xshift=5mm, rectangle] {shred comments};
-  \node (comments) [below left of=process, yshift=5mm,xshift=-5mm] {raw comments as text };
-  \node (comment_table) [right of=process] {comment table};
-  \node (analyze) [right of=comment_table, rectangle] {analyze comments};
-  \node (data) [right of=analyze] {student data};
+  \node (comments) [\datastore]{raw comments as text};
+  \node (students) [below of=comments, \datastore] {list of students};
+  \node (shred) [right of=comments, xshift=\datagapmm, \function] {shred comments};
+  \node (comment_table) [right of=shred, \datastore] {comment table};
+  \node (analyze) [below of=shred, \function] {analyze comments};
+  \node (progress) [below of=comment_table, \datastore] {progress table};
 
   % Arrows
-  \draw[->] (students) -- (process);
-  \draw[->] (comments) -- (process);
-  \draw[->] (process) -- (comment_table);
+  \draw[->] (students) -- (shred);
+  \draw[->] (comments) -- (shred);
+  \draw[->] (shred) -- (comment_table);
   \draw[->] (comment_table) -- (analyze);
-  \draw[->] (analyze) -- (data);
+  \draw[->] (analyze) -- (progress);
+  
+  % Second row
+  \node (suggest) [below of=shred, yshift=-18mm, \function] {suggest focus};
+  \node (focus) [right of=suggest, xshift=\datagapmm, \datastore] {ordered students for focus};
+  \node (build) [below of=suggest, \function] {build report};
+  \node (report) [right of=build, xshift=\datagapmm, \datastore] {pdf of individual reports};
 
+  \draw[->] (progress) -- (suggest);
+  \draw[->] (suggest) -- (focus);
+  \draw[->] (progress) -- (build);
+  \draw[->] (build) -- (report);
+  
+  % Third row
+  \node (average) [below of=build, \function] {calculate average notes};
+  \node (results) [left of=average, xshift=-\datagapmm, \datastore] {exam results};
+  \node (weights) [above of=results, \datastore] {exam weights};
+  \node (spreadsheet) [right of=average, xshift=\datagapmm, \datastore] {spreadsheet of \emph{moyennes}};
+  
+  \draw[->] (results) -- (average);
+  \draw[->] (weights) -- (average);
+  \draw[->] (average) -- (spreadsheet);
+
+  \draw[->] (students) -- (suggest);
+  \draw[->] (students) -- (build);
+  \draw[->] (students) -- (average);
 %    {(in\X) edge[->] (box.west |- in\X)
 
 \end{tikzpicture}
