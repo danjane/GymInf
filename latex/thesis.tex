@@ -70,7 +70,7 @@ I also wanted to use this thesis to improve my coding style, exploring the indus
 
 \
 
-
+TODO intro for chaps 7 and 8
 
 \
 
@@ -382,11 +382,11 @@ harry.pttr \hfill \textbf{Harry} \hfill 1ma1df01
 
 \subsection{Implied structure of backend}
 
-By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what functionality will be required, and what functionality can be shared. In the schematic in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, I have used Yourdon-DeMarco notation for a \emph{Data Flow Diagram}, where the processes (functions) are circles and data is represented as a rectangle. Flow of control (transfer of information) is represented by arrows. TODO citation needed.
+By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what intermediate processing will be required, and what functionality can be shared. The schematic in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a \emph{Data Flow Diagram} for the TAT system. I have used the Yourdon-Coad notation where the processes (functions) are circles and data is represented as a rectangle. Flow of control (transfer of information) is represented by arrows, see \cite{Coad91}.
 
 \begin{figure}[h] \label{dataflowdiagram}
 \begin{center}
-\begin{tikzpicture}[node distance=18mm, every node/.style={draw, text centered, minimum height=12mm, align=center, text width=1cm, font=\fontsize{6}{8}\selectfont}]
+\begin{tikzpicture}[node distance=25mm, every node/.style={draw, text centered, minimum height=20mm, align=center, text width=15mm, font=\fontsize{8}{10}\selectfont}]
 
 \def\datagapmm{40}
 
@@ -408,7 +408,7 @@ By "backend" I mean the data access layer of the system. By connecting the input
   \draw[->] (analyze) -- (progress);
   
   % Second row
-  \node (suggest) [below of=shred, yshift=-18mm, \function] {suggest focus};
+  \node (suggest) [below of=shred, yshift=-25mm, \function] {suggest focus};
   \node (focus) [right of=suggest, xshift=\datagapmm, \datastore] {ordered students for focus};
   \node (build) [below of=suggest, \function] {build report};
   \node (report) [right of=build, xshift=\datagapmm, \datastore] {pdf of individual reports};
@@ -694,6 +694,8 @@ using the data to make predictions about students. For example: their behaviour 
 
 \bibitem[BS09]{BS09} Bucheton D. \& Soulé Y. (2009). Les gestes professionnels et le jeu des postures de l’enseignant dans la classe : un multi-agenda de préoccupations enchâssées.
 
+\bibitem[Coad91]{Coad91} Coad, P., Yourdon, E., \& Coad, P. (1991). Object-oriented analysis (Vol. 2). Englewood Cliffs, NJ: Yourdon press.
+
 \bibitem[Hat12]{Hat12} Hattie, J. (2012). Visible learning for teachers: Maximizing impact on learning. Routledge.
 
 \bibitem[Jorg17]{Jorg17} Jorgensen, P. C. (2017). The craft of model-based testing. CRC Press.
@@ -706,7 +708,7 @@ using the data to make predictions about students. For example: their behaviour 
 
 \bibitem[MSB11]{MSB11} Myers, G. J., Sandler, C., \& Badgett, T. (2011). The art of software testing. John Wiley \& Sons.
 
-\bibitem{Norr98}[Norr98] Norris, J. R. (1998). Markov chains (No. 2). Cambridge university press.
+\bibitem[Norr98]{Norr98} Norris, J. R. (1998). Markov chains (No. 2). Cambridge university press.
 
 \bibitem[PPDT18]{PPDT18} Le PPDT - Guide pratique RGPD à l'attention des institutions publiques genevoises (2018).
 
@@ -719,7 +721,7 @@ using the data to make predictions about students. For example: their behaviour 
 
 \appendix
 
-\section{Project proposal}
+\section{Original project proposal}
 
 Bucheton and Soulé have described the act of teaching as a multi-agenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controlling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. And yet many of the teacher's most time-consuming tasks do not take place in the classroom \cite{Bryant20}: good preparation and strong follow-ups (for example auto-reflection, marking and parent-teacher interactions) work to support and complement the pillars identified in the student learning process.
 
