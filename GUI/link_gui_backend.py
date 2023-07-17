@@ -20,3 +20,8 @@ def setup(cfg_path: str, course: str):
     seating_plan = GUI.desk_functions.load_basic_seating_plan_from_file(file_path)
     desk_layout = max(v[0] for v in seating_plan.values()) + 1, max(v[1] for v in seating_plan.values()) + 1
     return seating_plan, desk_layout
+
+
+def courses(cfg_path: str):
+    cfg = config.load(cfg_path)
+    return cfg["courses"]
