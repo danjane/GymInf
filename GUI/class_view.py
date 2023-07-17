@@ -6,7 +6,7 @@ import link_gui_backend
 
 
 def run(config_file, course, screen, clock, constants):
-    seating_plan, desk_layout = link_gui_backend.setup(config_file, course)
+    seating_plan, desk_layout, comment_file = link_gui_backend.setup(config_file, course)
 
     desks = []
     for student, place in seating_plan.items():
@@ -18,9 +18,10 @@ def run(config_file, course, screen, clock, constants):
     selected_desks = set()
 
     buttons = [
-        icons.PositiveButton((700, 25), (200, 75)),
-        icons.NegativeButton((700, 140), (200, 75)),
-        icons.SuggestionsButton((700, 255), (200, 75), desks)
+        icons.PositiveButton((700, 25), (200, 75), comment_file),
+        icons.NegativeButton((700, 140), (200, 75), comment_file),
+        icons.SuggestionsButton((700, 255), (200, 75), desks, comment_file,
+                                config_file, course)
     ]
     selected_button = 0
 

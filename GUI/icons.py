@@ -226,7 +226,6 @@ class Button(pygame.sprite.Sprite):
         self.fade_from_1_to_0 = 0.
         self.name_img = font.render(text, True, (0, 0, 0))
         self.name_pos = self.name_img.get_rect(center=self.rect.center)
-        self.comment_file = "../example_files/testing_comments.txt"
         self.text_editor_active = False
         self.text = text
         self.text_rect = self.rect.inflate(-50, -50).move(0, 20)
@@ -280,36 +279,44 @@ class Button(pygame.sprite.Sprite):
         return self, set()
 
 
-class PositiveButton(Button):
-    def __init__(self, pos, size):
-        super().__init__(pos, size, "positive")
+class ButtonWithComments(Button):
+    def __init__(self, pos, size, text, comments_path):
+        super().__init__(pos, size, text)
+        self.comments_path = comments_path
+
+
+class PositiveButton(ButtonWithComments):
+    def __init__(self, pos, size, comments_path):
+        super().__init__(pos, size, "positive", comments_path)
 
     def clicked(self, selected_desks):
-        updateComments.add_positive_comments(self.comment_file,
+        updateComments.add_positive_comments(self.comments_path,
                                              [desk.name for desk in selected_desks], self.text)
         super().clicked(selected_desks)
         return UnclickedDesk(), set()
 
 
-class NegativeButton(Button):
-    def __init__(self, pos, size):
-        super().__init__(pos, size, "negative")
+class NegativeButton(ButtonWithComments):
+    def __init__(self, pos, size, comments_path):
+        super().__init__(pos, size, "negative", comments_path)
 
     def clicked(self, selected_desks, comment=""):
-        updateComments.add_negative_comments(self.comment_file,
+        updateComments.add_negative_comments(self.comments_path,
                                              [desk.name for desk in selected_desks], comment)
         super().clicked(selected_desks)
         return UnclickedDesk(), set()
 
 
-class SuggestionsButton(Button):
-    def __init__(self, pos, size, desks):
-        super().__init__(pos, size, "suggestions")
+class SuggestionsButton(ButtonWithComments):
+    def __init__(self, pos, size, desks, comments_path, config_path, course):
+        super().__init__(pos, size, "suggestions", comments_path)
         self.desks = desks
+        self.config_path = config_path
+        self.course = course
 
     def clicked(self, selected_desks):
         students_for_comments = linkComments.get_students_needing_comments_from_config_path(
-            "../example_files/config_GUI.yaml", "2ma2dfb01")
+            self.config_path, self.course)
         students_for_comments = students_for_comments[:5]
         for desk in selected_desks:
             desk.color = desk.color_default
