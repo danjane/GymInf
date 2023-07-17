@@ -1,19 +1,12 @@
 import icons
 import pygame
 
-def handle_mouse_button_down_desks(x, y, desks, selected_desks):
-    for desk in desks:
-        if desk.rect.collidepoint(x, y):
-            desk.clicked()
-            return desk, selected_desks
-    return icons.UnclickedDesk(), selected_desks
 
-
-def handle_mouse_button_down_buttons(x, y, desks, selected_desks):
+def handle_mouse_button_down(x, y, desks, selected_desks):
     for desk in desks:
         if desk.rect.collidepoint(x, y):
             return desk.clicked(selected_desks)
-    return selected_desks
+    return icons.UnclickedDesk(), selected_desks
 
 
 def update_swapping_desk(desks, clicked_desk, swapping_desk):

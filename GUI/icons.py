@@ -188,10 +188,11 @@ class FilledDesk(Desk):
     def __init__(self, place, name, desk_layout, height_width):
         super().__init__(place, name, desk_layout, height_width)
 
-    def clicked(self):
+    def clicked(self, other):
         self.color = RED
         self.button_down = True
         self.sliding = False
+        return self, other
 
     def append(self, selected_desks):
         if self in selected_desks:
@@ -284,7 +285,7 @@ class PositiveButton(Button):
         updateComments.add_positive_comments(self.comment_file,
                                              [desk.name for desk in selected_desks], self.text)
         super().clicked(selected_desks)
-        return set()
+        return UnclickedDesk(), set()
 
 
 class NegativeButton(Button):
@@ -295,7 +296,7 @@ class NegativeButton(Button):
         updateComments.add_negative_comments(self.comment_file,
                                              [desk.name for desk in selected_desks], comment)
         super().clicked(selected_desks)
-        return set()
+        return UnclickedDesk(), set()
 
 
 class SuggestionsButton(Button):
@@ -312,4 +313,4 @@ class SuggestionsButton(Button):
         selected_desks = set(desk for desk in self.desks if desk.name in students_for_comments)
         for desk in selected_desks:
             desk.color = desk.color_selected
-        return selected_desks
+        return UnclickedDesk(), selected_desks

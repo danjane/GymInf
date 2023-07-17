@@ -13,6 +13,7 @@ config_file, course = "../example_files/config_GUI.yaml", "2ma2dfb01"
 
 running = True
 next_view = "control_view"
+# next_view = "class_view"
 while running:
     if next_view == "quit":
         running = False

@@ -32,12 +32,8 @@ def run(config_file, course, screen, clock, constants):
             if event.type == pygame.QUIT:
                 return "quit"
             if event.type == MOUSEBUTTONDOWN:
-                # TODO merge events.handle_mouse_button_down
-                clicked_desk, selected_desks = events.handle_mouse_button_down_desks(
-                    *event.pos, desks, selected_desks
-                )
-                selected_desks = events.handle_mouse_button_down_buttons(
-                    *event.pos, buttons, selected_desks
+                clicked_desk, selected_desks = events.handle_mouse_button_down(
+                    *event.pos, desks + buttons, selected_desks
                 )
             if event.type == MOUSEBUTTONUP:
                 clicked_desk, selected_desks = \
