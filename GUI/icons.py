@@ -143,6 +143,7 @@ class Desk(ParentDesk):
         self.color = self.color_default
         self.target_for_sliding = self.home
         self.sliding = True
+        self.changing_position = False
 
     def move(self, dx, dy):
         self.pos = (self.pos[0] + dx, self.pos[1] + dy)
@@ -170,10 +171,8 @@ class Desk(ParentDesk):
         self.sliding = True
         if self.changing_position:
             self.home, other.home = other.home, self.home
-            self.target_for_sliding, other.target_for_sliding = self.home, other.home
-            other.sliding = True
-            self.changing_position = False
-            self.color = self.color_default
+            self.unbothered()
+            other.unbothered()
         return UnclickedDesk()
 
     @classmethod

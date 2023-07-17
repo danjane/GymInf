@@ -43,6 +43,7 @@ def run(config_file, course, screen, clock, constants):
             if event.type == MOUSEBUTTONUP:
                 clicked_desk, selected_desks = \
                     events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)
+                swapping_desk = icons.UnclickedDesk()
             if event.type == MOUSEMOTION:
                 clicked_desk.move(*event.rel)
             if event.type == KEYDOWN:
