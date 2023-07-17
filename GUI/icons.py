@@ -63,7 +63,7 @@ class ParentDesk(pygame.sprite.Sprite):
         pass
 
     def clicked(self, *args, **kwargs):
-        pass
+        return UnclickedDesk(), *args
 
     def unclicked(self, *args, **kwargs):
         return UnclickedDesk()
