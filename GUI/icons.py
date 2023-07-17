@@ -220,6 +220,8 @@ class Button(pygame.sprite.Sprite):
         self.size = size
         self.color_unclicked = YELLOW
         self.color_clicked = RED
+        self.color_default = YELLOW
+        self.color_selected = LIGHT_BLUE
         self.rect = pygame.Rect(*self.pos, *self.size)
         self.fade_from_1_to_0 = 0.
         self.name_img = font.render(text, True, (0, 0, 0))
