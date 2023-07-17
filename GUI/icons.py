@@ -226,7 +226,7 @@ class Button(pygame.sprite.Sprite):
         self.name_pos = self.name_img.get_rect(center=self.rect.center)
         self.comment_file = "../example_files/testing_comments.txt"
         self.text_editor_active = False
-        self.text = ""
+        self.text = text
         self.text_rect = self.rect.inflate(-50, -50).move(0, 20)
         self.cursor_visible = True
         self.cursor_blink_interval_millis = 500
@@ -275,6 +275,7 @@ class Button(pygame.sprite.Sprite):
         self.fade_from_1_to_0 = 1.
         for desk in selected_desks:
             desk.color = desk.color_default
+        return self, set()
 
 
 class PositiveButton(Button):

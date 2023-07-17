@@ -38,9 +38,11 @@ def run(config_file, screen, clock, constants):
             if event.type == pygame.QUIT:
                 return "quit", selected_course
             if event.type == MOUSEBUTTONDOWN:
-                _ = events.handle_mouse_button_down(
+                button, _ = events.handle_mouse_button_down(
                     *event.pos, buttons, []
                 )
+                if button == control_buttons[0]:
+                    return "class_view", selected_course
 
         sprites.update(screen)
         pygame.display.flip()
