@@ -17,9 +17,10 @@ def run(config_file, screen, clock, constants):
 
     edit_buttons = [
         icons.Button((25, 25), (125, 75), "Edit Courses"),
-        icons.Button((160, 25), (125, 75), "Edit ClassList"),
-        icons.Button((295, 25), (125, 75), "Refresh")
+        icons.Button((160, 25), (125, 75), "Edit ClassList")
     ]
+
+    refresh_button = icons.Button((295, 25), (125, 75), "Refresh")
 
     course_buttons = []
     y_pos = 125
@@ -36,7 +37,7 @@ def run(config_file, screen, clock, constants):
 
     selected_course = courses[0]
 
-    buttons = edit_buttons + course_buttons + [class_view_button] + control_buttons
+    buttons = edit_buttons + course_buttons + [class_view_button, refresh_button] + control_buttons
     sprites = pygame.sprite.Group(buttons)
 
     while True:
@@ -50,6 +51,8 @@ def run(config_file, screen, clock, constants):
                 )
                 if button == class_view_button:
                     return "class_view", selected_course
+                if button == refresh_button:
+                    return "control_view", selected_course
                 if button in course_buttons:
                     selected_course = button.text
                     select_course_button(button, course_buttons)
