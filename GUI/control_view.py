@@ -11,7 +11,7 @@ def select_course_button(clicked_button, course_buttons):
     clicked_button.color_unclicked = clicked_button.color_selected
 
 
-def run(config_file, screen, clock, constants):
+def run(config_file, selected_course, screen, clock, constants):
 
     courses = link_gui_backend.courses(config_file)
 
@@ -25,7 +25,10 @@ def run(config_file, screen, clock, constants):
     course_buttons = []
     y_pos = 125
     for course in courses:
-        course_buttons.append(icons.Button((25, y_pos), (395, 25), course))
+        course_button = icons.Button((25, y_pos), (395, 25), course)
+        course_buttons.append(course_button)
+        if course == selected_course:
+            select_course_button(course_button, course_buttons)
         y_pos += 30
 
     class_view_button = icons.Button((500, 25), (125, 75), "Go to class view")
@@ -34,8 +37,6 @@ def run(config_file, screen, clock, constants):
         icons.Button((500, 110), (125, 75), "Build reports"),
         icons.Button((500, 195), (125, 75), "Calculate moyennes"),
     ]
-
-    selected_course = courses[0]
 
     buttons = edit_buttons + course_buttons + [class_view_button, refresh_button] + control_buttons
     sprites = pygame.sprite.Group(buttons)

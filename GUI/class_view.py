@@ -17,15 +17,17 @@ def run(config_file, course, screen, clock, constants):
     swapping_desk = icons.UnclickedDesk()
     selected_desks = set()
 
+    control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
+
     buttons = [
-        icons.PositiveButton((700, 25), (200, 75), comment_file),
-        icons.NegativeButton((700, 140), (200, 75), comment_file),
-        icons.SuggestionsButton((700, 255), (200, 75), desks, comment_file,
+        icons.PositiveButton((700, 90), (200, 75), comment_file),
+        icons.NegativeButton((700, 180), (200, 75), comment_file),
+        icons.SuggestionsButton((700, 270), (200, 50), desks, comment_file,
                                 config_file, course)
     ]
     selected_button = 0
 
-    sprites = pygame.sprite.Group(desks + buttons)
+    sprites = pygame.sprite.Group(desks + buttons + [control_view_button])
 
     while True:
         screen.fill(constants.BACKGROUND)
@@ -34,8 +36,10 @@ def run(config_file, course, screen, clock, constants):
                 return "quit"
             if event.type == MOUSEBUTTONDOWN:
                 clicked_desk, selected_desks = events.handle_mouse_button_down(
-                    *event.pos, desks + buttons, selected_desks
+                    *event.pos, sprites.sprites(), selected_desks
                 )
+                if clicked_desk == control_view_button:
+                    return "control_view", course
             if event.type == MOUSEBUTTONUP:
                 clicked_desk, selected_desks = \
                     events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)
@@ -44,7 +48,8 @@ def run(config_file, course, screen, clock, constants):
             if event.type == KEYDOWN:
                 selected_button = events.handle_keydown(event, selected_desks, selected_button, buttons)
 
-        swapping_desk = events.update_swapping_desk(desks, clicked_desk, swapping_desk)
+        if isinstance(clicked_desk, icons.Desk):
+            swapping_desk = events.update_swapping_desk(desks, clicked_desk, swapping_desk)
 
         sprites.update(screen)
         clicked_desk.update(screen)
