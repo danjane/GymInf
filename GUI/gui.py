@@ -8,10 +8,12 @@ import class_view, control_view
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(constants.WIDTH_HEIGHT)
+pygame.display.set_caption("Teacher assisting tools")
 
-config_file, course = "../example_files/config_GUI.yaml", "2ma2dfb01"
+config_file = "../example_files/config_GUI.yaml"
 
 running = True
+course = None
 next_view = "control_view"
 # next_view = "class_view"
 while running:

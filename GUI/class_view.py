@@ -9,7 +9,7 @@ def run(config_file, course, screen, clock, constants):
     seating_plan, desk_layout, comment_file = link_gui_backend.setup(config_file, course)
 
     desks = []
-    for student, place in seating_plan.items():
+    for place, student in seating_plan.items():
         desk = icons.Desk.create_desk(place, student, desk_layout, constants.WIDTH_HEIGHT_DESKS)
         desks.append(desk)
 

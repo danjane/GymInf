@@ -50,7 +50,7 @@ def run(config_file, selected_course, screen, clock, constants):
                 button, _ = events.handle_mouse_button_down(
                     *event.pos, buttons, []
                 )
-                if button == class_view_button:
+                if button == class_view_button and selected_course:
                     return "class_view", selected_course
                 if button == refresh_button:
                     return "control_view", selected_course

@@ -19,4 +19,4 @@ def load_basic_seating_plan_from_file(filename: str) -> Dict[str, Tuple]:
     if number_empties < 0:
         raise NotImplementedError("Cannot handle more than 24 students, legal limit in gva!!")
     padded_student_list = ["empty"]*number_empties + student_list[::-1]
-    return dict(zip(padded_student_list, pairs))
+    return dict(zip(pairs, padded_student_list))
