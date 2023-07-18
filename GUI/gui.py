@@ -23,5 +23,7 @@ while running:
         next_view, course = control_view.run(config_file, course, screen, clock, constants)
     elif next_view == "class_view":
         next_view, course = class_view.run(config_file, course, screen, clock, constants)
+    else:
+        raise NotImplementedError("This view yet to be seen to!!")
 
 pygame.quit()

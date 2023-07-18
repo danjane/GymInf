@@ -41,3 +41,16 @@ def handle_keydown(event, selected_desks, selected_button, buttons):
         button.text_editor_active = False
     buttons[selected_button].handle_keydown(event, selected_desks)
     return selected_button
+
+
+def handle_add_course_button_click(button):
+    if button.text_editor_active:
+        button.text_editor_active = False
+        return True
+    else:
+        button.text_editor_active = True
+        button.text = ""
+        return False
+
+
+
