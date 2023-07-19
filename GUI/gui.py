@@ -8,14 +8,13 @@ import class_view, control_view
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(constants.WIDTH_HEIGHT)
-pygame.display.set_caption("Teacher assisting tools")
+pygame.display.set_caption("TAT: teacher assisting tools")
 
 config_file = "../example_files/config_GUI.yaml"
 
 running = True
 course = None
 next_view = "control_view"
-# next_view = "class_view"
 while running:
     if next_view == "quit":
         running = False
