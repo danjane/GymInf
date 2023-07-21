@@ -46,11 +46,11 @@ def handle_keydown(event, selected_desks, selected_button, buttons):
 def handle_add_course_button_click(button):
     if button.text_editor_active:
         button.text_editor_active = False
-        return True
+        return button.text
     else:
         button.text_editor_active = True
         button.text = ""
-        return False
+        return None
 
 
 
