@@ -233,7 +233,6 @@ class Button(pygame.sprite.Sprite):
         self.cursor_blink_timer = 0
 
     def update(self, surface):
-        self.rect = pygame.Rect(*self.pos, *self.size)
         if self.fade_from_1_to_0 < 0.01:
             color = self.color_unclicked
         else:
