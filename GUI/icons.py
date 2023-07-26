@@ -52,6 +52,7 @@ class ParentDesk(pygame.sprite.Sprite):
         self.home = (1e10, 1e10)
         self.sliding = False
         self.is_swapping = False
+        self.text_editor_active = False
 
     def __str__(self):
         return "ParentDesk"
@@ -223,11 +224,11 @@ class Button(pygame.sprite.Sprite):
         self.color_selected = LIGHT_BLUE
         self.rect = pygame.Rect(*self.pos, *self.size)
         self.fade_from_1_to_0 = 0.
-        self.name_img = font.render(text, True, (0, 0, 0))
-        self.name_pos = self.name_img.get_rect(center=self.rect.center)
+        self.text_img = font.render(text, True, (0, 0, 0))
+        self.text_pos = self.text_img.get_rect(center=self.rect.center)
         self.text_editor_active = False
         self.text = text
-        self.text_rect = self.rect.inflate(-50, -50).move(0, 20)
+        # self.text_rect = self.rect.inflate(-50, -50).move(0, 20)
         self.cursor_visible = True
         self.cursor_blink_interval_millis = 500
         self.cursor_blink_timer = 0
@@ -240,13 +241,13 @@ class Button(pygame.sprite.Sprite):
             color = [int(u * (1 - f) + c * f) for u, c in zip(self.color_unclicked, self.color_clicked)]
             self.fade_from_1_to_0 *= 0.95
         pygame.draw.rect(surface, color, self.rect)
-        surface.blit(self.name_img, self.name_pos)
+        surface.blit(self.text_img, self.text_pos)
         if self.text_editor_active:
-            pygame.draw.rect(surface, WHITE, self.text_rect)
-            text_img = font.render(self.text, True, (0, 0, 0))
-            text_pos = text_img.get_rect(center=self.text_rect.center)
-            surface.blit(text_img, text_pos)
-            self.draw_cursor(surface, text_pos)
+            pygame.draw.rect(surface, WHITE, self.rect)
+            self.text_img = font.render(self.text, True, (0, 0, 0))
+            self.text_pos = self.text_img.get_rect(center=self.rect.center)
+            surface.blit(self.text_img, self.text_pos)
+            self.draw_cursor(surface, self.text_pos)
 
     def draw_cursor(self, surface, text_pos):
         if pygame.time.get_ticks() - self.cursor_blink_timer >= self.cursor_blink_interval_millis:
@@ -322,3 +323,39 @@ class SuggestionsButton(ButtonWithComments):
         for desk in selected_desks:
             desk.color = desk.color_selected
         return UnclickedDesk(), selected_desks
+
+
+class TextButtonLinkedToFile(Button):
+
+    def __init__(self, pos, size, text, file, count):
+        super().__init__(pos, size, text)
+        self.file = file
+        self.count = count
+        self.linked_buttons = []
+
+    def write_text(self):
+        with open(self.file, 'r') as f:
+            lines = f.read().split("/n")
+        lines[self.count] = self.text
+        with open(self.file, 'w') as f:
+            f.write("/n".join(lines))
+
+    def clicked(self, selected_desks):
+        super().clicked(selected_desks)
+        if self.text_editor_active:
+            self.text_editor_active = False
+            if self.file:
+                self.write_text()
+        else:
+            self.text_editor_active = True
+        return self, set()
+
+    def handle_keydown(self, event, selected_desks):
+        self.text_editor_active = True
+        if event.key == pygame.K_RETURN:
+            self.clicked(selected_desks)
+            self.text_editor_active = False
+        elif event.key == pygame.K_BACKSPACE:
+            self.text = self.text[:-1]
+        else:
+            self.text += event.unicode

@@ -1,5 +1,6 @@
 import os
 import config
+import students
 import GUI.desk_functions
 from datetime import datetime
 from typing import Dict
@@ -26,3 +27,11 @@ def setup(cfg_path: str, course: str):
 def courses(cfg_path: str):
     cfg = config.load(cfg_path)
     return cfg["courses"]
+
+
+def load_students(cfg_path, course):
+    cfg = config.load(cfg_path)
+    class_path = os.path.join(cfg["courses_path"], course + '.txt')
+    student_dict = students.parse_course_list(class_path)
+    students_codes_and_given_names = [code + ", " + name for code, name in student_dict.items()]
+    return students_codes_and_given_names
