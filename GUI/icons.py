@@ -277,6 +277,11 @@ class Button(pygame.sprite.Sprite):
             desk.color = desk.color_default
         return self, set()
 
+    def set_text(self, text):
+        self.text = text
+        self.text_img = font.render(text, True, (0, 0, 0))
+        self.text_pos = self.text_img.get_rect(center=self.rect.center)
+
 
 class ButtonWithComments(Button):
     def __init__(self, pos, size, text, comments_path):
@@ -359,3 +364,4 @@ class TextButtonLinkedToFile(Button):
             self.text = self.text[:-1]
         else:
             self.text += event.unicode
+

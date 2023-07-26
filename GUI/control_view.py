@@ -106,11 +106,14 @@ def run(config_file, selected_course, screen, clock, constants):
                 if button == add_course_button:
                     new_course = events.handle_add_course_button_click(add_course_button)
                     if new_course:
+                        add_course_button.set_text("Add Course")
                         course_button = icons.Button((25, course_y_pos), (260, 25), new_course)
                         course_y_pos += 30
                         selected_course = new_course
                         course_buttons.append(course_button)
                         select_course_button(course_button, course_buttons)
+                        courses.append(new_course)
+                        link_gui_backend.update_courses_in_config_file(config_file, courses)
                 if button in course_buttons:
                     selected_course = button.text
                     select_course_button(button, course_buttons)

@@ -35,3 +35,7 @@ def load_students(cfg_path, course):
     student_dict = students.parse_course_list(class_path)
     students_codes_and_given_names = [code + ", " + name for code, name in student_dict.items()]
     return students_codes_and_given_names, class_path
+
+
+def update_courses_in_config_file(config_file, new_courses):
+    config.update_courses_in_yaml(config_file, new_courses)

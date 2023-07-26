@@ -16,3 +16,11 @@ def add_class_paths(config: Dict[str, Any]) -> Dict[str, Any]:
     paths = [os.path.join(folder, cls + ".txt") for cls in courses]
     config["class_paths"] = paths
     return config
+
+
+def update_courses_in_yaml(filename, courses):
+    with open(filename, 'r') as f:
+        config = yaml.safe_load(f)
+    config["courses"] = courses
+    with open(filename, 'w') as f:
+        yaml.safe_dump(config, f)
