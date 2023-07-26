@@ -1,3 +1,6 @@
+import os.path
+import subprocess
+
 import shredComments
 import analyseComments
 import students
@@ -57,15 +60,33 @@ def get_latex_report_from_config_path(cfg_path: str) -> str:
     return report
 
 
+def latex_to_pdf(tex_file, output_directory):
+    try:
+        process = subprocess.Popen(['pdflatex', '-output-directory', output_directory, tex_file],
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+
+        if process.returncode == 0:
+            print("Compilation successful!")
+        else:
+            print("Compilation failed. Error message:")
+            print(stderr.decode())
+
+    except FileNotFoundError:
+        print("pdflatex command not found. Please ensure that LaTeX is installed.")
+
+
 def create_report(cfg_path: str) -> None:
     report = get_latex_report_from_config_path(cfg_path)
     cfg = config.load(cfg_path)
-    with open(cfg["report_tex_path"], "w") as f:
+    report_file = cfg["report_tex_path"]
+    report_dir = os.path.dirname(report_file)
+    with open(report_file, "w") as f:
         f.write(report)
+    latex_to_pdf(report_file, report_dir)
 
 
 def get_students_needing_comments_from_config_path(cfg_path: str, course: str) -> List[str]:
     cfg, courses, df = load_data_from_config_path(cfg_path)
     ss = analyseComments.comments_needed(df, list(courses[course].keys()))
     return [courses[course][s] for s in ss]
-
