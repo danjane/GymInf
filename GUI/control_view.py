@@ -33,8 +33,7 @@ def create_class_list_buttons(students, height, file):
 
 
 def class_list_from_file(config_file, selected_course, student_button_height):
-    students = link_gui_backend.load_students(config_file, selected_course)
-    file = ""
+    students, file = link_gui_backend.load_students(config_file, selected_course)
     student_buttons = create_class_list_buttons(students, student_button_height, file)
     return student_buttons
 

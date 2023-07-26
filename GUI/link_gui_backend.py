@@ -34,4 +34,4 @@ def load_students(cfg_path, course):
     class_path = os.path.join(cfg["courses_path"], course + '.txt')
     student_dict = students.parse_course_list(class_path)
     students_codes_and_given_names = [code + ", " + name for code, name in student_dict.items()]
-    return students_codes_and_given_names
+    return students_codes_and_given_names, class_path
