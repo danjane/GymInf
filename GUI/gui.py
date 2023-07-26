@@ -10,7 +10,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode(constants.WIDTH_HEIGHT)
 pygame.display.set_caption("TAT: teacher assisting tools")
 
-config_file = "../example_files/config_GUI.yaml"
+config_file = "../GUI_files/config.yaml"
 
 running = True
 course = None
