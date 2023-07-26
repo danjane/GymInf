@@ -46,3 +46,8 @@ def add_courses_in_files(config_file, course, old_courses):
         with open(course_file, 'w') as f:
             f.write("StudentID, StudentName")
     return new_courses
+
+
+def delete_course_in_files(config_file, deleted_course):
+    old_courses = courses(config_file)
+    config.update_courses_in_yaml(config_file, [c for c in old_courses if c != deleted_course])

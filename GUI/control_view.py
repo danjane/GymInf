@@ -65,7 +65,7 @@ def run(config_file, selected_course, screen, clock, constants):
             student_buttons[i] = student_button
 
     add_course_button = icons.Button((25, 25), (125, 50), "Add Course")
-    save_class_button = icons.Button((160, 25), (125, 50), "Save ClassList")
+    delete_course_button = icons.Button((160, 25), (125, 50), "Delete Course")
 
     course_buttons = []
     course_y_pos = 85
@@ -83,7 +83,7 @@ def run(config_file, selected_course, screen, clock, constants):
         icons.Button((700, 145), (200, 50), "Calculate moyennes"),
     ]
 
-    buttons = [[add_course_button, save_class_button, class_view_button],
+    buttons = [[add_course_button, delete_course_button, class_view_button],
                course_buttons, control_buttons, student_buttons]
     button = control_buttons[0]  # TODO create a proper holding button
 
@@ -104,6 +104,9 @@ def run(config_file, selected_course, screen, clock, constants):
                 turn_off_editors(flat_buttons, button)
                 if button == class_view_button and selected_course:
                     return "class_view", selected_course
+                if button == delete_course_button and selected_course:
+                    link_gui_backend.delete_course_in_files(config_file, selected_course)
+                    return "control_view", None
                 if button == add_course_button:
                     new_course = events.handle_add_course_button_click(add_course_button)
                     if new_course:
