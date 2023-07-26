@@ -37,5 +37,12 @@ def load_students(cfg_path, course):
     return students_codes_and_given_names, class_path
 
 
-def update_courses_in_config_file(config_file, new_courses):
+def add_courses_in_files(config_file, course, old_courses):
+    new_courses = old_courses + [course]
     config.update_courses_in_yaml(config_file, new_courses)
+    cfg = config.load(config_file)
+    course_file = os.path.join(cfg["courses_path"], course + ".txt")
+    if not os.path.isfile(course_file):
+        with open(course_file, 'w') as f:
+            f.write("StudentID, StudentName")
+    return new_courses
