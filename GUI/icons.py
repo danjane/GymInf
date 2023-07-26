@@ -335,10 +335,10 @@ class TextButtonLinkedToFile(Button):
 
     def write_text(self):
         with open(self.file, 'r') as f:
-            lines = f.read().split("/n")
+            lines = f.read().split("\n")
         lines[self.count] = self.text
         with open(self.file, 'w') as f:
-            f.write("/n".join(lines))
+            f.write("\n".join(lines))
 
     def clicked(self, selected_desks):
         super().clicked(selected_desks)
