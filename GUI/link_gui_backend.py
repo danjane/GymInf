@@ -2,6 +2,7 @@ import os
 import config
 import students
 import linkComments
+import analyseNotes
 import GUI.desk_functions
 from datetime import datetime
 from typing import Dict
@@ -56,3 +57,7 @@ def delete_course_in_files(config_file, deleted_course):
 
 def build_reports(config_file):
     linkComments.create_report(config_file)
+
+
+def calculate_averages(config_file):
+    analyseNotes.dump_all(config_file, None)

@@ -81,7 +81,8 @@ def run(config_file, selected_course, screen, clock, constants):
     control_buttons = [
         icons.ButtonWhichCallsFunction((700, 90), (200, 50), "Build reports",
                                        link_gui_backend.build_reports, config_file),
-        icons.Button((700, 145), (200, 50), "Calculate moyennes"),
+        icons.ButtonWhichCallsFunction((700, 145), (200, 50), "Calculate moyennes",
+                                       link_gui_backend.calculate_averages, config_file),
     ]
 
     buttons = [[add_course_button, delete_course_button, class_view_button],

@@ -17,6 +17,8 @@ def first_semester(date_string):
 
 def dump_all(cfg_path, output_file):
     cfg, courses, df = linkComments.load_data_from_config_path(cfg_path)
+    if not output_file:
+        output_file = cfg["exam_averages_path"]
 
     workbook = xlsxwriter.Workbook(output_file)
 
