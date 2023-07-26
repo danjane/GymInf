@@ -1,6 +1,7 @@
 import os
 import config
 import students
+import linkComments
 import GUI.desk_functions
 from datetime import datetime
 from typing import Dict
@@ -51,3 +52,7 @@ def add_courses_in_files(config_file, course, old_courses):
 def delete_course_in_files(config_file, deleted_course):
     old_courses = courses(config_file)
     config.update_courses_in_yaml(config_file, [c for c in old_courses if c != deleted_course])
+
+
+def build_reports(config_file):
+    linkComments.create_report(config_file)

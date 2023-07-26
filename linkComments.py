@@ -57,6 +57,13 @@ def get_latex_report_from_config_path(cfg_path: str) -> str:
     return report
 
 
+def create_report(cfg_path: str) -> None:
+    report = get_latex_report_from_config_path(cfg_path)
+    cfg = config.load(cfg_path)
+    with open(cfg["report_tex_path"], "w") as f:
+        f.write(report)
+
+
 def get_students_needing_comments_from_config_path(cfg_path: str, course: str) -> List[str]:
     cfg, courses, df = load_data_from_config_path(cfg_path)
     ss = analyseComments.comments_needed(df, list(courses[course].keys()))

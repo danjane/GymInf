@@ -365,3 +365,15 @@ class TextButtonLinkedToFile(Button):
         else:
             self.text += event.unicode
 
+
+class ButtonWhichCallsFunction(Button):
+    def __init__(self, pos, size, text, fn, config_file):
+        super().__init__(pos, size, text)
+        self.fn = fn
+        self.config_file = config_file
+
+    def clicked(self, selected_desks):
+        button, selected_desks = super().clicked(selected_desks)
+        self.fn(self.config_file)
+        return button, selected_desks
+
