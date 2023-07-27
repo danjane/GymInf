@@ -17,14 +17,15 @@ def create_class_list_buttons(students, height, file):
     student_buttons = []
     y_pos = 15
     i = 0
-    for (i, student) in enumerate(students):
+    for student in students:
         student_buttons.append(
             icons.TextButtonLinkedToFile((300, y_pos), (250, height), student, file, i)
         )
         y_pos += height + 1
+        i += 1
     while i < 23:
         student_buttons.append(
-            icons.TextButtonLinkedToFile((300, y_pos), (250, height), "", None, i)
+            icons.TextButtonLinkedToFile((300, y_pos), (250, height), "", file, i)
         )
         y_pos += height + 1
         i += 1
@@ -115,10 +116,9 @@ def run(config_file, selected_course, screen, clock, constants):
                         add_course_button.set_text("Add Course")
                         course_button = icons.Button((25, course_y_pos), (260, 25), new_course)
                         course_y_pos += 30
-                        selected_course = new_course
                         course_buttons.append(course_button)
-                        select_course_button(course_button, course_buttons)
                         courses = link_gui_backend.add_courses_in_files(config_file, new_course, courses)
+                        button = course_button
                 if button in course_buttons:
                     selected_course = button.text
                     select_course_button(button, course_buttons)

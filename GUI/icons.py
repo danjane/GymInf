@@ -341,6 +341,9 @@ class TextButtonLinkedToFile(Button):
     def write_text(self):
         with open(self.file, 'r') as f:
             lines = f.read().split("\n")
+        num_missing = self.count - len(lines) + 1
+        if num_missing > 0:
+            lines = lines + [""]*num_missing
         lines[self.count] = self.text
         with open(self.file, 'w') as f:
             f.write("\n".join(lines))
