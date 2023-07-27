@@ -311,7 +311,7 @@ class NegativeButton(ButtonWithComments):
         return UnclickedDesk(), set()
 
 
-class SuggestionsButton(ButtonWithComments):
+class SuggestFocusButton(ButtonWithComments):
     def __init__(self, pos, size, desks, comments_path, config_path, course):
         super().__init__(pos, size, "suggestions", comments_path)
         self.desks = desks

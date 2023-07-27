@@ -22,7 +22,7 @@ def run(config_file, course, screen, clock, constants):
     buttons = [
         icons.PositiveButton((700, 90), (200, 75), comment_file),
         icons.NegativeButton((700, 180), (200, 75), comment_file),
-        icons.SuggestionsButton((700, 270), (200, 50), desks, comment_file,
+        icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file,
                                 config_file, course)
     ]
     selected_button = 0
