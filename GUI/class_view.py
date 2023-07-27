@@ -20,12 +20,11 @@ def run(config_file, course, screen, clock, constants):
     control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
 
     buttons = [
-        icons.PositiveButton((700, 90), (200, 75), comment_file),
-        icons.NegativeButton((700, 180), (200, 75), comment_file),
+        icons.PositiveButton((700, 90), (20, 75), comment_file),
+        icons.NegativeButton((700, 180), (20, 75), comment_file),
         icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file,
-                                config_file, course)
+                                 config_file, course)
     ]
-    selected_button = 0
 
     sprites = pygame.sprite.Group(desks + buttons + [control_view_button])
 
@@ -47,7 +46,7 @@ def run(config_file, course, screen, clock, constants):
             if event.type == MOUSEMOTION:
                 clicked_desk.move(*event.rel)
             if event.type == KEYDOWN:
-                selected_button = events.handle_keydown(event, selected_desks, selected_button, buttons)
+                selected_button = events.handle_keydown(event, selected_desks, buttons)
 
         if isinstance(clicked_desk, icons.Desk):
             swapping_desk = events.update_swapping_desk(desks, clicked_desk, swapping_desk)

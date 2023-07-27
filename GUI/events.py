@@ -33,12 +33,6 @@ def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
 
 
 def handle_keydown(event, selected_desks, selected_button, buttons):
-    if event.key == pygame.K_UP:
-        selected_button = 0
-    elif event.key == pygame.K_DOWN:
-        selected_button = 1
-    for button in buttons:
-        button.text_editor_active = False
     buttons[selected_button].handle_keydown(event, selected_desks)
     return selected_button
 
