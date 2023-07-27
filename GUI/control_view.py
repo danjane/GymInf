@@ -40,13 +40,6 @@ def class_list_from_file(config_file, selected_course, student_button_height):
     return student_buttons
 
 
-def turn_off_editors(buttons, button):
-    if button in buttons:
-        for b in buttons:
-            if b != button:
-                b.text_editor_active = False
-
-
 def flatten(list_of_lists):
     return [b for sublist in list_of_lists for b in sublist]
 
@@ -104,7 +97,7 @@ def run(config_file, selected_course, screen, clock, constants):
                 button, _ = events.handle_mouse_button_down(
                     *event.pos, flat_buttons, []
                 )
-                turn_off_editors(flat_buttons, button)
+                events.turn_off_editors(flat_buttons, button)
                 if button == class_view_button and selected_course:
                     return "class_view", selected_course
                 if button == delete_course_button and selected_course:

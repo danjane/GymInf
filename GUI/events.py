@@ -32,11 +32,6 @@ def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
         return new_clicked_desk, selected_desks
 
 
-def handle_keydown(event, selected_desks, selected_button, buttons):
-    buttons[selected_button].handle_keydown(event, selected_desks)
-    return selected_button
-
-
 def handle_add_course_button_click(button):
     if button.text_editor_active:
         button.text_editor_active = False
@@ -47,4 +42,9 @@ def handle_add_course_button_click(button):
         return None
 
 
+def turn_off_editors(buttons, button):
+    if button in buttons:
+        for b in buttons:
+            if b != button:
+                b.text_editor_active = False
 

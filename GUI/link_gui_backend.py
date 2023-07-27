@@ -19,11 +19,13 @@ def setup(cfg_path: str, course: str):
     cfg = config.load(cfg_path)
     start_new_day(cfg, course)
     comments_path = cfg["comments_path"]
+    positive_defaults = cfg["positive_comments_defaults_path"]
+    negative_defaults = cfg["negative_comments_defaults_path"]
 
     file_path = os.path.join(cfg["courses_path"], course + ".txt")
     seating_plan = GUI.desk_functions.load_basic_seating_plan_from_file(file_path)
     desk_layout = max(v[0] for v in seating_plan.keys()) + 1, max(v[1] for v in seating_plan.keys()) + 1
-    return seating_plan, desk_layout, comments_path
+    return seating_plan, desk_layout, comments_path, positive_defaults, negative_defaults
 
 
 def courses(cfg_path: str):

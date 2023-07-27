@@ -333,6 +333,10 @@ class SuggestFocusButton(ButtonWithComments):
 class TextButtonLinkedToFile(Button):
 
     def __init__(self, pos, size, text, file, count):
+        if text is None:
+            with open(file, 'r') as f:
+                lines = f.read().split("\n")
+            text = lines[count]
         super().__init__(pos, size, text)
         self.file = file
         self.count = count
