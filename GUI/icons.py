@@ -84,6 +84,9 @@ class ParentDesk(pygame.sprite.Sprite):
     def append(self, selected_desks):
         return selected_desks
 
+    def handle_keydown(self, event, selected_desks):
+        pass
+
 
 class UnclickedDesk(ParentDesk):
     def __init__(self):
@@ -287,26 +290,31 @@ class ButtonWithComments(Button):
     def __init__(self, pos, size, text, comments_path):
         super().__init__(pos, size, text)
         self.comments_path = comments_path
+        self.linked_button = None
 
 
 class PositiveButton(ButtonWithComments):
     def __init__(self, pos, size, comments_path):
-        super().__init__(pos, size, "positive", comments_path)
+        super().__init__(pos, size, "+", comments_path)
 
     def clicked(self, selected_desks):
         updateComments.add_positive_comments(self.comments_path,
-                                             [desk.name for desk in selected_desks], self.text)
+                                             [desk.name for desk in selected_desks],
+                                             self.linked_button.text)
+        self.linked_button.fade_from_1_to_0 = 1.
         super().clicked(selected_desks)
         return UnclickedDesk(), set()
 
 
 class NegativeButton(ButtonWithComments):
     def __init__(self, pos, size, comments_path):
-        super().__init__(pos, size, "negative", comments_path)
+        super().__init__(pos, size, "-", comments_path)
 
-    def clicked(self, selected_desks, comment=""):
+    def clicked(self, selected_desks):
         updateComments.add_negative_comments(self.comments_path,
-                                             [desk.name for desk in selected_desks], comment)
+                                             [desk.name for desk in selected_desks],
+                                             self.linked_button.text)
+        self.linked_button.fade_from_1_to_0 = 1.
         super().clicked(selected_desks)
         return UnclickedDesk(), set()
 
@@ -360,7 +368,7 @@ class TextButtonLinkedToFile(Button):
                 self.write_text()
         else:
             self.text_editor_active = True
-        return self, set()
+        return self, selected_desks
 
     def handle_keydown(self, event, selected_desks):
         self.text_editor_active = True

@@ -5,16 +5,24 @@ import events
 import link_gui_backend
 
 
-def create_text_editor_comment_buttons(type, pos, size, step, file, number):
+def create_text_editor_comment_buttons(pn, pos, size, step, file, number, comment_file):
     buttons = []
     x_pos, y_pos = pos
     x_size, y_size = size
     x_size_quick = x_size // 4
     x_size_text = x_size - x_size_quick
     for count in range(number):
-        buttons.append(icons.Button((x_pos, y_pos), (x_size_quick, y_size), type))
-        buttons.append(icons.TextButtonLinkedToFile(
-            (x_pos + x_size_quick + 5, y_pos), (x_size_text - 5, y_size), None, file, count))
+        if pn == "+":
+            quick_button = icons.PositiveButton((x_pos, y_pos), (x_size_quick, y_size), comment_file)
+        else:
+            quick_button = icons.NegativeButton((x_pos, y_pos), (x_size_quick, y_size), comment_file)
+
+        text_button = icons.TextButtonLinkedToFile(
+            (x_pos + x_size_quick + 5, y_pos), (x_size_text - 5, y_size), None, file, count)
+        quick_button.linked_button = text_button
+
+        buttons.append(quick_button)
+        buttons.append(text_button)
         y_pos += step
     return buttons
 
@@ -37,8 +45,10 @@ def run(config_file, course, screen, clock, constants):
     buttons = [
                   icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file,
                                            config_file, course)
-              ] + create_text_editor_comment_buttons("+", (700, 90), (200, 20), 25, positive_defaults, 4) + \
-              create_text_editor_comment_buttons("-", (700, 200), (200, 20), 25, negative_defaults, 2)
+              ] + create_text_editor_comment_buttons("+", (700, 90), (200, 20), 25,
+                                                     positive_defaults, 4, comment_file) + \
+              create_text_editor_comment_buttons("-", (700, 200), (200, 20), 25,
+                                                 negative_defaults, 2,comment_file)
 
     sprites = pygame.sprite.Group(desks + buttons + [control_view_button])
 
@@ -46,7 +56,7 @@ def run(config_file, course, screen, clock, constants):
         screen.fill(constants.BACKGROUND)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return "quit"
+                return "quit", None
             if event.type == MOUSEBUTTONDOWN:
                 clicked_desk, selected_desks = events.handle_mouse_button_down(
                     *event.pos, sprites.sprites(), selected_desks
