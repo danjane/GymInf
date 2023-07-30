@@ -33,9 +33,6 @@
 
 \section{Introduction}
 
-TODO: GUI update or delete comments?
-TODO: standard comments for easy click? Move text editor out of button
-
 From the classic teaching literature, Bucheton and Soulé have described the act of teaching as a multi-agenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controlling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. Many of the teacher's most time-consuming tasks do not take place in the classroom: good preparation and strong follow-ups (auto-reflection, marking, parent-teacher interactions) work to support and complement the overall success of the student learning process.
 
 For example, teacher responsibilities include the ability to [TODO: citation needed]
@@ -49,7 +46,7 @@ For example, teacher responsibilities include the ability to [TODO: citation nee
 \item write student reports to guide changes in instruction and practice, and to improve student learning.
 \end{itemize}
 
-Many of these tasks are "ripe for automation" \cite[p.?]{Swei15}, although I would also accept that some of these tasks should \textbf{not} be automated (even if they can be). As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
+Many of these tasks are "ripe for automation" \cite[p.? TODO]{Swei15}, although I would also accept that some of these tasks should \textbf{not} be automated (even if they can be). As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
 
 So which tasks should be automated? Why? And for whom? When I first started teaching, my natural character led to two bad teaching practices: I found it difficult to engage with the quieter, more reserved students; and I was so busy answering student questions that I left little time for taking notes. I felt my teaching (and so hopefully also my students' learning experience) would benefit from a tool which tracked my interactions in class in an attempt to shift the focus away from the "louder" students. 
 
@@ -158,17 +155,9 @@ Given the constraints, and especially the time limit, there is a large risk of s
 
 The TAT system will provide a basic GUI over a backend handling the tasks covered in the scope. In particular, the system should at least allow notes to be taken against student names and then suggest pertinent students for focus.
 
-\section{System plan: inputs and outputs} \label{inout}
+\section{System plan} \label{inout}
 
-“Design Patterns: Elements of Reusable Object-Oriented Software” by Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides \\
-“The Design of Everyday Things” by Don Norman \\
-“Systems Analysis and Design” by Alan Dennis and Barbara Haley Wixom\\
-“Clean Architecture: A Craftsman’s Guide to Software Structure and Design” by Robert C. Martin\\
-“Software Architecture in Practice” by Len Bass, Paul Clements, and Rick Kazman
-
-\
-
-In his 2017 book "Clean Architecture" Robert Martin\footnote{Martin likes to be called "Uncle Bob".} is clear about why we invest time in the planning phase of an IT system:
+In his 2017 book "Clean Architecture" Robert Martin\footnote{Robert Martin likes to be called "Uncle Bob".} is clear about why we invest time in the planning phase of an IT system:
 \begin{center}
 \emph{"The goal of software architecture is to minimize the human resources required to build and maintain the required system."} \cite[p. 5]{Mart17}
 \end{center}
@@ -398,7 +387,7 @@ By "backend" I mean the data access layer of the system. By connecting the input
 \def\function{circle}
 \def\datastore{rectangle}
   % Nodes
-  \node (comments) [\datastore]{raw comments as text};
+  \node (comments) [\datastore]{raw comments};
   \node (students) [below of=comments, \datastore] {list of students};
   \node (shred) [right of=comments, xshift=\datagapmm, \function] {shred comments};
   \node (comment_table) [right of=shred, \datastore] {comment table};
@@ -414,9 +403,9 @@ By "backend" I mean the data access layer of the system. By connecting the input
   
   % Second row
   \node (suggest) [below of=shred, yshift=-25mm, \function] {suggest focus};
-  \node (focus) [right of=suggest, xshift=\datagapmm, \datastore] {ordered students for focus};
+  \node (focus) [right of=suggest, xshift=\datagapmm, \datastore] {students for focus};
   \node (build) [below of=suggest, \function] {build report};
-  \node (report) [right of=build, xshift=\datagapmm, \datastore] {pdf of individual reports};
+  \node (report) [right of=build, xshift=\datagapmm, \datastore] {individual reports};
 
   \draw[->] (progress) -- (suggest);
   \draw[->] (suggest) -- (focus);
@@ -436,7 +425,6 @@ By "backend" I mean the data access layer of the system. By connecting the input
   \draw[->] (students) -- (suggest);
   \draw[->] (students) -- (build);
   \draw[->] (students) -- (average);
-%    {(in\X) edge[->] (box.west |- in\X)
 
 \end{tikzpicture}
 
@@ -446,8 +434,14 @@ By "backend" I mean the data access layer of the system. By connecting the input
 
 \subsection{Data}
 
-\subsubsection{Files}
+The data flow diagram in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a very high-level description of a possible system. To make concrete decisions about how to implement the TAT system it will help to define the expected inputs and outputs. In this section I will outline a basic backend based on files, then briefly explain the advantages of databases over files. An implementation based on files is simpler, but in the future I would expect the backend to handle updates via databases. I will finish this section by touching on the data privacy laws that apply in Geneva; in particular the system will use only a minimum amount of personal data.
 
+\subsubsection{Files}
+The \textbf{list of students} is a list of students in each class. I will use a text file for each class, storing a list of user-ids for each student. For example, for the class 1in1dfb01 I would create a textfile called "1in1dfb01.txt":
+\begin{tcolorbox}[title = 1in1dfb01.txt]
+\texttt{albert.enstn\\ngabriel.crmr\\nmarie.cr\\nrichard.fynmn}.
+\end{tcolorbox}
+This also seems a pertinent place to store the given name of each student. Currently, the user-id starts with the first name of the student. TODO
 
 \subsubsection{Databases}
 
@@ -463,6 +457,8 @@ By "backend" I mean the data access layer of the system. By connecting the input
 \begin{center} 
 \emph{"Ainsi, ne sont en principe pas soumises au RGPD les situations suivantes... L’instruction publique accueille des élèves qui résident et/ou ont la nationalité d’un Etat membre de l’UE, sans avoir fait de promotion sur le territoire de l’UE."}\cite[p. 3]{PPDT18}
 \end{center}
+
+
 
 
 
@@ -563,6 +559,8 @@ The teacher is expected to have a strong background in the coding language being
 
 
 
+
+
 \section{Test driven development} \label{tdd}
 
 \subsection{Building IT systems}
@@ -613,6 +611,8 @@ I based the GUI views on the three phases defined when reviewing the types of ac
 \draw[thick] (4.75, 4.1) rectangle (8, 4.5) node[pos=0.5] {gabriel.crmr};
 \draw[thick] (4.75, 3.6) rectangle (8, 4) node[pos=0.5] {marie.cr};
 \draw[thick] (4.75, 3.1) rectangle (8, 3.5) node[pos=0.5] {richard.fynmn};
+\draw[thick] (4.75, 2.6) rectangle (8, 3);
+\draw[thick] (4.75, 2.1) rectangle (8, 2.5);
 
 \fill[gray!50!white] (8.5, 0.5) rectangle (12.25, 5.5);
 \draw[thick] (8.75, 4.5) rectangle (12, 5.25) node[pos=0.5] {Go to class view};
@@ -626,8 +626,8 @@ I based the GUI views on the three phases defined when reviewing the types of ac
 Possible events controlled from this view: 
 \begin{enumerate}
 \item Create a new class.
-\item Delete a class.
 \item Select the active class.
+\item Delete the active class
 \item Edit the class list.
 \item Pass to the class view of the active class.
 \item Build student reports.
@@ -670,26 +670,12 @@ The class view includes the seating plan, both as a reminder for names and as a 
 Possible events: 
 \begin{enumerate}
 \item Pass back to the control view.
+\item Change the seating plan.
 \item Select/ deselect a student.
-\item Record a positive comment.
-\item Record a negative comment.
+\item Record a positive comment for the selected students.
+\item Record a negative comment  for the selected students.
 \item Suggest students for next teacher-student focus.
 \end{enumerate}
-
-\subsubsection{Seating plan view}
-
-TODO : diagram
-
-Possible events: 
-\begin{enumerate}
-\item Pass back to the control view.
-\item Pass to the class view of this class.
-\item Change the seating plan.
-\item Save the seating plan.
-\item Load previous seating plans.
-\item Suggest a seating plan.
-\end{enumerate}
-
 
 
 
@@ -700,8 +686,6 @@ Possible events:
 \subsection{Page 2: control view}
 
 \subsection{Page 3: class view}
-
-\subsection{Page 4: seating plan view}
 
 
 \section{Missing features} \label{notdone}
@@ -727,6 +711,10 @@ handling students who leave
 \
 
 changing given names after comments already made about them
+
+\
+
+seating plans
 
 \
 
