@@ -5,17 +5,23 @@ import events
 import link_gui_backend
 
 
-def create_text_editor_comment_buttons(button_type, pos, size, step, file, number):
+def create_text_editor_comment_buttons(type, pos, size, step, file, number):
     buttons = []
     x_pos, y_pos = pos
+    x_size, y_size = size
+    x_size_quick = x_size // 4
+    x_size_text = x_size - x_size_quick
     for count in range(number):
-        buttons.append(icons.TextButtonLinkedToFile((x_pos, y_pos), size, None, file, count))
+        buttons.append(icons.Button((x_pos, y_pos), (x_size_quick, y_size), type))
+        buttons.append(icons.TextButtonLinkedToFile(
+            (x_pos + x_size_quick + 5, y_pos), (x_size_text - 5, y_size), None, file, count))
         y_pos += step
     return buttons
 
 
 def run(config_file, course, screen, clock, constants):
-    seating_plan, desk_layout, comment_file, positive_defaults, negative_defaults = link_gui_backend.setup(config_file, course)
+    seating_plan, desk_layout, comment_file, positive_defaults, negative_defaults = link_gui_backend.setup(config_file,
+                                                                                                           course)
 
     desks = []
     for place, student in seating_plan.items():
@@ -29,10 +35,10 @@ def run(config_file, course, screen, clock, constants):
     control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
 
     buttons = [
-        icons.NegativeButton((700, 180), (20, 75), comment_file),
-        icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file,
-                                 config_file, course)
-    ] + create_text_editor_comment_buttons(icons, (750, 90), (150, 20), 25, positive_defaults, 4)
+                  icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file,
+                                           config_file, course)
+              ] + create_text_editor_comment_buttons("+", (700, 90), (200, 20), 25, positive_defaults, 4) + \
+              create_text_editor_comment_buttons("-", (700, 200), (200, 20), 25, negative_defaults, 2)
 
     sprites = pygame.sprite.Group(desks + buttons + [control_view_button])
 
@@ -62,6 +68,8 @@ def run(config_file, course, screen, clock, constants):
             swapping_desk = events.update_swapping_desk(desks, clicked_desk, swapping_desk)
 
         sprites.update(screen)
-        clicked_desk.update(screen)
+        if isinstance(clicked_desk, icons.Desk):
+            clicked_desk.update(screen)
+
         pygame.display.flip()
         clock.tick(60)
