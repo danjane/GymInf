@@ -677,7 +677,31 @@ Possible events:
 \item Suggest students for next teacher-student focus.
 \end{enumerate}
 
+\section{A single executable file}
 
+Ideally, the TAT system would run from a single executable file. The user would launch the TAT application (for example, by double clicking on the icon) and then all interactions would happen through the GUI. 
+
+I tried using two different packages: \textbf{PyInstaller}\footnote{\texttt{https://pyinstaller.org/en/stable/}} and \textbf{cx-Freeze}\footnote{\texttt{https://cx-freeze.readthedocs.io/en/latest/index.html}}. Both packages attempt to build standalone executables from Python scripts by bundling the application and dependencies into a single package.
+
+Unfortunately, at this time I have not managed to automate the process of creating a standalone package. PyInstaller has trouble linking to the pygame module, and cx-Freeze dislikes subfolders. Instead I manually create the executable as follows:
+
+\begin{enumerate}
+\item Create an empty folder.
+\item Copy all the TAT python scripts and the \texttt{requirements.txt} into this folder.
+\item Create a virtual environment and add the necessary python modules. This can be done at the command line using
+
+\texttt{pip install -r requirements.txt}
+
+\item Again at the command line in this working directory, run cx-Freeze
+
+\texttt{cxfreeze -c gui.py --target-dir dist}.
+
+\item Copy the \texttt{GUI\_files} directory into the new \texttt{dist} folder.
+\item Zip the necessary files into a single archive:
+\begin{itemize}
+\item The application file \texttt{TAT.exe}.
+\item The directory of packaged files \texttt{lib}.\item The directory of TAT options and helper files \texttt{GUI\_files}.\end{itemize}
+\end{enumerate}
 
 \section{Instruction booklet} \label{instructions}
 
@@ -720,7 +744,9 @@ seating plans
 
 using the data to make predictions about students. For example: their behaviour in class has changed dramatically (for the better or for the worse); students who might need extra support in order to pass the year; students who should consider accelerated learning programs. There are lots of resources available to the students and to the teachers, and it is difficult for young teachers to suggest
 
+\
 
+Automate the process of creating a standalone package, which is currently manual.
 
 \section{Conclusion}
 
