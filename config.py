@@ -16,9 +16,17 @@ def cx(filename):
     else:
         return filename
 
+
+def ispath(obj):
+    return isinstance(obj, str) and len(obj) > 1 and obj[0] == "."
+
+
 def load(filename: str) -> Dict[str, Any]:
     with open(cx(filename), 'r') as f:
         config = yaml.safe_load(f)
+    for k, v in config.items():
+        if ispath(v):
+            config[k] = cx(v)
     config = add_class_paths(config)
     return config
 

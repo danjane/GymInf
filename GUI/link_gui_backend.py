@@ -3,7 +3,7 @@ import config
 import students
 import linkComments
 import analyseNotes
-import GUI.desk_functions
+import desk_functions
 from datetime import datetime
 from typing import Dict
 
@@ -23,7 +23,7 @@ def setup(cfg_path: str, course: str):
     negative_defaults = cfg["negative_comments_defaults_path"]
 
     file_path = os.path.join(cfg["courses_path"], course + ".txt")
-    seating_plan = GUI.desk_functions.load_basic_seating_plan_from_file(file_path)
+    seating_plan = desk_functions.load_basic_seating_plan_from_file(file_path)
     desk_layout = max(v[0] for v in seating_plan.keys()) + 1, max(v[1] for v in seating_plan.keys()) + 1
     return seating_plan, desk_layout, comments_path, positive_defaults, negative_defaults
 
