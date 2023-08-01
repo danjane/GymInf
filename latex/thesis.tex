@@ -76,9 +76,9 @@ TODO intro for chaps 7 and 8
 
 Given the limited resources of this masters' thesis, not all of the desired functionality has been delivered. These missing features are described in section \ref{notdone}. Please note that the current codebase was designed with these features in mind, and that existing code should require minimal changes to incorporate these features as they are added.
 
-\section{BOSCARD}
+\section{Project scope}
 
-As Robinson points out in \emph{BOSCARD: a scoping tool} \cite{Rob19}, for a project to be effective and efficient it is necessary (but alas not sufficient) to be clear about the project's aims from the start. BOSCARD is an acronym for background, objectives, scope, constraints, assumptions, risks, and deliverables. Although an industry standard, Robinson claims that the origins of this approach to project planning are unclear, but likely originated with the consulting company Cap Gemini in the 1980s \cite[p. 181]{Rob19}.
+As Robinson points out in \emph{BOSCARD: a scoping tool} \cite{Rob19}, for a project to be effective and efficient it is necessary (but alas not sufficient) to be clear about the project's aims from the start. BOSCARD is an acronym for background, objectives, scope, constraints, assumptions, risks, and deliverables. Although an industry standard, Robinson claims that the origins of this approach to project planning are unclear but likely originated with the consulting company Cap Gemini in the 1980s \cite[p. 181]{Rob19}.
 
 \subsection{Background}
 \emph{Provide background information that includes the reasons for creating the project and mentions the key stakeholders who will benefit from the project result.}
@@ -376,7 +376,7 @@ harry.pttr \hfill \textbf{Harry} \hfill 1ma1df01
 
 \subsection{Implied structure of backend}
 
-By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what intermediate processing will be required, and what functionality can be shared. The schematic in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a \emph{Data Flow Diagram} for the TAT system. I have used the Yourdon-Coad notation where the processes (functions) are circles and data is represented as a rectangle. Flow of control (transfer of information) is represented by arrows, see \cite{Coad91}.
+By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what intermediate processing will be required, and what functionality can be shared. The schematic in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a \emph{Data Flow Diagram} for the TAT system. I have used the Yourdon-Coad notation where the processes (functions) are circles and data is represented by rectangles. Flow of control (transfer of information) is represented by arrows, see \cite{Coad91}.
 
 \begin{figure}[h] \label{dataflowdiagram}
 \begin{center}
@@ -432,18 +432,81 @@ By "backend" I mean the data access layer of the system. By connecting the input
 \caption{Data flow diagram for the backend of the TAT system.}
 \end{figure}
 
-\subsection{Data}
+The data flow diagram in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a very high-level description of a possible system. To make concrete decisions about how to implement the TAT system it will help to define the expected inputs and outputs. In this section I will outline a basic backend based on files.  An implementation based on files is simpler and quicker, and so more suited for a master's project, but in the future I would expect the backend to handle updates via ACID database queries. I will briefly explain the advantages of databases over files in subsection \ref{db}. I will finish this section by touching on the data privacy laws that apply in Geneva; in particular the system will use only a minimum amount of personal data.
 
-The data flow diagram in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a very high-level description of a possible system. To make concrete decisions about how to implement the TAT system it will help to define the expected inputs and outputs. In this section I will outline a basic backend based on files, then briefly explain the advantages of databases over files. An implementation based on files is simpler, but in the future I would expect the backend to handle updates via databases. I will finish this section by touching on the data privacy laws that apply in Geneva; in particular the system will use only a minimum amount of personal data.
-
-\subsubsection{Files}
+\subsubsection{The list of students}
 The \textbf{list of students} is a list of students in each class. I will use a text file for each class, storing a list of user-ids for each student. For example, for the class 1in1dfb01 I would create a textfile called "1in1dfb01.txt":
 \begin{tcolorbox}[title = 1in1dfb01.txt]
-\texttt{albert.enstn\\ngabriel.crmr\\nmarie.cr\\nrichard.fynmn}.
+\texttt{harry.pttr\\ronald.wsly\\marie.cr\\richard.fynmn}
 \end{tcolorbox}
-This also seems a pertinent place to store the given name of each student. Currently, the user-id starts with the first name of the student. TODO
+This also seems a pertinent place to store the given name of each student. Currently the user-id starts with the first name of the student followed by a fullstop followed by (roughly) the consonants of the surname, 
+\begin{center}
+\texttt{user\_id = firstname + "." + consonants(surname).}
+\end{center}
+A regular expression of the form \texttt{\textasciicircum
+[a-z\textbackslash-]+} strips the student's first name from their user-id. In Python, we use the \texttt{re} package, for example
+\begin{center}
+\texttt{firstname = re.search(r"\textasciicircum[a-z\textbackslash-]+", user\_id).group(0).capitalize()}
+\end{center}
+Applying this function to the students above would yield
+\begin{center}
+\texttt{["Harry", "Ronald", "Marie", "Richard"]}
+\end{center}
 
-\subsubsection{Databases}
+However, there are two issues with assuming that this function will always yield the given name of a student. Firstly, we do not control how the user-ids are created, and so we cannot guarantee that this function will work in the future. Secondly, a student might want to be called by a different name (for example their second name). 
+
+I decided to add an optional comma-separated second item which designates the given name of a student in a class: this will be the name shown on the seating plan. For example, if Ronald Weasley wished to be called "Ron" and Richard Feynman preferred "Dick", then the file for the class list would be 
+\begin{tcolorbox}[title = 1in1dfb01.txt]
+\texttt{harry.pttr\\ronald.wsly, Ron\\marie.cr\\richard.fynmn, Dick}
+\end{tcolorbox}
+
+\subsubsection{Raw comments}
+The comments file is designed to be read and updated by a user. A comment is written on a new line in the file, prefaced with a "+" or "-" depending on whether the comment is positive or negative. Then I include a list of students, followed by a comment.\footnote{The text in the comment can handle \LaTeX{} commands}
+
+Examples of positive comments: \\
+\texttt{+Harry gives conclusion of Pythag} \\
+\texttt{+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$}
+
+\
+
+Examples of negative comments: \\
+\texttt{-Harry moaning about scar} \\
+\texttt{-Harry, Ron chatting}
+
+Before a set of comments must be a line with the name of the class and, independently, the date. So a valid state for the comments file might be something like the following
+\begin{tcolorbox}[title = comments\_file\_v0.1.txt]
+\texttt{01Apr2023\\1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\2indfb01\\+George TN for Djikstra \\\\02Apr2023\\1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagore}
+\end{tcolorbox}
+(Note that the vertical spaces are optional and aid human readability.)
+
+Given that this is a first implementation, but that nevertheless we want an efficient backend, we can improve the parsing of this file by demanding that the first character in each line defines the information that this line will contain:
+
+\begin{itemize}
+\item "+" or "-" will be followed by a comma separated list of students and a comment.
+\item "d" will be followed by a date in "ddMMMyyyy" format.
+\item "c" will be be followed by a class name.
+\end{itemize}
+
+\begin{tcolorbox}[title = comments\_file\_v1.1.txt]
+\texttt{d01Apr2023\\c1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\c2indfb01\\+George TN for Djikstra \\\\ d02Apr2023\\c1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagore}
+\end{tcolorbox}
+
+\subsubsection{Comment table}
+
+\subsubsection{Progress table}
+
+
+\subsubsection{Students for focus}
+
+\subsubsection{Individual reports}
+
+\subsubsection{Spreadsheet of moyennes}
+
+\subsubsection{Exam results}
+
+
+
+\subsubsection{Databases} \label{db}
 
 
 \subsubsection{Data privacy} \label{dataprivacy}
@@ -681,14 +744,16 @@ Possible events:
 
 Ideally, the TAT system would run from a single executable file. The user would launch the TAT application (for example, by double clicking on the icon) and then all interactions would happen through the GUI. 
 
-I tried using two different packages: \textbf{PyInstaller}\footnote{\texttt{https://pyinstaller.org/en/stable/}} and \textbf{cx-Freeze}\footnote{\texttt{https://cx-freeze.readthedocs.io/en/latest/index.html}}. Both packages attempt to build standalone executables from Python scripts by bundling the application and dependencies into a single package.
+I tried using two different packages: \textbf{PyInstaller}\footnote{\texttt{https://pyinstaller.org/en/stable/}} and \textbf{cx-Freeze}\footnote{\texttt{https://cx-freeze.readthedocs.io/en/latest/index.html}}. Both packages attempt to build standalone executables from Python scripts by bundling the application and dependencies into a single package. 
+
+Importantly, both scripts are only able to build packages for the hardware and software used when building the package. This means that \textbf{I must build the executable using the school computers,} as the executable I make locally will only run on machines identical to my own. This is a clear disadvantage with the decision to use Python, a scripting language. If I had implemented the TAT system using Java, for example, then I could have assumed the school computers used a compatible virtual machine.
 
 Unfortunately, at this time I have not managed to automate the process of creating a standalone package. PyInstaller has trouble linking to the pygame module, and cx-Freeze dislikes subfolders. Instead I manually create the executable as follows:
 
 \begin{enumerate}
 \item Create an empty folder.
 \item Copy all the TAT python scripts and the \texttt{requirements.txt} into this folder.
-\item Create a virtual environment and add the necessary python modules. This can be done at the command line using
+\item Create a virtual Python environment for this directory and add the necessary python modules. This can be done at the command line using
 
 \texttt{pip install -r requirements.txt}
 
@@ -696,8 +761,8 @@ Unfortunately, at this time I have not managed to automate the process of creati
 
 \texttt{cxfreeze -c gui.py --target-dir dist}.
 
-\item Copy the \texttt{GUI\_files} directory into the new \texttt{dist} folder.
-\item Zip the necessary files into a single archive:
+\item Copy the \texttt{GUI\_files} directory into the new \texttt{dist} subfolder.
+\item From the \texttt{dist} subfolder, zip the following files into a single archive ready for distribution:
 \begin{itemize}
 \item The application file \texttt{TAT.exe}.
 \item The directory of packaged files \texttt{lib}.\item The directory of TAT options and helper files \texttt{GUI\_files}.\end{itemize}
