@@ -563,23 +563,47 @@ Of course, other students in this course have a default weight of zero if there 
 \texttt{["hermione.grngr", "ronald.wsl", "harry.pttr"]}.
 \end{center}
 
-\subsubsection{Individual reports}
+\subsubsection{Report}
 The \textbf{report} is a pdf document containing an A4 page per student. On each page we have the student-id, the student's given name, the course, and a list of comments associated with this student. The TAT system first creates a text-based .tex document, and then calls a system function which executes pdflatex\footnote{\texttt{https://www.tug.org/applications/pdftex/}} to typeset the report as a .pdf document.
 
 \subsubsection{Spreadsheet of moyennes}
 The TAT system can shred spreadsheets of individual exams to create a table with the exam name, exam date, course, student-ids and associated notes. It then creates a \textbf{spreadsheet of moyennes} with a worksheet per course and a table of notes with the exams as columns and the student-ids as rows.
 
-So far, the description above explains how a spreadsheet of static data is created (albeit static data collated in a useful single file). The TAT system goes further, automatically creating a table of cells containing formulae (rather than static data) which calculate the student \emph{moyennes} for the provisional notes (NIPs), the first semester notes (S1), the second semester notes (S2) and the implied end of year note (EOY). This allows the teacher to fill-in or correct individual exams and see the effect on the notes to be officially declared.
+So far, the description above explains how a spreadsheet of static data is created (albeit static data collated in a useful single file). The TAT system goes further, automatically creating a table of cells containing formulae (rather than static data) which calculate the student \emph{moyennes} for the provisional notes (NIPs), the first semester notes (S1), the second semester notes (S2) and the implied end of year note (EOY). This allows the teacher to fill-in or correct individual exams and see the effect on the notes to be officially declared. Further, by leaving rows for the individual exam weights the teacher has the flexibility to specify which exams are noted and which are formative, which exams count double, as well as choosing the weight of the semestriel exams.
 
-I also made the TAT system create the workbook with conditional formatting applied to the cells, so that notes less than the passing mark of 4.0 are flagged in red. To handle missing notes (for example, when students were absent), I use a default value of -100 as I did not want to expose non-scientific users to the joys of "Not a Number".
+The algebra for the calculation of the notes was given in subsection \ref{output_notes}, on page \pageref{output_notes}. The equivalent spreadsheet formulae are 
+\begin{itemize}
+\item \texttt{"RAWNOTE=SUMPRODUCT(EXAMWEIGHTS, EXAMNOTES)/SUM(EXAMWEIGHTS)},
+\item \texttt{"NOTE\_Sx=ROUND(RAWNOTE*10)/10"}, and
+\item \texttt{"NOTE\_EOY=ROUND(AVERAGE(NOTE\_S1;NOTE\_S2)*10)/10"}.
+\end{itemize}
 
+I also made the TAT system create the workbook with conditional formatting applied to the cells, so that notes less than the passing mark of 4.0 are flagged in red. To handle missing notes (for example, when students were absent), I use a default value of -100 as I did not want to expose non-scientific users to the joys of "Not a Number". This is sufficiently negative to cause obvious problems throughout the calculations.
 
 \subsubsection{Exam results}
+In order to shred individual exams that TAT system assumes that the notes are stored in spreadsheets named with the convention \texttt{EXAMDATE\_EXAMNAME\_Notes} with extension either \texttt{.ods}, \texttt{.xls} or \texttt{.xlsx}. The files for a single course should be grouped together in a subdirectory with the same name as the course name. Each spreadsheet should be contain a cell in the first column containing the keyword "Student", followed by a column of student-ids. There should be a cell in the first row containing the keyword "Note", and the notes are in the corresponding intersection of the student-id row and the note column. These are notes for an individual exam, and so should be rounded to the nearest multiple of 0.5.\footnote{Individual exam notes are given to the nearest half except in very special cases. One such exception is for controlled exams with an external jury: where the teacher and the jury agree to disagree, the exam note is the average (rounded to the nearest tenth) of the two notes (rounded to the nearest half).}
 
+So an example for an exam filename might \texttt{20Apr2020\_ExampleExam\_Notes.ods} found in the directory \texttt{.\textbackslash1indfb01}.
 
 
 \subsubsection{Databases} \label{db}
+In the Genevan \emph{plan d'études} one third of the second year is devoted to databases (ten out of thirty contact hours). This project would have been excellent opportunity for me to practice planning, creating, updating and querying tables programmatically: the course lists, the comment table and the progress table lend themselves naturally to being stored and treated as tables in a database (indeed, that's why I named them as tables).
 
+Using a database has a number of advantages over a system based on flat files, including:
+\begin{enumerate}
+\item handling scalability and concurrency, 
+\item data organisation and structure,
+\item providing automated backup and recovery programs,
+\item offering user authentication and enhanced data security, as well as
+\item data consistency based on ACID transactions.
+\end{enumerate}
+The first four reasons are less important for small, individual projects such as this masters. The last reason, however, would have been useful: ACID stands for Atomicity, Consistency, Isolation, and Durability. Consistency promises that the databases is always in a valid state, even if the system crashes during an update. The TAT system does not make this promise with flat text files: if the system only adds the first few letters of a course name in the raw comments file, for example, the TAT system will not be able to restart without a manual intervention.
+
+\begin{tcolorbox}[title = comments\_file\_BROKEN.txt]
+\texttt{d01Apr2023\\c1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\c2ind}
+\end{tcolorbox}
+
+In spite of these advantages I decided to leave the TAT system based on flat files. First, there is the cost and risk of migration (although the risk should be minin
 
 \subsubsection{Data privacy} \label{dataprivacy}
 
@@ -596,7 +620,7 @@ I also made the TAT system create the workbook with conditional formatting appli
 
 
 
-
+\iffalse
 \section{System plan: user actions} \label{actions}
 
 We can also model a system by considering the possible actions. We can then analyse the sub-processes inside the actions, which can suggest a natural architecture for the system.
@@ -643,7 +667,8 @@ The \emph{class list} is the list of students in a given class.
 I would like to be able to take into account the needs of certain students. For example, short-sighted students often ask to sit in the front row, as do students with hearing difficulties. More rarely, students have asked to sit away from the windows because of hay-fever. These constraints could be handled by specifying particular seats as "preferable" for a given student.
 
 Pairs of students often asked to be sat together. The decision as to whether or not these requests are accepted should rest with the teacher, but it would be a nice to have when automatically generating seating plans.
-
+}
+\fi
 
 \section{Choice of programming language} \label{language}
 
