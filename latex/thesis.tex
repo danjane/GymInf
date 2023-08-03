@@ -933,49 +933,12 @@ In the spreadsheet you can adjust the weights of each exam in rows 2, 3 and 4. T
 \textbf{Select the desired course and then click on the top "Go to course" button.} \\
 This will take you to the \textbf{course view}.
 
-\iffalse
-\section{System plan: user actions} \label{actions}
-
-We can also model a system by considering the possible actions. We can then analyse the sub-processes inside the actions, which can suggest a natural architecture for the system.
-
-
-
-\subsection{Actions during teaching}
-
- 
- 
- 
- 
-\subsection{Actions outside of teaching}
- 
-
-\subsubsection{Suggest a seating plan}
-
-\subsubsection{Review previous seating plans}
-
-\subsubsection{Prepare spreadsheets for noting an exam}
-
-
-
-
-
-
-\subsection{Actions to set up the classes}
- 
-
-
-\subsubsection{Suggest a seating plan}
-
-\subsubsection{Configure constraints in a seating plan}
-I would like to be able to take into account the needs of certain students. For example, short-sighted students often ask to sit in the front row, as do students with hearing difficulties. More rarely, students have asked to sit away from the windows because of hay-fever. These constraints could be handled by specifying particular seats as "preferable" for a given student.
-
-Pairs of students often asked to be sat together. The decision as to whether or not these requests are accepted should rest with the teacher, but it would be a nice to have when automatically generating seating plans.
-}
-\fi
 
 
 
 \subsection{The course view}
+
+The \textbf{course view} has the seating plan on the left hand side of the view, and the control buttons on the right. The seating plan uses the ordering of the students in the course list.
 
 \begin{center}
 \begin{tikzpicture}
@@ -1012,34 +975,66 @@ Pairs of students often asked to be sat together. The decision as to whether or 
 
 \draw[thick] (8.75, 1) rectangle (12, 1.75) node[pos=0.5] {Suggest focus};
 
-
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Record a remark about a set of students}
+\subsubsection{Modify the seating plan}
+\textbf{Click and drag a student.} \\
+The student will swap places with another.
+
+\subsubsection{Select a student}
+\textbf{Click on the desired student.} \\
+The student will turn blue, to indicate they have been selected. Hint: you can select multiple students at once.
+
+\subsubsection{Deselect a student}
+\textbf{Click on the selected student.} \\
+The student will turn yellow again. 
+
+\subsubsection{Go back to the control view}
+\textbf{Click on the "Go to control view" button at the top.} \\
+This course will still be selected, so if you double click you return to the same course view.
 
 \subsubsection{Suggest students for focus}
+\textbf{Click on the "Suggest focus" button at the bottom.} \\
+The TAT system will identify five students who have not received a positive comment recently and automatically select them for you (they turn blue). 
 
-\subsubsection{Modify the seating plan}
+\subsubsection{Record a positive remark for students}
+\textbf{Click on the corresponding "+" button.} \\
+The comment next to the associated "+" button will flash red, and then all the students will be deselected. The comment has been stored, and will appear in the student reports with today's date. 
 
+\subsubsection{Record a negative remark for students}
+\textbf{Click on the corresponding "-" button OR double-click the comment button.} \\
+Hint: this second option is also possible for positive comments.
+
+\subsubsection{Update a comment option}
+\textbf{Click on the comment button, type the new comment, and click on the button again.} \\
+The new comment will be immediately saved for any selected students. 
+Hint: the new comment is saved, and will be used next time you pass to the course view.
 
 \section{Missing features} \label{notdone}
 
-\subsection{Simple executable file}
-
-\subsection{instruction booklet}
 
 
+\subsection{Create exam file button}
 
-\subsection{exam buttons}
+\subsection{Export seating plan to pdf}
 
-\subsection{export seating plan to latex to pdf}
+\subsection{Handling students who leave}
 
-\subsection{handling students who leave}
+\subsection{Changing given names after comments already made about them}
 
-\subsection{changing given names after comments already made about them}
-\subsection{seating plans}
-\subsection{predictions}
+\subsection{Suggest seating plans}
+
+\subsection{Review previous seating plans}
+
+
+\subsection{Configure constraints in a seating plan}
+I would like to be able to take into account the needs of certain students. For example, short-sighted students often ask to sit in the front row, as do students with hearing difficulties. More rarely, students have asked to sit away from the windows because of hay-fever. These constraints could be handled by specifying particular seats as "preferable" for a given student.
+
+Pairs of students often asked to be sat together. The decision as to whether or not these requests are accepted should rest with the teacher, but it would be a nice to have when automatically generating seating plans.
+
+
+\subsection{Predictions}
 using the data to make predictions about students. For example: their behaviour in class has changed dramatically (for the better or for the worse); students who might need extra support in order to pass the year; students who should consider accelerated learning programs. There are lots of resources available to the students and to the teachers, and it is difficult for young teachers to suggest
 
 \subsection{Automate the process of creating a standalone package, which is currently manual}
