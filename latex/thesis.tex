@@ -1011,35 +1011,60 @@ Hint: this second option is also possible for positive comments.
 The new comment will be immediately saved for any selected students. 
 Hint: the new comment is saved, and will be used next time you pass to the course view.
 
+
+
+
+
 \section{Missing features} \label{notdone}
 
+In roughly decreasing order of importance, in my opinion, here are the features I would like to see in the next implementation of the TAT system. Many of these features I had in mind as I was designing the system, but had to be descoped in this project due to time constraints.
 
+\subsection{Button to create a blank exam file}
+On the selected course, create a spreadsheet in the correct format with the student.ids already filled in. This exists in the backend but was not wired up in the GUI.
 
-\subsection{Create exam file button}
+\subsection{Counting DNFs}
+The backend can already count the number of \emph{devoir non fait} and return a dictionary of counts against student.ids. I did not have time to wire this into the GUI.
 
-\subsection{Export seating plan to pdf}
+\subsection{Move to databases}
+We should confirm with the PPDT what extra security would be needed, see subsection \ref{dataprivacy}, and migrate the system onto a database instead of flat files. This raises other needs: it would have to be easier to review and change comments on students, for example, as simply opening the \texttt{comments.txt} file would no longer be an option. Also, should we connect to the official databases for student.ids and even course lists?
+
+\subsection{Stage the processed data}
+Currently the entire raw comments file must be shredded each time the comments are used. For example, every time the system suggests students for focus it must start from the beginning even though very little (and possibly nothing) has changed since the last calculation. Intermediate steps could be saved in the database using coherent transactions which mark which data has already been preprocessed.
 
 \subsection{Handling students who leave}
+In the current implementation, if a student leaves then they will soon be constantly suggested for focus. Unfortunately we cannot simply delete them from the list of students as the functions for "Shred Comments" would crash on an unknown student. This can be very annoying if, say, five students in the same class leave on an extramuros\ldots
 
-\subsection{Changing given names after comments already made about them}
+\subsection{Changing a name which already has comments}
+Although I have yet to see this happen in reality, if a student wanted to change their given name it would cause large headaches for the current TAT system. This seems like an edge case which it should be able to handle.
+
+\subsection{Persist seating plans}
+Currently the seating plan is lost when we switch out of the class view of the GUI.
+
+\subsection{Export seating plan to pdf}
+We could plan the seating plan in advance, and then we could print it off for the students or project it on to the board.
 
 \subsection{Suggest seating plans}
+We could consider, for example, how well pairs have worked previously, or how correlated students were in exams over the different questions, or whether certain students reduce the learning around them. I think a simulated annealing approach to optimisation would have worked well.
 
 \subsection{Review previous seating plans}
-
+It would be useful to store previous seating plans.
 
 \subsection{Configure constraints in a seating plan}
 I would like to be able to take into account the needs of certain students. For example, short-sighted students often ask to sit in the front row, as do students with hearing difficulties. More rarely, students have asked to sit away from the windows because of hay-fever. These constraints could be handled by specifying particular seats as "preferable" for a given student.
 
 Pairs of students often asked to be sat together. The decision as to whether or not these requests are accepted should rest with the teacher, but it would be a nice to have when automatically generating seating plans.
 
+\subsection{Testing the GUI}
+It is much harder to build a testing framework for a GUI. However, to ensure future maintainability would require either a manual UAT process or, ideally, an automated harness. The latter would require high initial investment.
 
 \subsection{Predictions}
-using the data to make predictions about students. For example: their behaviour in class has changed dramatically (for the better or for the worse); students who might need extra support in order to pass the year; students who should consider accelerated learning programs. There are lots of resources available to the students and to the teachers, and it is difficult for young teachers to suggest
+It would be interesting to use the data in the system to make predictions about students. For example: their behaviour in class has changed dramatically (for the better or for the worse); students who might need extra support in order to pass the year; students who should consider accelerated learning programs. There may be issues around data privacy with such an expansion though, see subsection \ref{dataprivacy}.
 
 \subsection{Automate the process of creating a standalone package, which is currently manual}
+This would be a nice to have, especially if the system was being regularly updated.
 
-\subsection{Counting DNFs}
+
+
 
 \section{Conclusion}
 
