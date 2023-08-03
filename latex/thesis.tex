@@ -367,8 +367,8 @@ harry.pttr \hfill \textbf{Harry} \hfill 1ma1df01
 \begin{center}
 \begin{tikzpicture}
 
-\draw[thick, fill=black!10!white] (0,0) rectangle (3,3) node[pos=0.5] {progress};
-\draw[thick, fill=black!10!white] (6,0) rectangle (9,3) node[pos=0.5] {notes};
+\draw[thick, fill=black!10!white] (0,0) rectangle (3,3) node[pos=0.5] {progress graph};
+\draw[thick, fill=black!10!white] (6,0) rectangle (9,3) node[pos=0.5] {notes graph};
 
 \end{tikzpicture}
 \end{center}
@@ -520,7 +520,7 @@ ronald.wsl       & 01Apr2023     & 1indfb01        & +Harry, Ron correct calc li
 george.wsl       & 01Apr2023     & 2indfb01        & +George TN for Djikstra                                                     & 1                  & 0.9             & 1                 \\ \hline
 ronald.wsl       & 02Apr2023     & 1indfb01        & -Ron DNF                                                                    & -1                 & 0.0             & 0                 \\ \hline
 harry.pttr       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 3                 \\ \hline
-harry.pttr       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 1                 \\ \hline
+ronald.wsl       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 1                 \\ \hline
 \end{tabular}
 \end{tcolorbox}
 
@@ -550,12 +550,29 @@ The \emph{progress} is the running cumulative sum of sentiments filtered on that
 
 
 \subsubsection{Students for focus}
-
-
+We sort the set of students in a given course to return a list of \textbf{students for focus}, a list ordered in increasing need for teacher-student interactions. This "need" is approximated by a function of the distribution of the comments over time, as explained in subsection \ref{output_focus} on page \pageref{output_focus}. In practice, it is simply the sum of the weights in the progress table. Referring to the example on page \pageref{comments_table}, the sum of weights for the students in class \texttt{1indfb01} is
+\begin{center}
+\texttt{\{"harry.pttr": 2.8, "ronald.wsl": 1.9\}}.
+\end{center}
+So as a list ordered on increasing weight, the students for focus would be
+\begin{center}
+\texttt{["ronald.wsl", "harry.pttr"]}.
+\end{center}
+Of course, other students in this course have a default weight of zero if there are currently no comments associated to them. So if the course also included \texttt{"hermione.grngr"} then the ordered list of students for focus would be
+\begin{center}
+\texttt{["hermione.grngr", "ronald.wsl", "harry.pttr"]}.
+\end{center}
 
 \subsubsection{Individual reports}
+The \textbf{report} is a pdf document containing an A4 page per student. On each page we have the student-id, the student's given name, the course, and a list of comments associated with this student. The TAT system first creates a text-based .tex document, and then calls a system function which executes pdflatex\footnote{\texttt{https://www.tug.org/applications/pdftex/}} to typeset the report as a .pdf document.
 
 \subsubsection{Spreadsheet of moyennes}
+The TAT system can shred spreadsheets of individual exams to create a table with the exam name, exam date, course, student-ids and associated notes. It then creates a \textbf{spreadsheet of moyennes} with a worksheet per course and a table of notes with the exams as columns and the student-ids as rows.
+
+So far, the description above explains how a spreadsheet of static data is created (albeit static data collated in a useful single file). The TAT system goes further, automatically creating a table of cells containing formulae (rather than static data) which calculate the student \emph{moyennes} for the provisional notes (NIPs), the first semester notes (S1), the second semester notes (S2) and the implied end of year note (EOY). This allows the teacher to fill-in or correct individual exams and see the effect on the notes to be officially declared.
+
+I also made the TAT system create the workbook with conditional formatting applied to the cells, so that notes less than the passing mark of 4.0 are flagged in red. To handle missing notes (for example, when students were absent), I use a default value of -100 as I did not want to expose non-scientific users to the joys of "Not a Number".
+
 
 \subsubsection{Exam results}
 
