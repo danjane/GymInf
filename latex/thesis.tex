@@ -25,6 +25,9 @@
 }
 \usepackage{adjustbox}
 
+\usepackage{pdflscape}
+
+
 \begin{document}
 
 \tableofcontents
@@ -461,7 +464,7 @@ I decided to add an optional comma-separated second item which designates the gi
 \end{tcolorbox}
 
 \subsubsection{Raw comments}
-The comments file is designed to be read and updated by a user. A comment is written on a new line in the file, prefaced with a "+" or "-" depending on whether the comment is positive or negative. Then I include a list of students, followed by a comment.\footnote{The text in the comment can handle \LaTeX{} commands}
+The \textbf{raw comments} was originally stored in a text file designed to be read and updated by the teacher. For this project, I have used the same design. A comment is written on a new line in the file, prefaced with a "+" or "-" depending on whether the comment is positive or negative. Then I include a list of students, followed by a comment.\footnote{The text in the comment can handle \LaTeX{} commands}
 
 Examples of positive comments: \\
 \texttt{+Harry gives conclusion of Pythag} \\
@@ -473,7 +476,7 @@ Examples of negative comments: \\
 \texttt{-Harry moaning about scar} \\
 \texttt{-Harry, Ron chatting}
 
-Before a set of comments must be a line with the name of the class and, independently, the date. So a valid state for the comments file might be something like the following
+Before lines of comments there must be a line with the name of the class and, independently, the date. So a valid state for the comments file might be something like the following
 \begin{tcolorbox}[title = comments\_file\_v0.1.txt]
 \texttt{01Apr2023\\1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\2indfb01\\+George TN for Djikstra \\\\02Apr2023\\1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagore}
 \end{tcolorbox}
@@ -493,10 +496,62 @@ Given that this is a first implementation, but that nevertheless we want an effi
 
 \subsubsection{Comment table}
 
+The \textbf{comment table} is a pandas data frame\footnote{\texttt{https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html}} created from the raw comments. The \emph{shred comments} functions read the raw comments from top to bottom, scraping the information in a comment along with the associated student, date, the course name, and the sentiment (whether the comment is positive or negative). A comment in the raw comments file can concern multiple students, so if necessary a line in the data frame is duplicated for each individual student. An example is given on page \pageref{comments_table}, restricting to the columns "Student", "Date", "Course", "Info" and "Sentiment".
+
+\begin{tcolorbox}
+NB: I had hoped that the TAT system would also keep track of missed homeworks (\emph{devoirs non-fait} in French, hence "DNF" in the comments). I have decided to punish students with a electronic \emph{renvoi} for every second homework missed. Of course, it is quite a lot of work to track which students have missed a second homework. The TAT system can easily count the DNFs through time which eliminates this bureaucracy (it also avoids mistakes and so is fairer.) The counting of DNFs is implemented in the backend but not yet wired up in the GUI, and so I do not mention it elsewhere in this thesis.
+\end{tcolorbox}
+
+\begin{landscape}
+
+\begin{tcolorbox}[title = comments\_file\_v1.1.txt]
+\texttt{d01Apr2023\\c1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\c2indfb01\\+George TN for Djikstra \\\\ d02Apr2023\\c1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagore}
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[title = comments\_table\_DataFrame $\subset$ progress\_table\_DataFrame] \label{comments_table}
+
+\begin{tabular}{|l|l|l|l|l||l|l|}
+\hline
+\textbf{Student} & \textbf{Date} & \textbf{Course} & \textbf{Info}                                                               & \textbf{Sentiment} & \textbf{Weight} & \textbf{Progress} \\ \hline
+harry.pttr       & 01Apr2023     & 1indfb01        & +Harry gives conclusion of Pythag                                           & 1                  & 0.9             & 1                 \\ \hline
+harry.pttr       & 01Apr2023     & 1indfb01        & +Harry, Ron correct calc litt for $(a+b)^2$ & 1                  & 0.9             & 2                 \\ \hline
+ronald.wsl       & 01Apr2023     & 1indfb01        & +Harry, Ron correct calc litt for $(a+b)^2$ & 1                  & 0.9             & 1                 \\ \hline
+george.wsl       & 01Apr2023     & 2indfb01        & +George TN for Djikstra                                                     & 1                  & 0.9             & 1                 \\ \hline
+ronald.wsl       & 02Apr2023     & 1indfb01        & -Ron DNF                                                                    & -1                 & 0.0             & 0                 \\ \hline
+harry.pttr       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 3                 \\ \hline
+harry.pttr       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 1                 \\ \hline
+\end{tabular}
+\end{tcolorbox}
+
+\end{landscape}
+
 \subsubsection{Progress table}
+In the \textbf{comments table} the columns were "Student", "Date", "Course", "Info" and "Sentiment". To these columns we adjoin the "Weight" and "Progress" columns to create \textbf{progress table}, which (like the comments table) is also implemented as a pandas DataFrame. See the example on page \pageref{comments_table}.
+
+The \emph{weight} of a positive comment is a memoryless function of the time duration between now and the date associated with the comment, see subsection \ref{output_focus} on page \pageref{output_focus}:
+$$ \mathrm{weight} = e^{-kd} $$
+where $d$ is the age of the comment in calendar days and $k = 0.1$ is a constant. For example, the weight of a comment made today is $e^{-0.1 \cdot 0} = 1$ while the weight of a comment made yesterday is $e^{-0.1 \cdot 1} \approx 0.9$. Comments with a negative sentiment have a weight of 0 (forgive and forget).
+
+The \emph{progress} is the running cumulative sum of sentiments filtered on that student in that class. If we filter the progress table on \texttt{harry.ptter} in course \texttt{1indfb01} then we see
+
+\
+
+{\footnotesize
+\hspace{-6mm}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Date} & \textbf{Info}                                                               & \textbf{Sentiment} & \textbf{Weight} & \textbf{Progress} \\ \hline
+01Apr2023     & +Harry gives conclusion of Pythag                                           & 1                  & 0.9             & 1                 \\ \hline
+01Apr2023     & +Harry, Ron correct calc litt for $(a+b)^2$ & 1                  & 0.9             & 2                 \\ \hline
+02Apr2023     & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 3                 \\ \hline
+\end{tabular}
+}
 
 
 \subsubsection{Students for focus}
+
+
 
 \subsubsection{Individual reports}
 
