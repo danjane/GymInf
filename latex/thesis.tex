@@ -607,15 +607,28 @@ In spite of these advantages I decided to leave the TAT system based on flat fil
 
 \subsubsection{Data privacy} \label{dataprivacy}
 
-\texttt{https://www.ge.ch/organisation/protection-donnees-transparence}
+In the course "Security and Confidentiality" given by Linus Gasser at EPFL, all GymInf students have studied the most relevant laws governing IT systems. In Geneva, for example, we must be follow the Swiss "Federal Act on Data Protection"\footnote{\texttt{https://www.fedlex.admin.ch/eli/cc/1993/1945\_1945\_1945/en}}, called \textbf{LIPAD} by the Genevan authorities, and we should also check that we do not have to follow the much more stringent European "General Data Protection Regulation"\footnote{https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX\%3A02016R0679-20160504}, called the \textbf{GDPR}, which is extraterritorial.
 
-\begin{center} 
-\emph{"Les institutions publiques genevoises sont soumises à la LIPAD, s'agissant du traitement des données personnelles (art. 3 LIPAD). Elles doivent donc respecter les dispositions prévues par cette loi dans tout traitement de données personnelles."}\cite[p. 1]{PPDT18}
-\end{center}
-
+Luckily, public schools in the Genevan canton do not need to follow the GDPR. This was decided by the \emph{Préposé cantonal à la protection des données et à la transparence} (PPDT)\footnote{\texttt{https://www.ge.ch/organisation/protection-donnees-transparence}} in 2018:
 \begin{center} 
 \emph{"Ainsi, ne sont en principe pas soumises au RGPD les situations suivantes... L’instruction publique accueille des élèves qui résident et/ou ont la nationalité d’un Etat membre de l’UE, sans avoir fait de promotion sur le territoire de l’UE."}\cite[p. 3]{PPDT18}
 \end{center}
+In the same document the PPDT reminds us that we should follow LIPAD with respect to sensitive personal data:
+\begin{center} 
+\emph{"Les institutions publiques genevoises sont soumises à la LIPAD, s'agissant du traitement des données personnelles (art. 3 LIPAD). Elles doivent donc respecter les dispositions prévues par cette loi dans tout traitement de données personnelles."}\cite[p. 1]{PPDT18}
+\end{center}
+The LIPAD defines sensitive personal data as
+\begin{enumerate}
+\item religious, ideological, political or trade union-related views or activities,
+\item health, the intimate sphere or the racial origin,
+\item social security measures,
+\item administrative or criminal proceedings and sanctions; and also
+\item a \emph{personality profile}: a collection of data that permits an assessment of essential characteristics of the personality of a natural person.
+\end{enumerate}
+
+As implemented, the TAT system uses the same information that an average teacher would already be storing about their students in order to carry out their duties. Therefore the TAT system stays within the current framework and findings. However, if we collated much larger amounts of student information in a single database it might be argued that this personal data constituted a \emph{personality profile}, which would be covered by the LIPAD. To avoid having to check this during the masters project, I decided not to implement a database and instead make use of existing files.
+
+
 
 
 
