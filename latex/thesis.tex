@@ -27,6 +27,10 @@
 
 \usepackage{pdflscape}
 
+\usepackage{hyperref}
+
+%tbd - to make refs easier
+\usepackage{showlabels}
 
 \begin{document}
 
@@ -61,23 +65,27 @@ For the Master's thesis project undertaken for the GymInf formation, I chose to 
 
 \
 
-I will now explain the layout of this thesis. In sections \ref{inout} and \ref{actions} I outline the planned architecture of the system, explaining how it can be built incrementally. While I sometimes take the opportunity to explore alternative solutions, in general I mainly explain and defend my decisions.
+I will now explain the layout of this thesis. In section \ref{inout} I outline the planned architecture of the system, explaining how it can be built incrementally. While I sometimes take the opportunity to explore alternative solutions, in general I mainly explain and defend my decisions.
 
 \
 
-The tools will be coded in Python. This choice of language is mainly because Python is the language we teach our students, see section \ref{language}, and I would like to take this opportunity to consolidate my Python skillset.
+The tools will be coded in Python. This choice of language is mainly because Python is the language we teach our students, see section \ref{language}, and I would like to take this opportunity to consolidate my Python skillset. For the same reason, in section \ref{gui}, I will defend my choice of PyGame for the GUI, despite its many disadvantages.
 
 \
 
-I also wanted to use this thesis to improve my coding style, exploring the industry technique of \emph{test driven development} as explained in section \ref{tdd}. The majority of my contemporaries from university who ended up in university have highly recommended this coding style, and while it has disadvantages (as discussed later) there are strong reasons to having it as an option \cite{Amman16}. TODO proper link to book.
+I also wanted to use this thesis to improve my coding style, exploring the industry technique of \emph{test driven development} as explained in section \ref{tdd}. The majority of my contemporaries from university who ended up in industry have highly recommended this coding style. As discussed later, while it has some disadvantages there are strong reasons for having \emph{test driven development} as another tool in the toolkit\cite{Amman16}. TODO proper link to book.
 
 \
 
-TODO intro for chaps 7 and 8
+TODO intro for chaps \ref{instructions} and \ref{executable}
 
 \
 
 Given the limited resources of this masters' thesis, not all of the desired functionality has been delivered. These missing features are described in section \ref{notdone}. Please note that the current codebase was designed with these features in mind, and that existing code should require minimal changes to incorporate these features as they are added.
+
+\
+
+Finally, in section \ref{conclusion} I conclude the thesis with a reflection on the strengths and weaknesses of the project, on what I've learnt and what I would have done differently.
 
 \section{Project scope}
 
@@ -665,8 +673,8 @@ Alongside \textbf{Scala} (syntactic sugar over Java with a functional feel) and 
 
 TODO discussion of these new languages: why they were created, their advantages and disadvantages and possible 
 
-\subsection{Python}
-At Collège Rousseau, where I teach, we decided to teach the students Python. This was a difficult decision, with each language having advantages and disadvantages. Like the vast majority of Secondary II schools in Switzerland, we decided that the low barrier to entry, the wide use of Python in industry, the teachers' current abilities, the large support community, and the focus of readability narrowly outweighed the use of weak (duck) typing with beginners.
+\subsection{Python} \label{python}
+At Collège Rousseau, where I teach, we decided to teach the students Python. This was a difficult decision, with each language having advantages and disadvantages. Like the vast majority of Secondary II schools in Switzerland, we decided that the low barrier to entry, the wide use of Python in industry, the teachers' current abilities, the availability of packages, the large support community, and the focus on readability narrowly outweighed the use of weak (duck) typing with beginners.
 
 The teacher is expected to have a strong background in the coding language being taught :
 \begin{itemize}
@@ -703,16 +711,55 @@ The teacher is expected to have a strong background in the coding language being
 
 \section{The graphical user interface} \label{gui}
 
+Initially I had planned to interact with the TAT system using a \emph{Command Line Interface}, updating flat files using a text editor and then calling the Python code from the terminal. To make the system accessible to a wider audience it was suggested that I add a \emph{graphical user interface}, or GUI (pronounced \emph{"gooey"}), over the backend.
+
+In W. Martinez's 2011 article \cite{Mart11} introducing graphical user interfaces the author explains that for most users the GUI is the standard form of human-computer interaction: windows, buttons, drop-down menus, spreadsheets, progress bars, etc. provide a graphical buffer on the screen between the human and the program being executed on the computer. GUIs tend to be \emph{event-based}, driven off user events such as mouse actions and keyboard entry.
+
+In this section I explain how I chose to implement the GUI; both the language and the approach. I then list a few basic principles of GUI design from the literature before outlining the interface I built.
+
 \subsection{Choice of language}
 
-\subsection{Implementation style}
+As in subsection \ref{python}, I decided to continue with Python when implementing the GUI. Again the aim was to improve the programming skills I use in class, while gaining experience in areas of computing which offer different directions for my teaching.
+
+Even then, there are many Python packages available for building a GUI. Some packages create familiar "windows": for example \textbf{Tkinter}, \textbf{PyQt}, \textbf{wxPython} and \textbf{PyGTK}. These packages create \emph{widgets} such as buttons, menus, and text editors with standard behaviours. Fitting the widgets into the window as well as handling mouse and keyboard events is done by the package.The widgets can be \emph{"wired up"} to Python functions in the backend. 
+
+The disadvantage with the applications built with these packages is their "look": the GUIs feel old-fashioned which would reduce student interest.
+
+A completely different approach, which is now very popular, is to create an interactive web application. These packages are more diverse than the standard "windows" style packages. There is the pythonic \textbf{JustPy}, lightweight packages such as \textbf{Flask} and \textbf{Remi}, and the full-stack solution \textbf{Django}. These packages can be run locally, serving a webpage which presents the user interface in a navigator, or if hosted on a server then a user can access them from any device with an internet connection. This makes it easier to deploy and share the application with users.
+
+I opted for a third approach: building a GUI from the ground up with \textbf{PyGame} \cite{KK16}. PyGame is a popular Python library for game development, especially 2D games. I have already had a number of students use PyGame in class and the results are almost always impressive: the imagination of the students, their perseverance in the face of difficulties, and the end results. Allowing the students to build their own projects, with more or less scaffolding as required, helps foster internal motivation as explained in the classical literature by R. Viau \cite{Viau94}.
+
+PyGame provides a built-in event queue that collects and manages events such as mouse clicks, keyboard presses, window resizing, etc. This event handling allows developers to create interactive applications that respond to user actions in real-time. As mentioned above GUIs tend to be event-driven and so this is pertinent for GUIs as well as for games.
+
+\
+
+I thought that the TAT system would be a good chance to improve my own PyGame skills.
+
+
+\subsection{Planning for a positive user experience}
+J. Johnson outlines some simple ideas for improved \emph{"UX"}, user experience, in his 2020 book on "GUI Bloopers" \cite{JJo20}. He suggests the user will feel more in control if the design elements and interactions are simple and standardised, feedback is prompt and useful (obvious button clicks, error messages, progress indicators), and actions can easily be undone. Martinez summarises Johnson's ideas into four principles \cite[p. 123]{Mart11}:
+\begin{enumerate}
+\item ‘Focus on the users and their tasks, not the technology’.
+\item ‘Consider function first, presentation later’.
+\item ‘Conform to the user’s view of the task: do not make it more complicated’.
+\item ‘Promote learning and deliver information, not just data’.
+\end{enumerate}
+
+There are strong links to D. Norman's ideas in "The Design of Everyday Things" \cite{Norm13}. Good design should be intuitive and make it easy for users to understand and interact with the objects or systems, which in turn positively influences user behaviour and promotes satisfaction. Norman introduces the concept of \emph{"affordances,"} which refers to the perceived actions that an interface suggests to the user. Clear affordances will guide users on how to use the interface naturally.
+
+So rather than starting with what the backend can do, the design process starts with what the user will want to achieve with the TAT system:
+\begin{enumerate}
+\item Review and update the list of courses.
+\item Edit the list of students in a course.
+\item Change the seating plan in a given course.
+\item Record a comment for a set of students.
+\item Suggest students for next teacher-student focus.
+\item Build student reports.
+\item Calculate average notes.
+\end{enumerate}
 
 \subsection{Views}
-A classic GUI structure is to use \emph{views}, different screens designed for different use cases.
- 
-TODO: citation needed.
-
-I based the GUI views on the three phases defined when reviewing the types of actions in section \ref{actions}: configuration, teaching, and planning. I wanted to be able to use some of the planning actions while teaching, for example suggesting students for interaction, so I moved these to the teaching view. This meant "planning" only left those actions directly related to proposing seating plans, so the "planning" phase is really only "planning the seating plan". Thus I have called the respective views the \textbf{control view}, the \textbf{class view}, and the \textbf{seating plan view}.
+A classic GUI structure is to use \emph{views}, different screens designed for different use cases. I based the GUI views on the two phases defined when reviewing the types of actions in the last section: configuration and teaching. I have called the respective views the \textbf{control view} and the \textbf{class view}.
 
 \subsubsection{Control view}
 
@@ -800,7 +847,10 @@ Possible events:
 \item Suggest students for next teacher-student focus.
 \end{enumerate}
 
-\section{A single executable file}
+\subsection{Implementation style}
+l used an object-oriented based system for the widgets that appear in the GUI, relying on inheritance and polymorphism. I quickly gave up with test driven development, as there was too much initial investment required for this project. Indeed, as Nasser et al recently report this is a common problem when building GUIs \cite{Nass21}.
+
+\section{A single executable file} \label{executable}
 
 Ideally, the TAT system would run from a single executable file. The user would launch the TAT application (for example, by double clicking on the icon) and then all interactions would happen through the GUI. 
 
@@ -831,7 +881,7 @@ Unfortunately, at this time I have not managed to automate the process of creati
 \end{enumerate}
 
 \newpage
-\section{Instruction booklet} \label{instructions}
+\section{Instruction booklet} \label{instructions} 
 
 \subsection{Introducing the TAT system}
 The \textbf{Teaching Assisting Tools} system, TAT, is designed to improve your teaching by automating some of the boring stuff. During class, when planning lessons, or as a reminder before meeting the parents, TAT helps manage and collate a record of your interactions with students.
@@ -1015,7 +1065,7 @@ Hint: the new comment is saved, and will be used next time you pass to the cours
 
 
 
-\section{Missing features} \label{notdone}
+\section{Missing features} \label{notdone} 
 
 In roughly decreasing order of importance, in my opinion, here are the features I would like to see in the next implementation of the TAT system. Many of these features I had in mind as I was designing the system, but had to be descoped in this project due to time constraints.
 
@@ -1066,7 +1116,7 @@ This would be a nice to have, especially if the system was being regularly updat
 
 
 
-\section{Conclusion}
+\section{Conclusion} \label{conclusion} 
 
 
 
@@ -1092,26 +1142,41 @@ This would be a nice to have, especially if the system was being regularly updat
 
 \bibitem[Hat12]{Hat12} Hattie, J. (2012). Visible learning for teachers: Maximizing impact on learning. Routledge.
 
+\bibitem[JJo20]{JJo20} Johnson, J. (2000). GUI bloopers: don'ts and do's for software developers and Web designers. Morgan Kaufmann.
+
 \bibitem[Jorg17]{Jorg17} Jorgensen, P. C. (2017). The craft of model-based testing. CRC Press.
+
+\bibitem[KK16]{KK16} Kelly, S., \& Kelly, S. (2016). Basic introduction to pygame. Python, PyGame and Raspberry Pi Game Development. Springer.
 
 \bibitem[Mart08]{Mart08} Martin, R. (2008). Clean Code. Pearson.
 
 \bibitem[Mart17]{Mart17} Martin, R. (2017). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Pearson
 
+\bibitem[Mart11]{Mart11} Martinez, W. L. (2011). Graphical user interfaces. Wiley Interdisciplinary Reviews: Computational Statistics, 3(2), 119-133.
+
 \bibitem[MM78]{MM78} McCorskey, J. C., \& McVetta, R. W. (1978). Classroom seating arrangements: Instructional communication theory versus student preferences. Communication education, 27(2), 99-111.
 
 \bibitem[MSB11]{MSB11} Myers, G. J., Sandler, C., \& Badgett, T. (2011). The art of software testing. John Wiley \& Sons.
+
+\bibitem[Nass21]{Nass21} Nass, M., Alégroth, E., \& Feldt, R. (2021). Why many challenges with GUI test automation (will) remain. Information and Software Technology, 138, 106625.
+
+\bibitem[Norm13]{Norm13} Norman, D. (2013). The design of everyday things: Revised and expanded edition. Basic books.
 
 \bibitem[Norr98]{Norr98} Norris, J. R. (1998). Markov chains (No. 2). Cambridge university press.
 
 \bibitem[PPDT18]{PPDT18} Le PPDT - Guide pratique RGPD à l'attention des institutions publiques genevoises (2018).
 
-
 \bibitem[Rob19]{Rob19} Robinson, M. (2019). BOSCARD: A Scoping Tool for Lean Continuous Improvement Projects. In Global Lean for Higher Education (pp. 181-195). Productivity Press.
 
 \bibitem[Swei15]{Swei15} Sweigart, A. (2015). Automate the Boring Stuff with Python.
-\end{thebibliography}
 
+\bibitem[Tidw10]{Tidw10}Tidwell, J. (2010). Designing interfaces: Patterns for effective interaction design. O'Reilly Media, Inc.
+
+\bibitem[Unesco23]{Unesco23} UNESCO (2023). Global Education Monitoring Report: Technology in education: a tool on whose terms? Paris: UNESCO.
+
+\bibitem[Viau94]{Viau94} Viau, R. (1994). La motivation en contexte scolaire. Éditions du Renouveau pédagogique.
+
+\end{thebibliography}
 
 \appendix
 
@@ -1162,8 +1227,6 @@ https://github.com/zedr/clean-code-python#table-of-contents
 \begin{center} 
 \emph{``Successful education systems typically have absorptive capacity, including strong school leaders and confident teachers willing to innovate. Yet often seemingly trivial issues, such as maintenance and repair, are ignored or underestimated.''} \cite[p. 17]{Unesco23}
 \end{center}
-
-
 
 
 
