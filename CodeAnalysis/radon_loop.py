@@ -41,8 +41,8 @@ def analyse(scripts):
         total_fns += nf
         total_lloc += lloc
 
-    for f, c, m in zip(functions, complexities, maintainabilities):
-        print(f, c, m)
+    for f, c in zip(functions, complexities):
+        print(f, c)
     print("")
 
     mean, median, std = [f(complexities) for f in [np.mean, np.median, np.std]]
