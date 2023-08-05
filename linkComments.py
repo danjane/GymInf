@@ -75,15 +75,23 @@ def latex_to_pdf(tex_file, output_directory):
     except FileNotFoundError:
         print("pdflatex command not found. Please ensure that LaTeX is installed.")
 
+    pdf_file = tex_file[:-3] + "pdf"
+    if os.path.isfile(pdf_file):
+        return pdf_file
+    else:
+        print("pdf was NOT created from tex file!!")
+        return tex_file
 
-def create_report(cfg_path: str) -> None:
+
+def create_report(cfg_path: str) -> str:
     report = get_latex_report_from_config_path(cfg_path)
     cfg = config.load(cfg_path)
     report_file = cfg["report_tex_path"]
     report_dir = os.path.dirname(report_file)
     with open(report_file, "w") as f:
         f.write(report)
-    latex_to_pdf(report_file, report_dir)
+    pdf_file = latex_to_pdf(report_file, report_dir)
+    return pdf_file
 
 
 def get_students_needing_comments_from_config_path(cfg_path: str, course: str) -> List[str]:

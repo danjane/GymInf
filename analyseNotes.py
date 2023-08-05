@@ -109,6 +109,7 @@ def dump_all(cfg_path, output_file):
             formats["failing"])
 
     workbook.close()
+    return output_file
 
 
 def identify_noted_exams_if_possible(exam_files, cfg):
