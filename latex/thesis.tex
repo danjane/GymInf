@@ -59,9 +59,9 @@ So which tasks should be automated? Why? And for whom? When I first started teac
 \begin{center} 
 \emph{``The best climate for learning is one in which there is trust. Students often don’t like to make mistakes because they fear a negative response from peers. Expert teachers create classrooms in which errors are welcome and learning is cool.''} \cite{Hat12}
 \end{center}
-J. Hattie finds evidence that answering quickly has a positive effect on how the students view the teacher, but basically no effect on student learning \cite[p.184]{Hat12}. A better practice is throwing the question back to the class and then allowing them time to think. By taking the time to record the question I force myself to give the class this thinking time.
+J. Hattie finds evidence that answering quickly has a positive effect on how the students view the teacher, but basically no effect on student learning \cite[p.184]{Hat12}. A better practice is throwing the question back to the class and then allowing them time to think: J. Rowe identified many advantages in extending the "wait-time" from one second to about five seconds \cite{Rowe72}. By taking the time to record the interaction at my desk I force myself to give the class this wait-time.
 
-If I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: a useful capability when planning lessons, writing reports, and especially for parent evenings.
+But if I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: a useful capability when planning lessons, writing reports, and especially for parent evenings.
 
 For the Master's thesis project undertaken for the GymInf formation, I chose to build a suite of tools to support a range of teacher tasks including capturing key interaction information, building individual student reports, suggesting teacher-student interactions for upcoming classes, organising seating plans, and creating spreadsheets of marks. 
 
@@ -144,7 +144,7 @@ The TAT backend will be linked to a GUI, run from a single executable file, with
 
 \
 
-TAT will not connect to the internet. TAT will not cover data privacy concerns beyond what is currently used in standard teaching practices in Geneva, see section TODO \ref{data_privacy}.
+TAT will not connect to the internet. TAT will not cover data privacy concerns beyond what is currently used in standard teaching practices in Geneva, see section \ref{data_privacy}.
 
 \
 
@@ -155,7 +155,7 @@ All development and testing will be done on my personal machine, a MacBook Air, 
 
 The thesis must be defended and marked by September 8$^{th}$, 2023. Therefore the TAT system must be delivered to my thesis advisor before August 14$^{th}$ 2023. I am writing this thesis and the code for the TAT system alone: while a basic functionality is essential for all objectives, I anticipate future enhancements and even functional additions will occur.
 
-The TAT system will eventually run on the school computers. TODO: find out what they are running. However, for this project all testing will be done on my local machine.
+The TAT system will eventually run on the school computers. However, for this project all testing will be done on my local machine.
 
 \subsection{Assumptions} 
 \emph{Specify all factors that are, for planning purposes, considered to be true. During the planning process, these assumptions will be validated.}
@@ -215,7 +215,7 @@ We can analyse a system by connecting its (physical or virtual) inputs and outpu
 
 \vspace{5mm}
 
-The inputs clearly contain sensitive information, and the relevant laws and best practices with regards to student data will be discussed further in Section \ref{dataprivacy}. It is also worth pointing out that the processed data (data during calculations and the outputs) is also sensitive. In general we should try to store as little personal data as possible. TODO citation needed.
+The inputs clearly contain sensitive information, and the relevant laws and best practices with regards to student data will be discussed further in Section \ref{dataprivacy}. It is also worth pointing out that the processed data (data during calculations and the outputs) is also sensitive. In general it is good practice to store as little personal data as possible.
 
 \subsection{Explanation of inputs}
 
@@ -303,7 +303,7 @@ The individual exam results will be needed in order to calculate the average not
 
 As a student teacher, I found it hard to balance my time equitably among the students in a class. Certain students, perhaps those who were louder or more confident, tended to capture my attention. By keeping a record of my interactions with students, it was possible to estimate an ordering of students by recent interactions, and so indicate students who require teacher \emph{focus} during the next set of teacher-student interactions (probably during the next class).
 
-This \emph{focus} can be very simple: these are the students to whom the teacher addresses the opening questions. These opening questions can revise topics from the last lesson or prepare the students for the ideas to be tackled in this lesson. Students who respond positively to an early question are much more likely to volunteer answers later in the class TODO citation needed.
+This \emph{focus} can be very simple: these are the students to whom the teacher addresses the opening questions. These opening questions can revise topics from the last lesson or prepare the students for the ideas to be tackled in this lesson. J. Larkin and H. Pines point out that students who respond positively to an early question are much more likely to volunteer answers later in the class \cite{Larkin05}. They also suggest supporting shy students by announcing the question in advance of the lesson.
 
 \
 
@@ -657,9 +657,6 @@ In general, apart from Prolog, these languages feel quite similar. Some are more
 
 The other distinction between the languages is whether or not they are \emph{functional}. Functional languages do not allow the redefinition of a variable, such as Prolog, Clojure and Scala. 
 
-
-TODO discussion of functional languages.
-
 I considered the following factors when choosing the language for my project:
 \begin{itemize}
 \item my current proficiency,
@@ -672,19 +669,14 @@ I considered the following factors when choosing the language for my project:
 
 There are other factors which did not affect my decision at the start of coding : for example, creating the GUI (graphical user interface), deployability of the code, the speed and reactivity of the program, or whether the code would be scalable. I will comment on these oversights in the conclusion.
 
-
-
-\subsection{New languages}
 Alongside \textbf{Scala} (syntactic sugar over Java with a functional feel) and \textbf{Julia} (Matlab maths functionality built directly on C++), the other \emph{new} languages I considered using were \textbf{Swift}, \textbf{Clojure} and \textbf{Rust}.
-
-TODO discussion of these new languages: why they were created, their advantages and disadvantages and possible 
 
 \subsection{Python} \label{python}
 At Collège Rousseau, where I teach, we decided to teach the students Python. This was a difficult decision, with each language having advantages and disadvantages. Like the vast majority of Secondary II schools in Switzerland, we decided that the low barrier to entry, the wide use of Python in industry, the teachers' current abilities, the availability of packages, the large support community, and the focus on readability narrowly outweighed the use of weak (duck) typing with beginners.
 
 The teacher is expected to have a strong background in the coding language being taught :
 \begin{itemize}
-\item for the pedagogical benefits of "live coding", modelling how to create code for the students to discuss and learn from, TODO citation needed
+\item for the pedagogical benefits of "live coding", modelling how to create code for the students to discuss and learn from \cite{Raj2018}, 
 \item creating well written code for students to study,
 \item for ease of marking and correcting (lots of) student code,
 \item for spotting mistakes in student code during class time, in order to suggest hints, and
@@ -871,9 +863,69 @@ Possible events:
 \end{enumerate}
 
 \subsection{Implementation style}
-l used an object-oriented based system for the widgets that appear in the GUI, relying on inheritance and polymorphism. I quickly gave up with test-driven development, as there was too much initial investment required for this project. Indeed, as Nasser et al recently report this is a common problem when building GUIs \cite{Nass21}.
+l used an object-oriented based system for the widgets that appear in the GUI, relying on inheritance and polymorphism. I quickly gave up with test-driven development, as there was too much initial investment required for this project. Indeed, as Nasser et al recently report this is a common problem when building GUIs \cite{Nass21}. The inheritance diagram of the objects used to model Buttons in the GUI is in figure \ref{inheritance_diagram_Buttons} on page \pageref{inheritance_diagram_Buttons}, and similarly a diagram for the desks is in figure \ref{inheritance_diagram_Desks} on page \pageref{inheritance_diagram_Desks}.
 
-TODO Inheritance diagram.
+
+\begin{figure}[!hbtp] \label{inheritance_diagram_Buttons}
+\begin{center}
+\begin{tikzpicture}[node distance=18mm, every node/.style={draw, rectangle, rounded corners, text centered, minimum height=10mm, align=center, font=\fontsize{8}{10}\selectfont}]
+
+  % Nodes
+  \node (sprite) {PyGame.sprite.Sprite};
+  \node (button) [below of=sprite] {Button};
+  \node (file) [below left of=button, xshift=-25mm] {TextButtonLinkedToFile};
+  \node (comments) [below of=button] {ButtonWithComments};
+  \node (function) [below right of=button, xshift=25mm] {ButtonWhichCallsFunction};
+  \node (positive) [below left of=comments] {PositiveButton};
+  \node (negative) [below right of=comments] {NegativeButton};
+%  \node (shred) [below right of=comments, xshift=\datagapmm, \object] {shred comments};
+
+  % Arrows
+  \draw[->] (button) -- (sprite);
+  \draw[->] (file) -- (button);
+  \draw[->] (comments) -- (button);
+  \draw[->] (function) -- (button);
+  \draw[->] (positive) -- (comments);
+  \draw[->] (negative) -- (comments);
+
+\def\border{3mm}
+\draw[thick] ([shift={(-\border,-\border)}]current bounding box.south west) rectangle ([shift={(\border,\border)}]current bounding box.north east);
+
+\end{tikzpicture}
+\end{center}
+\caption{Inheritance diagram for the objects modelling the Buttons in the GUI.}
+\end{figure}
+
+
+\begin{figure}[!hbtp] \label{inheritance_diagram_Desks}
+\begin{center}
+\begin{tikzpicture}[node distance=18mm, every node/.style={draw, rectangle, rounded corners, text centered, minimum height=10mm, align=center, font=\fontsize{8}{10}\selectfont}]
+
+  % Nodes
+  \node (sprite) {PyGame.sprite.Sprite};
+  \node (button) [below of=sprite] {ParentDesk};
+  \node (file) [below left of=button, xshift=-25mm] {UnclickedDesk};
+  \node (comments) [below of=button] {Desk};
+  \node (function) [below right of=button, xshift=25mm] {UnselectedDesk};
+  \node (positive) [below left of=comments] {EmptyDesk};
+  \node (negative) [below right of=comments] {FilledDesk};
+%  \node (shred) [below right of=comments, xshift=\datagapmm, \object] {shred comments};
+
+  % Arrows
+  \draw[->] (button) -- (sprite);
+  \draw[->] (file) -- (button);
+  \draw[->] (comments) -- (button);
+  \draw[->] (function) -- (button);
+  \draw[->] (positive) -- (comments);
+  \draw[->] (negative) -- (comments);
+
+\def\border{3mm}
+\draw[thick] ([shift={(-\border,-\border)}]current bounding box.south west) rectangle ([shift={(\border,\border)}]current bounding box.north east);
+
+\end{tikzpicture}
+\end{center}
+\caption{Inheritance diagram for the objects modelling the Buttons in the GUI.}
+\end{figure}
 
 \section{A single executable file} \label{executable}
 
@@ -1211,6 +1263,8 @@ The deliverables of section \ref{deliverables} were that \emph{the TAT system wi
 
 \bibitem[KK16]{KK16} Kelly, S., \& Kelly, S. (2016). Basic introduction to pygame. Python, PyGame and Raspberry Pi Game Development. Springer.
 
+\bibitem[Larkin05]{Larkin05} Larkin, J. E., \& Pines, H. A. (2005). Asking Questions: Promoting student-faculty interchange in the classroom. APS Observer, 18.
+
 \bibitem[LX10]{LX10} Lee, G., \& Xia, W. (2010). Toward agile: an integrated analysis of quantitative and qualitative field data on software development agility. MIS quarterly, 34(1), 87-114.
 
 \bibitem[Mart08]{Mart08} Martin, R. (2008). Clean Code. Pearson.
@@ -1234,7 +1288,11 @@ The deliverables of section \ref{deliverables} were that \emph{the TAT system wi
 
 \bibitem[PPDT18]{PPDT18} Le PPDT - Guide pratique RGPD à l'attention des institutions publiques genevoises (2018).
 
+\bibitem[Raj2018]{Raj2018} Raj, A. G. S., Patel, J. M., Halverson, R., \& Halverson, E. R. (2018, November). Role of live-coding in learning introductory programming. In Proceedings of the 18th koli calling international conference on computing education research (pp. 1-8).
+
 \bibitem[Rob19]{Rob19} Robinson, M. (2019). BOSCARD: A Scoping Tool for Lean Continuous Improvement Projects. In Global Lean for Higher Education (pp. 181-195). Productivity Press.
+
+\bibitem[Rowe72]{Rowe72} Rowe, M. B. (1972). Wait-Time and Rewards as Instructional Variables: Their Influence on Language, Logic, and Fate Control.
 
 \bibitem[SVDU21]{SVDU21}Santos, A., Vegas, S., Dieste, O., Uyaguari, F., et al (2021). A family of experiments on test-driven development. Empirical Software Engineering, 26, 1-53.
 
@@ -1273,24 +1331,6 @@ I will implement this project using \emph{Test-Driven Development.} This is a st
 \indent \textbf{Green.} As quickly as possible, write code to pass the test. \\
 \indent \textbf{Refactor.} Clean the code, removing duplication and renaming functions. \\
 Coding is driven by testing. In the thesis I will explore testing in more detail.
-
-
-\section{Useful quotes}
- 
-
- 
-
-
-\begin{verbatim}
-https://github.com/zedr/clean-code-python#table-of-contents
-\end{verbatim}
-
-
-
-
-\begin{center} 
-\emph{``Successful education systems typically have absorptive capacity, including strong school leaders and confident teachers willing to innovate. Yet often seemingly trivial issues, such as maintenance and repair, are ignored or underestimated.''} \cite[p. 17]{Unesco23}
-\end{center}
 
 
 
