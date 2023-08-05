@@ -19,13 +19,13 @@ def create_class_list_buttons(students, height, file):
     i = 0
     for student in students:
         student_buttons.append(
-            icons.TextButtonLinkedToFile((300, y_pos), (250, height), student, file, i)
+            icons.TextButtonLinkedToFile((320, y_pos), (350, height), student, file, i)
         )
         y_pos += height + 1
         i += 1
     while i < 24:
         student_buttons.append(
-            icons.TextButtonLinkedToFile((300, y_pos), (250, height), "", file, i)
+            icons.TextButtonLinkedToFile((320, y_pos), (350, height), "", file, i)
         )
         y_pos += height + 1
         i += 1
