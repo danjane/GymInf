@@ -692,17 +692,21 @@ The teacher is expected to have a strong background in the coding language being
 
 
 
-\section{Test driven development} \label{tdd}
+\section{Test Driven Development} \label{tdd}
+The process of developing complex IT systems involves various stages, from understanding client requirements to delivering and maintaining the final product. Traditionally, software development followed the waterfall method \cite{Amman16}, where each phase was executed sequentially: requirements gathering, design, implementation, testing, and deployment. However, this approach had several drawbacks, such as a long development cycle and limited client involvement until the final stages.  The latter (all too often) led to misunderstandings and mismatches between the final product and client expectations, resulting in costly redesigns that would have been cheaper if they had been identified earlier in the process. In this section I explore how industry practitioners tried to adapt the waterfall process.
 
-\subsection{Building IT systems}
+\subsection{Reducing the Distance Between Clients and Developers}
+As a response to costly overruns the \emph{"Agile"} methodologies emerged, emphasising iterative development and client collaboration \cite{Anaya18, Beck03}. The adoption of Agile methodologies aimed to bridge the gap between clients and developers throughout the process. Agile principles emphasise frequent communication, iterative development, and the delivery of working software in short cycles known as \emph{sprints}. This approach allowed clients to see progress regularly, provide feedback, and steer the development process in the right direction. 
 
-\subsection{The waterfall method}
+Note that even with Agile principles it is still difficult to ensure that the delivered software precisely meets the client's needs. Further, as G. Lee and W. Xia pointed out in 2010, much of the alleged advantages of Agile development are anecdotal rather than scientifically proven \cite{LX10}. They find that there is a difference between being able to quickly respond to a particular change in user requirement (response efficiency), compared to being able to respond to as many changes as possible (response extensiveness).
 
-\subsection{Reducing the distance between clients and developers}
+The shorter sprints and early involvement of clients may also have led to developers becoming used to shipping beta versions of their software, rather than aiming for a final version.
 
-\subsection{TDD}
+\subsection{TDD - Test-Driven Development}
 
-\subsection{And next...?}
+
+\subsection{And Next...?}
+
 
 
 
@@ -849,6 +853,8 @@ Possible events:
 
 \subsection{Implementation style}
 l used an object-oriented based system for the widgets that appear in the GUI, relying on inheritance and polymorphism. I quickly gave up with test driven development, as there was too much initial investment required for this project. Indeed, as Nasser et al recently report this is a common problem when building GUIs \cite{Nass21}.
+
+TODO Inheritance diagram.
 
 \section{A single executable file} \label{executable}
 
@@ -1118,9 +1124,32 @@ This would be a nice to have, especially if the system was being regularly updat
 
 \section{Conclusion} \label{conclusion} 
 
+The backend was coded using test driven development, where I religiously wrote failing tests, trivial code which passed the tests, and finally refactored the code as much as possible. However, I quickly gave up on this method when implementing the GUI. This means that roughly half of my code was created with TDD, and half was not. I was interested to see how much better my coding would be with TDD, and so I used a Python package called \textbf{Radon} to calculate various metrics of code "goodness" \cite{Oman92}.
 
+The Radon package analyses text-based python scripts to calculate
+\begin{itemize}
+\item the cyclotomic complexity of each function; roughly, the number of holes in the possibly logical pathways of a function,
+\item the number of lines of code, and
+\item the maintainability index; a rough estimate of how easy or hard the code will be to understand, modify and maintain\cite{Oman92}. The higher the better $\in [0, 100]$.
+\end{itemize}
+I ran the analysis on my own code base, and also calculated the average length of functions. Looking through the analysis I am not surprised to see certain functions being flagged - shredding the raw comments file was difficult to code, for example, and the PyGame loops running the GUI views involve overly long conditional chains on the events.
 
+I was hoping to see a large difference between the code written with TDD and the rest.
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+Complexities      & \textbf{Backend (TDD)} & \textbf{GUI (without)} \\ \hline
+Mean            & 2.26         & 2.20             \\ \hline
+Median          & 2            & 2                \\ \hline
+Stdev           & 2.13         & 2.53             \\ \hline \hline
+Maintainability & 49.63        & 47.53            \\ \hline
+Lines of code   & 574          & 579              \\ \hline
+Avg length fns     & 7.97         & 6.36             \\ \hline
+\end{tabular}
+\end{center}
+Surprisingly there really is no difference as far as the metrics are concerned! Rather than being disheartened notice that the backend has a strong testing framework, making changes relatively risk free. Further, we might hope that I am becoming better at naturally and more completely refactoring as I code. Finally, recent research by A. Santos et al has shown that \emph{"[small projects] tend to provide less optimistic results for TDD"} and that TDD is more effective for teams.\cite{SVDU21}
 
+Another regret was that I continued to use PyCharm as my IDE: given that I was trying to improve the skills used in class, perhaps I should have used Replit or Thonny.
 
 \begin{thebibliography}{Xyzz12}
 
@@ -1148,6 +1177,8 @@ This would be a nice to have, especially if the system was being regularly updat
 
 \bibitem[KK16]{KK16} Kelly, S., \& Kelly, S. (2016). Basic introduction to pygame. Python, PyGame and Raspberry Pi Game Development. Springer.
 
+\bibitem[LX10]{LX10} Lee, G., \& Xia, W. (2010). Toward agile: an integrated analysis of quantitative and qualitative field data on software development agility. MIS quarterly, 34(1), 87-114.
+
 \bibitem[Mart08]{Mart08} Martin, R. (2008). Clean Code. Pearson.
 
 \bibitem[Mart17]{Mart17} Martin, R. (2017). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Pearson
@@ -1164,9 +1195,14 @@ This would be a nice to have, especially if the system was being regularly updat
 
 \bibitem[Norr98]{Norr98} Norris, J. R. (1998). Markov chains (No. 2). Cambridge university press.
 
+\bibitem[Oman92]{Oman92} Oman, P., \& Hagemeister, J. (1992, January). Metrics for assessing a software system's maintainability. In Proceedings Conference on Software Maintenance 1992 (pp. 337-338). IEEE Computer Society.
+
+
 \bibitem[PPDT18]{PPDT18} Le PPDT - Guide pratique RGPD à l'attention des institutions publiques genevoises (2018).
 
 \bibitem[Rob19]{Rob19} Robinson, M. (2019). BOSCARD: A Scoping Tool for Lean Continuous Improvement Projects. In Global Lean for Higher Education (pp. 181-195). Productivity Press.
+
+\bibitem[SVDU21]{SVDU21}Santos, A., Vegas, S., Dieste, O., Uyaguari, F., et al (2021). A family of experiments on test-driven development. Empirical Software Engineering, 26, 1-53.
 
 \bibitem[Swei15]{Swei15} Sweigart, A. (2015). Automate the Boring Stuff with Python.
 
