@@ -42,7 +42,7 @@
 
 From the classic teaching literature, Bucheton and Soulé have described the act of teaching as a multi-agenda game of postures requiring good preparation and excellent micro-decisions \cite{BS09}. In their model, they identify the crucial roles of the teacher in controlling the cadence, the atmosphere, the scaffolding and the relationships during the class, and how each supports the learning objective. Many of the teacher's most time-consuming tasks do not take place in the classroom: good preparation and strong follow-ups (auto-reflection, marking, parent-teacher interactions) work to support and complement the overall success of the student learning process.
 
-For example, teacher responsibilities include the ability to [TODO: citation needed]
+For example, scanning the offers of teaching posts we see that teacher responsibilities include the ability to
 \begin{itemize}
 \item plan and implement effective classroom management practices,
 \item design and implement effective strategies to develop independent learners,
@@ -53,13 +53,15 @@ For example, teacher responsibilities include the ability to [TODO: citation nee
 \item write student reports to guide changes in instruction and practice, and to improve student learning.
 \end{itemize}
 
-Many of these tasks are "ripe for automation" \cite[p.? TODO]{Swei15}, although I would also accept that some of these tasks should \textbf{not} be automated (even if they can be). As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
+As A. Sweigart points out in his 2015 book "Automate the boring stuff" many of the teaching tasks listed above are ripe for automation \cite{Swei15}. I would also accept that some of these tasks should \textbf{not} be automated (even if they can be). As John Hattie explains in \emph{Visible Learning} \cite{Hat12}, \emph{``Expert teachers monitor learning and provide feedback.''} In my opinion writing student reports are a perfect example of a necessary evil: although time consuming (and potentially stressful) for the teacher, writing a student report forces the teacher to reflect on the progress of the student and at the same time manage the expectations of all partners - student, teacher, management and parent.
 
 So which tasks should be automated? Why? And for whom? When I first started teaching, my natural character led to two bad teaching practices: I found it difficult to engage with the quieter, more reserved students; and I was so busy answering student questions that I left little time for taking notes. I felt my teaching (and so hopefully also my students' learning experience) would benefit from a tool which tracked my interactions in class in an attempt to shift the focus away from the "louder" students. 
+\begin{center} 
+\emph{``The best climate for learning is one in which there is trust. Students often don’t like to make mistakes because they fear a negative response from peers. Expert teachers create classrooms in which errors are welcome and learning is cool.''} \cite{Hat12}
+\end{center}
+J. Hattie finds evidence that answering quickly has a positive effect on how the students view the teacher, but basically no effect on student learning \cite[p.184]{Hat12}. A better practice is throwing the question back to the class and then allowing them time to think. By taking the time to record the question I force myself to give the class this thinking time.
 
-TODO: discussion on equality for students, and \cite{Hat12} on answering too quickly.
-
-But if I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: a useful capability when planning lessons, writing reports, and especially for parent evenings.
+If I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: a useful capability when planning lessons, writing reports, and especially for parent evenings.
 
 For the Master's thesis project undertaken for the GymInf formation, I chose to build a suite of tools to support a range of teacher tasks including capturing key interaction information, building individual student reports, suggesting teacher-student interactions for upcoming classes, organising seating plans, and creating spreadsheets of marks. 
 
@@ -69,15 +71,19 @@ I will now explain the layout of this thesis. In section \ref{inout} I outline t
 
 \
 
-The tools will be coded in Python. This choice of language is mainly because Python is the language we teach our students, see section \ref{language}, and I would like to take this opportunity to consolidate my Python skillset. For the same reason, in section \ref{gui}, I will defend my choice of PyGame for the GUI, despite its many disadvantages.
+The tools will be coded in Python. This choice of language is mainly because Python is the language we teach our students, see section \ref{language}, and I would like to take this opportunity to consolidate my Python skillset. For the same reason, in section \ref{gui}, I will defend my choice of PyGame for the graphical user interface (GUI), despite its many disadvantages. I then explain a little about the theory being GUI design and how I planned the frontend of the TAT system. 
 
 \
 
-I also wanted to use this thesis to improve my coding style, exploring the industry technique of \emph{test driven development} as explained in section \ref{tdd}. The majority of my contemporaries from university who ended up in industry have highly recommended this coding style. As discussed later, while it has some disadvantages there are strong reasons for having \emph{test driven development} as another tool in the toolkit\cite{Amman16}. TODO proper link to book.
+I also wanted to use this thesis to improve my coding style, exploring the industry technique of \emph{test-driven development} as explained in section \ref{tdd}. The majority of my contemporaries from university who ended up in industry have highly recommended this coding style. As discussed later, while it has some disadvantages there are strong reasons for having \emph{test-driven development} as another tool in the toolkit\cite[p. 98]{Amman16}.
 
 \
 
-TODO intro for chaps \ref{instructions} and \ref{executable}
+In section \ref{instructions} I have written a mock instruction booklet for the TAT system as it currently operates. I based the instructions around user intentions, explaining how each action is achieved. All the functionality described in the instruction booklet has been delivered.
+
+\
+
+Ideally any teacher who wanted to use the TAT system would be able to: proficiency with a computer should not be necessary. This is why the system has a graphical user interface rather than relying on scripts run from the command line. I was asked to provide a single executable file and in section \ref{executable} I describe how this can be delivered.
 
 \
 
@@ -161,7 +167,7 @@ I will assume that classes have at most 24 students, and that the seating plan i
 
 Given the constraints, and especially the time limit, there is a large risk of some features being dropped from the first version. I want to first deliver basic functionality with a graphical user interface, and then add as many features as possible in the timeframe.
 
-\subsection{Deliverables} 
+\subsection{Deliverables} \label{deliverables}
 \emph{Define the key deliverables the project is required to produce to achieve the stated objectives.}
 
 The TAT system will provide a basic GUI over a backend handling the tasks covered in the scope. In particular, the system should at least allow notes to be taken against student names and then suggest pertinent students for focus.
@@ -320,7 +326,7 @@ On a given date $t$ we would like to create a weight operator, $W_t$, which woul
 
 Consider calculating the students for focus just before the holidays or just after the holidays. Assuming the list of comments has not changed, then ideally the \textbf{ordering} of the students by weight would not change. Thus the students for focus should not be dependant on when the algorithm was run. A straightforward property with this behaviour is that all weights change by the same constant. In probability, this is called the \emph{memoryless} property \cite{Norr98} and implies an exponential weighting of the counts:
 $$ W_t(f) = \sum_{d \in \mathcal{D}} f(d) \, e^{k(d-t)} $$
-where we sum over all dates\footnote{Clearly, as the number of comments is finite this is really a finite sum.}  and $k>0$ is a constant. Then recalculating the weights after $n$ days gives
+where we sum over all dates\footnote{As the number of comments is finite this is really a finite sum.}  and $k>0$ is a constant. Then recalculating the weights after $n$ days gives
 $$W_{t+n}(f) = \sum_{d \in \mathcal{D}} f(d) \, e^{k(d-(t+n))} =  e^{-kn} \cdot \sum_{d \in \mathcal{D}} f(d) \, e^{k(d-t)} = e^{-kn} \cdot  W_t(f),$$
 so all weights are rescaled by $e^{-kn}$ which does not depend on $f$.
 
@@ -692,22 +698,35 @@ The teacher is expected to have a strong background in the coding language being
 
 
 
-\section{Test Driven Development} \label{tdd}
-The process of developing complex IT systems involves various stages, from understanding client requirements to delivering and maintaining the final product. Traditionally, software development followed the waterfall method \cite{Amman16}, where each phase was executed sequentially: requirements gathering, design, implementation, testing, and deployment. However, this approach had several drawbacks, such as a long development cycle and limited client involvement until the final stages.  The latter (all too often) led to misunderstandings and mismatches between the final product and client expectations, resulting in costly redesigns that would have been cheaper if they had been identified earlier in the process. In this section I explore how industry practitioners tried to adapt the waterfall process.
+\section{Test-Driven Development} \label{tdd}
+The process of developing complex IT systems involves various stages, from understanding client requirements to delivering and maintaining the final product. Traditionally, software development followed the waterfall method \cite[p. 53]{Amman16}, where each phase was executed sequentially: 
+\begin{itemize}
+\item requirements  analysis, 
+\item design, 
+\item implementation, 
+\item testing, and 
+\item deployment. 
+\end{itemize}
+In their 2016 book, Ammann and Offutt speculate that the waterfall method originated with software development for large military projects. Here software was expected to have a long lifetime with no maintenance \cite[p. 96]{Amman16}. However, in industry this approach had several drawbacks, such as a long development cycle and limited client involvement until the final stages.  
 
-\subsection{Reducing the Distance Between Clients and Developers}
-As a response to costly overruns the \emph{"Agile"} methodologies emerged, emphasising iterative development and client collaboration \cite{Anaya18, Beck03}. The adoption of Agile methodologies aimed to bridge the gap between clients and developers throughout the process. Agile principles emphasise frequent communication, iterative development, and the delivery of working software in short cycles known as \emph{sprints}. This approach allowed clients to see progress regularly, provide feedback, and steer the development process in the right direction. 
+Reviews with the clients at a late stage of the development cycle led to misunderstandings and mismatches between the final product and client expectations. This resulted in costly redesigns that would have been cheaper if they had been identified earlier in the process, or even projects being dropped altogether. In 2004, a study showed that 45\% of IT projects in the US failed to meet user requirements \cite[p. 88]{LX10}. In this section I explore how industry practitioners have tried to adapt the waterfall process.
 
-Note that even with Agile principles it is still difficult to ensure that the delivered software precisely meets the client's needs. Further, as G. Lee and W. Xia pointed out in 2010, much of the alleged advantages of Agile development are anecdotal rather than scientifically proven \cite{LX10}. They find that there is a difference between being able to quickly respond to a particular change in user requirement (response efficiency), compared to being able to respond to as many changes as possible (response extensiveness).
+\subsection{Reducing the distance between clients and developers}
+As a response to costly overruns the \emph{"Agile"} methodologies emerged in the early 2000s, emphasising iterative development and client collaboration \cite{Anaya18, Beck03}. The adoption of Agile methodologies aimed to bridge the gap between clients and developers throughout the process. Agile principles emphasise frequent communication, iterative development, and the delivery of working software in short cycles known as \emph{sprints}. I would argue that autonomous teams of developers were encouraged to take control of the waterfall method themselves, but on a timescale of weeks rather than years. This approach allowed clients to see progress regularly, provide feedback, and steer the development process in the right direction. 
 
-The shorter sprints and early involvement of clients may also have led to developers becoming used to shipping beta versions of their software, rather than aiming for a final version.
+Note that even with Agile principles it is still difficult to ensure that the delivered software precisely meets the client's needs. Further, as G. Lee and W. Xia pointed out in 2010, much of the alleged advantages of Agile development are anecdotal rather than scientifically proven \cite{LX10}. They found that there is a difference between being able to quickly respond to a particular change in user requirement (response efficiency), compared to being able to respond to as many changes as possible (response extensiveness). Encouragingly, with this distinction they did find evidence that teams with more autonomy had greater response efficiency, and that response efficiency positively effects all measures of project success \cite[pp. 97-98]{LX10}.
 
-\subsection{TDD - Test-Driven Development}
+
+\subsection{TDD: Test-Driven Development}
+The shorter sprints and early involvement of clients may have led to developers becoming used to shipping beta versions of their software, rather than aiming for a final version. Another problem independently emerging in the 1990s was the increasing cost of \emph{maintaining} delivered systems. 
+
 
 
 \subsection{And Next...?}
 
-
+\begin{center}
+\emph{While this approach to correctness might strike mathematicians as impoverished, software is built by engineers, and guess what? Engineers are not mathematicians!} \cite[p. 98]{Amman16}
+\end{center}
 
 
 
@@ -852,7 +871,7 @@ Possible events:
 \end{enumerate}
 
 \subsection{Implementation style}
-l used an object-oriented based system for the widgets that appear in the GUI, relying on inheritance and polymorphism. I quickly gave up with test driven development, as there was too much initial investment required for this project. Indeed, as Nasser et al recently report this is a common problem when building GUIs \cite{Nass21}.
+l used an object-oriented based system for the widgets that appear in the GUI, relying on inheritance and polymorphism. I quickly gave up with test-driven development, as there was too much initial investment required for this project. Indeed, as Nasser et al recently report this is a common problem when building GUIs \cite{Nass21}.
 
 TODO Inheritance diagram.
 
@@ -1100,7 +1119,11 @@ Currently the seating plan is lost when we switch out of the class view of the G
 We could plan the seating plan in advance, and then we could print it off for the students or project it on to the board.
 
 \subsection{Suggest seating plans}
-We could consider, for example, how well pairs have worked previously, or how correlated students were in exams over the different questions, or whether certain students reduce the learning around them. I think a simulated annealing approach to optimisation would have worked well.
+We could consider, for example, how well pairs have worked previously, or how correlated students were in exams over the different questions, or whether certain students reduce the learning around them.
+\begin{center} 
+\emph{``Since it has been reasonably well established that student affect toward a class is related to student learning, student attitudes toward classroom arrangements are a matter of no small concern when determining a choice of classroom arrangement.''} \cite{MM78}
+\end{center}
+I think a simulated annealing optimisation would work well.
 
 \subsection{Review previous seating plans}
 It would be useful to store previous seating plans.
@@ -1124,7 +1147,7 @@ This would be a nice to have, especially if the system was being regularly updat
 
 \section{Conclusion} \label{conclusion} 
 
-The backend was coded using test driven development, where I religiously wrote failing tests, trivial code which passed the tests, and finally refactored the code as much as possible. However, I quickly gave up on this method when implementing the GUI. This means that roughly half of my code was created with TDD, and half was not. I was interested to see how much better my coding would be with TDD, and so I used a Python package called \textbf{Radon} to calculate various metrics of code "goodness" \cite{Oman92}.
+The backend was coded using test-driven development, where I religiously wrote failing tests, trivial code which passed the tests, and finally refactored the code as much as possible. However, I quickly gave up on this method when implementing the GUI. This means that roughly half of my code was created with TDD, and half was not. I was interested to see how much better my coding would be with TDD, and so I used a Python package called \textbf{Radon} to calculate various metrics of code "goodness" \cite{Oman92}.
 
 The Radon package analyses text-based python scripts to calculate
 \begin{itemize}
@@ -1147,9 +1170,20 @@ Lines of code   & 574          & 579              \\ \hline
 Avg length fns     & 7.97         & 6.36             \\ \hline
 \end{tabular}
 \end{center}
-Surprisingly there really is no difference as far as the metrics are concerned! Rather than being disheartened notice that the backend has a strong testing framework, making changes relatively risk free. Further, we might hope that I am becoming better at naturally and more completely refactoring as I code. Finally, recent research by A. Santos et al has shown that \emph{"[small projects] tend to provide less optimistic results for TDD"} and that TDD is more effective for teams.\cite{SVDU21}
+Surprisingly there really is no difference as far as the metrics are concerned! Rather than being disheartened notice that the backend has a strong testing framework, making changes relatively risk free. Further, we might hope that I am becoming better at naturally and more completely refactoring as I code. 
+\begin{center}
+\emph{...most people who learn TDD find that their programming practice changed for good.}\cite[p.xii]{Beck03}.
+\end{center}
+Recent research by A. Santos et al has shown that \emph{"[small projects] tend to provide less optimistic results for TDD"} and that TDD is more effective for teams.\cite{SVDU21} My aim at the start of this project was to be able to use test-driven development, not that to show that I must use TDD to write a better standard of code.
 
 Another regret was that I continued to use PyCharm as my IDE: given that I was trying to improve the skills used in class, perhaps I should have used Replit or Thonny.
+
+\
+
+The deliverables of section \ref{deliverables} were that \emph{the TAT system will provide a basic GUI over a backend handling\ldots notes to be taken against student names and then suggest pertinent students for focus."} In this project I have managed to complete the deliverables with only a relatively small number of missing functionalities. This project has managed to "automate the boring bits", as A. Sweigart puts in \cite{Swei15}. The most recent UNESCO global education monitoring report raises the next question: what to do with all the free time I have now afforded myself?
+\begin{center} 
+\emph{``Technology is touted as being able to reduce the time students and teachers spend on menial tasks, time that can be used in other, educationally more meaningful activities. However, there are conflicting views on what is meaningful.''} \cite[p. 11]{Unesco23}
+\end{center}
 
 \begin{thebibliography}{Xyzz12}
 
@@ -1157,7 +1191,7 @@ Another regret was that I continued to use PyCharm as my IDE: given that I was t
 
 \bibitem[Anaya18]{Anaya18} Anaya, M. (2018). Clean code in Python. Packt Publishing
 
-\bibitem[Beck03]{Beck03} Beck, K. (2003). Test driven development by example. Addison-Wesley.
+\bibitem[Beck03]{Beck03} Beck, K. (2003). Test-driven development by example. Addison-Wesley.
 
 \bibitem[Bloom79]{Bloom79} Bloom, B. S. (1976). Human characteristics and school learning. McGraw-Hill.
 
@@ -1234,7 +1268,7 @@ Many of these tasks are ripe for automation. As Sweigart writes, ``many people s
 Teachers will interact with the tool using a GUI: it should be easy to use for all teachers, not just those teachers who are computer literate.
 
 
-I will implement this project using \emph{Test Driven Development.} This is a style of software development that grew out of the `Extreme Programming' philosophy of the 1990s, encouraging quick development cycles and active feedback from clients. The first book written on the subject, \emph{TTD by Example}, by Kent Beck, is still the main resource \cite{Beck03}. Kent emphasises the need to thoroughly test the requirements in order to have confidence when refactoring or making changes, as well as the need to make incremental changes (both for confidence and for time to market). TTD programming follows the following cycle: \\
+I will implement this project using \emph{Test-Driven Development.} This is a style of software development that grew out of the `Extreme Programming' philosophy of the 1990s, encouraging quick development cycles and active feedback from clients. The first book written on the subject, \emph{TTD by Example}, by Kent Beck, is still the main resource \cite{Beck03}. Kent emphasises the need to thoroughly test the requirements in order to have confidence when refactoring or making changes, as well as the need to make incremental changes (both for confidence and for time to market). TTD programming follows the following cycle: \\
 \indent \textbf{Red.} Write a failing test for a requirement. \\
 \indent \textbf{Green.} As quickly as possible, write code to pass the test. \\
 \indent \textbf{Refactor.} Clean the code, removing duplication and renaming functions. \\
@@ -1243,22 +1277,16 @@ Coding is driven by testing. In the thesis I will explore testing in more detail
 
 \section{Useful quotes}
  
-\begin{center} 
-\emph{``The best climate for learning is one in which there is trust. Students often don’t like to make mistakes because they fear a negative response from peers. Expert teachers create classrooms in which errors are welcome and learning is cool.''} \cite{Hat12}
-\end{center}
+
  
-\begin{center} 
-\emph{``Since it has been reasonably well established that student affect toward a class is related to student learning, student attitudes toward classroom arrangements are a matter of no small concern when determining a choice of classroom arrangement.''} \cite{MM78}
-\end{center}
+
 
 \begin{verbatim}
 https://github.com/zedr/clean-code-python#table-of-contents
 \end{verbatim}
 
 
-\begin{center} 
-\emph{``Technology is touted as being able to reduce the time students and teachers spend on menial tasks, time that can be used in other, educationally more meaningful activities. However, there are conflicting views on what is meaningful.''} \cite[p. 11]{Unesco23}
-\end{center}
+
 
 \begin{center} 
 \emph{``Successful education systems typically have absorptive capacity, including strong school leaders and confident teachers willing to innovate. Yet often seemingly trivial issues, such as maintenance and repair, are ignored or underestimated.''} \cite[p. 17]{Unesco23}
