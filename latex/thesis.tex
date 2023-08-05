@@ -7,6 +7,9 @@
 \usepackage{cmbright}
 
 \usepackage{tcolorbox}
+\usepackage{adjustbox}
+\usepackage{pdflscape}
+\usepackage{graphicx}
 
 
 \usepackage{tikz}
@@ -23,9 +26,6 @@
   draw, rectangle, minimum height=1cm
   }
 }
-\usepackage{adjustbox}
-
-\usepackage{pdflscape}
 
 \usepackage{hyperref}
 
@@ -33,6 +33,38 @@
 \usepackage{showlabels}
 
 \begin{document}
+
+\begin{titlepage}
+\large
+
+\centering
+
+{\Huge TAT: teacher assisting tools}
+
+\vspace{5mm}
+
+{\Large An application to manage teacher-student interactions}
+
+\vfill
+{\Large James Daniel Trevarton Jane}
+
+\vspace{5mm}
+
+August 2023
+
+\vfill
+supervised by
+
+Dr.~Pierre-Alain Cherix
+\vfill
+
+
+\url{https://github.com/danjane/GymInf}
+
+
+\makebox[\textwidth][c]{\includegraphics[width=1.4\textwidth]{GymInfBanner.png}}
+
+\end{titlepage}
 
 \tableofcontents
 
@@ -61,9 +93,9 @@ So which tasks should be automated? Why? And for whom? When I first started teac
 \end{center}
 J. Hattie finds evidence that answering quickly has a positive effect on how the students view the teacher, but basically no effect on student learning \cite[p.184]{Hat12}. A better practice is throwing the question back to the class and then allowing them time to think: J. Rowe identified many advantages in extending the "wait-time" from one second to about five seconds \cite{Rowe72}. By taking the time to record the interaction at my desk I force myself to give the class this wait-time.
 
-But if I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: a useful capability when planning lessons, writing reports, and especially for parent evenings.
+But if I start recording a brief comment at an opportune moment after a positive (or negative) interaction with a set of students, I could also use this to build a reminder of the interactions per student: a useful capability when planning lessons, writing reports, and especially for parent evenings. These reports would include a list of the pertinent interactions with the student in question as well as his exam notes.
 
-For the Master's thesis project undertaken for the GymInf formation, I chose to build a suite of tools to support a range of teacher tasks including capturing key interaction information, building individual student reports, suggesting teacher-student interactions for upcoming classes, organising seating plans, and creating spreadsheets of marks. 
+For the Master's thesis project undertaken for the GymInf formation, I chose to build a suite of tools to support a range of teacher tasks including capturing key interaction information, building individual student reports, suggesting teacher-student interactions for upcoming classes, organising seating plans, and creating spreadsheets of marks. I called this system the \textbf{teacher assisting tools}, or TAT for short.
 
 \
 
@@ -71,7 +103,7 @@ I will now explain the layout of this thesis. In section \ref{inout} I outline t
 
 \
 
-The tools will be coded in Python. This choice of language is mainly because Python is the language we teach our students, see section \ref{language}, and I would like to take this opportunity to consolidate my Python skillset. For the same reason, in section \ref{gui}, I will defend my choice of PyGame for the graphical user interface (GUI), despite its many disadvantages. I then explain a little about the theory being GUI design and how I planned the frontend of the TAT system. 
+The tools will be coded in Python. This choice of language is mainly because Python is the language we teach our students, see section \ref{language}, and I would like to take this opportunity to consolidate my Python skillset. For the same reason, in section \ref{gui}, I will defend my choice of PyGame for the graphical user interface (GUI), despite its many disadvantages. I then explain a little about the theory behind GUI design and how I planned the frontend of the TAT system. 
 
 \
 
@@ -87,11 +119,18 @@ Ideally any teacher who wanted to use the TAT system would be able to: proficien
 
 \
 
-Given the limited resources of this masters' thesis, not all of the desired functionality has been delivered. These missing features are described in section \ref{notdone}. Please note that the current codebase was designed with these features in mind, and that existing code should require minimal changes to incorporate these features as they are added.
+Given the limited resources of this masters' thesis and my enthusiastic imagination, not all of the desired functionality has been completed. These missing features are described in section \ref{notdone}. Please note that the current codebase was designed with these features in mind, and that existing code should require minimal changes to incorporate these features as they are added.
 
 \
 
 Finally, in section \ref{conclusion} I conclude the thesis with a reflection on the strengths and weaknesses of the project, on what I've learnt and what I would have done differently.
+
+\
+
+\begin{tcolorbox}
+The latest version of the code and this thesis can be found at 
+\begin{center} \url{https://github.com/danjane/GymInf} \end{center}
+\end{tcolorbox}
 
 \section{Project scope}
 
@@ -103,7 +142,7 @@ As Robinson points out in \emph{BOSCARD: a scoping tool} \cite{Rob19}, for a pro
 I am doing master's thesis in Computing and have chosen to create a suite of tools to aid teachers. These will be implemented through the \emph{teacher assisting tools} system, called TAT. This will be aimed at assisting  myself and other teachers in their daily work.
 
 \subsection{Objectives} 
-\emph{Describe the project goals and link each of them with related, SMART project objectives.}
+\emph{Describe the project goals.}
 
 There are common mistakes made by many new teachers, for example 
 \begin{itemize}
@@ -111,7 +150,7 @@ There are common mistakes made by many new teachers, for example
 \item allowing a subset of students to monopolise class interactions, and
 \item taking inadequate notes during class.
 \end{itemize}
-I will build the TAT system to help teachers to overcome these issues. As well as recording student interaction information, the system will also build individual student reports, suggest future teacher-student interactions for upcoming classes, suggest seating plans, and create spreadsheets of marks.
+I will build the TAT system to help teachers to overcome these issues. As well as recording student interaction information, the system will also build individual student reports, suggest future teacher-student interactions for upcoming classes, suggest seating plans (descoped), and create spreadsheets of marks.
 
 \subsection{Scope} 
 \emph{Provide a high-level description of the features and functions that characterize the product, service, or result the project is meant to deliver.}
@@ -127,8 +166,8 @@ TAT will be able to:
  \item Actions outside of teaching.
  \begin{itemize}
   \item Prepare student reports.
-  \item Suggest a seating plan. \textbf{Descoped.}
-  \item Review previous seating plans.  \textbf{Descoped.}
+  \item Suggest a seating plan (descoped). 
+  \item Review previous seating plans (descoped).
   \item Prepare an empty spreadsheet for marking and noting an exam.
   \item Collate marks and calculate semester note.
 \end{itemize}
@@ -136,7 +175,7 @@ TAT will be able to:
 \begin{itemize}
   \item Add a class to the list of classes taught.
   \item Configure the class lists.
-  \item Suggest a seating plan.  \textbf{Descoped.}
+  \item Suggest a seating plan (descoped).
 \end{itemize}
 \end{itemize}
 
@@ -144,7 +183,7 @@ The TAT backend will be linked to a GUI, run from a single executable file, with
 
 \
 
-TAT will not connect to the internet. TAT will not cover data privacy concerns beyond what is currently used in standard teaching practices in Geneva, see section \ref{data_privacy}.
+TAT will not connect to the internet. TAT will not cover data privacy concerns beyond what is currently used in standard teaching practices in Geneva, see section \ref{dataprivacy}.
 
 \
 
@@ -701,27 +740,44 @@ The process of developing complex IT systems involves various stages, from under
 \end{itemize}
 In their 2016 book, Ammann and Offutt speculate that the waterfall method originated with software development for large military projects. Here software was expected to have a long lifetime with no maintenance \cite[p. 96]{Amman16}. However, in industry this approach had several drawbacks, such as a long development cycle and limited client involvement until the final stages.  
 
-Reviews with the clients at a late stage of the development cycle led to misunderstandings and mismatches between the final product and client expectations. This resulted in costly redesigns that would have been cheaper if they had been identified earlier in the process, or even projects being dropped altogether. In 2004, a study showed that 45\% of IT projects in the US failed to meet user requirements \cite[p. 88]{LX10}. In this section I explore how industry practitioners have tried to adapt the waterfall process.
+Reviews with the clients at a late stage of the development cycle led to misunderstandings and mismatches between the final product and client expectations. This resulted in costly redesigns that would have been cheaper if they had been identified earlier in the process, or even projects being dropped altogether. In 2004, a study showed that 45\% of IT projects in the US failed to meet user requirements \cite[p. 88]{LX10}. In this section I explore how industry practitioners have tried to adapt the waterfall process and the introduction of test-driven development.
 
 \subsection{Reducing the distance between clients and developers}
-As a response to costly overruns the \emph{"Agile"} methodologies emerged in the early 2000s, emphasising iterative development and client collaboration \cite{Anaya18, Beck03}. The adoption of Agile methodologies aimed to bridge the gap between clients and developers throughout the process. Agile principles emphasise frequent communication, iterative development, and the delivery of working software in short cycles known as \emph{sprints}. I would argue that autonomous teams of developers were encouraged to take control of the waterfall method themselves, but on a timescale of weeks rather than years. This approach allowed clients to see progress regularly, provide feedback, and steer the development process in the right direction. 
+As a response to costly overruns the \textbf{Agile} methodologies emerged in the early 2000s, emphasising iterative development and client collaboration \cite{Anaya18, Beck03}. The adoption of Agile methodologies aimed to bridge the gap between clients and developers throughout the process. Agile principles emphasise frequent communication, iterative development, and the delivery of working software in short cycles known as \emph{sprints}. I would argue that autonomous teams of developers were encouraged to take control of the waterfall method themselves, but on a timescale of weeks rather than years. This approach allowed clients to see progress regularly, provide feedback, and steer the development process in the right direction. 
 
-Note that even with Agile principles it is still difficult to ensure that the delivered software precisely meets the client's needs. Further, as G. Lee and W. Xia pointed out in 2010, much of the alleged advantages of Agile development are anecdotal rather than scientifically proven \cite{LX10}. They found that there is a difference between being able to quickly respond to a particular change in user requirement (response efficiency), compared to being able to respond to as many changes as possible (response extensiveness). Encouragingly, with this distinction they did find evidence that teams with more autonomy had greater response efficiency, and that response efficiency positively effects all measures of project success \cite[pp. 97-98]{LX10}.
-
-
-\subsection{TDD: Test-Driven Development}
-The shorter sprints and early involvement of clients may have led to developers becoming used to shipping beta versions of their software, rather than aiming for a final version. Another problem independently emerging in the 1990s was the increasing cost of \emph{maintaining} delivered systems. 
+Note that even with Agile principles it is still difficult to ensure that the delivered software precisely meets the client's needs. Further, as G. Lee and W. Xia pointed out in 2010, much of the alleged advantages of Agile development are anecdotal rather than scientifically proven \cite{LX10}. They found that there is a difference between being able to quickly respond to a particular change in user requirement (response efficiency), compared to being able to respond to as many changes as possible (response extensiveness). Encouragingly, with this distinction they did find evidence that agile teams with more autonomy had greater response efficiency, and that response efficiency positively effects all measures of project success \cite[pp. 97-98]{LX10}.
 
 
+\subsection{Testing} \label{testing}
+The shorter sprints and early involvement of clients may have led to developers becoming used to the idea of shipping beta versions of their software, rather than aiming for a final version. Another problem independently emerging in the 1990s was the increasing cost of \emph{maintaining} delivered systems. For these reasons the \textbf{testing} of software evolved.
 
-\subsection{And Next...?}
+Ammann and Offutt state that \emph{"faults in software are design mistakes\ldots they exist as a result of a decision by a human"} \cite[p. 29]{Amman16}. Since humans make mistakes, we must assume that software contains bugs. This in turn means we cannot prove that code is correct.\footnote{This is a long way from E. Djikstra's ideal of proving correctness of code, but the complexity of even moderately sized programs rules this out in practice.} So why do we test code? Ammann and Offutt identify five levels of increasing understanding to this question:
+\begin{enumerate}
+\item There is no difference between testing and debugging.
+\item The purpose of testing is to show correctness.
+\item The purpose of testing is to show that the software does not work.
+\item The purpose of testing is to reduce the risk of using the software.
+\item Testing is a mental discipline that helps all IT professionals develop higher-quality software.
+\end{enumerate}
+
+There are different types of testing. \textbf{Unit testing} compares inputs and outputs to check the functions behave as expected in a finite set of situations. Choosing these situations to cover as many interesting use-cases as possible becomes part of mental discipline mentioned above. \textbf{Integration testing} focuses on how different modules interact. \textbf{Regression testing} compares previous outputs against current outputs after a software update. \textbf{User acceptance testing} involves clients evaluating the system to determine if it meets their expectations.
 
 \begin{center}
 \emph{While this approach to correctness might strike mathematicians as impoverished, software is built by engineers, and guess what? Engineers are not mathematicians!} \cite[p. 98]{Amman16}
 \end{center}
 
+But there is still a problem: once the code is developed, who is doing the testing? If the developers and the testers are different teams, then it is hard to avoid a level 3 mindset (showing that the software does not work). But if the developers test their own code there is a risk of a level 2 mindset (testing shows correctness, which is impossible).
 
+\subsection{TDD: Test-Driven Development}
+To avoid these issues altogether and hence promote a level 5 mindset (that testing is a mental discipline which improves coding) K. Beck and his collaborators suggested that the developers should write their own tests \emph{before} they wrote their code \cite{Beck03}. This practice became known as \textbf{test-driven development}, or TDD. To help developers use this counterintuitive practice, there is a simple cycle to follow:
+\begin{itemize}
+\item \textbf{Red.} Write a failing test for a requirement.
+\item \textbf{Green.} As quickly as possible, write code to pass the test.
+\item \textbf{Refactor.} Clean the code, removing duplication and renaming functions.
+\end{itemize}
+Coding is driven by testing.
 
+I implemented the backed of the TAT system using test-driven development. Currently I have about 575 lines of code and 350 lines of tests. The tests were written with \textbf{pytest}, which runs all of the tests automatically. I will comment on how I found this in the conclusion, see section \ref{conclusion} on page \pageref{conclusion}.
 
 
 \section{The graphical user interface} \label{gui}
@@ -1199,13 +1255,15 @@ This would be a nice to have, especially if the system was being regularly updat
 
 \section{Conclusion} \label{conclusion} 
 
-The backend was coded using test-driven development, where I religiously wrote failing tests, trivial code which passed the tests, and finally refactored the code as much as possible. However, I quickly gave up on this method when implementing the GUI. This means that roughly half of my code was created with TDD, and half was not. I was interested to see how much better my coding would be with TDD, and so I used a Python package called \textbf{Radon} to calculate various metrics of code "goodness" \cite{Oman92}.
+The backend of the TAT system was coded using test-driven development, section \ref{tdd}, where I religiously wrote failing tests, then I wrote trivial code which passed the tests, before I finally refactored the code as much as possible. Refactoring is definitely much easier with a large suite of tests: I found I had the confidence to try much larger factorisations knowing that it was no effort to check for obvious mistakes then roll-back using version control.\footnote{I used github for this project, \url{https://github.com/danjane/GymInf}} I may be at risk of falling into a level 2 mindset of testing (testing is to show correctness), see section \ref{testing}.
+
+However, I quickly gave up on TDD when implementing the GUI. This means that roughly half of my code was created with TDD, and half was not. I was interested to see how much better my coding would be with TDD, and so I used a Python package called \textbf{Radon} to calculate various metrics of code "goodness" \cite{Oman92}.
 
 The Radon package analyses text-based python scripts to calculate
 \begin{itemize}
 \item the cyclotomic complexity of each function; roughly, the number of holes in the possibly logical pathways of a function,
 \item the number of lines of code, and
-\item the maintainability index; a rough estimate of how easy or hard the code will be to understand, modify and maintain\cite{Oman92}. The higher the better $\in [0, 100]$.
+\item the maintainability index; a rough estimate of how easy or hard the code will be to understand, modify and maintain\cite{Oman92}. The higher the maintainability index the better, with a value in the range $[0, 100]$.
 \end{itemize}
 I ran the analysis on my own code base, and also calculated the average length of functions. Looking through the analysis I am not surprised to see certain functions being flagged - shredding the raw comments file was difficult to code, for example, and the PyGame loops running the GUI views involve overly long conditional chains on the events.
 
@@ -1222,13 +1280,13 @@ Lines of code   & 574          & 579              \\ \hline
 Avg length fns     & 7.97         & 6.36             \\ \hline
 \end{tabular}
 \end{center}
-Surprisingly there really is no difference as far as the metrics are concerned! Rather than being disheartened notice that the backend has a strong testing framework, making changes relatively risk free. Further, we might hope that I am becoming better at naturally and more completely refactoring as I code. 
+I was surprised to see that there really is no difference as far as the metrics are concerned! Rather than being disheartened notice that the backend has a strong testing framework, making changes relatively risk free. Further, we might hope that I am becoming better at naturally refactoring as I code. 
 \begin{center}
 \emph{...most people who learn TDD find that their programming practice changed for good.}\cite[p.xii]{Beck03}.
 \end{center}
 Recent research by A. Santos et al has shown that \emph{"[small projects] tend to provide less optimistic results for TDD"} and that TDD is more effective for teams.\cite{SVDU21} My aim at the start of this project was to be able to use test-driven development, not that to show that I must use TDD to write a better standard of code.
 
-Another regret was that I continued to use PyCharm as my IDE: given that I was trying to improve the skills used in class, perhaps I should have used Replit or Thonny.
+I was happy that I used Python for this project. I am also clearly more competent with PyGame, and I feel more confident replying to student questions on this package. However, I do feel that building a GUI with PyGame required a lot more work than I had expected: probably a lightweight interactive web application built with JustPy would have been more appropriate for this masters project. Another regret was that I continued to use PyCharm as my IDE: given that I was trying to improve the skills used in class, perhaps I should have used Replit or Thonny.
 
 \
 
