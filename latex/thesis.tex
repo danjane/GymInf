@@ -1008,6 +1008,10 @@ def setup_from_cfg(cfg):
     os.mkdir(cfg["exam_path"])
 \end{lstlisting}
 
+At the point the code feels well-structured. There is a reasonable test coverage, and so I have the confidence to refactor or experiment. I continue cycling through red, green, refactor until the GUI can run from a "cold start".
+
+\
+
 I implemented the backed of the TAT system using test-driven development. Currently I have about 575 lines of code and 350 lines of tests. The tests were written with \textbf{pytest}, which runs all of the tests automatically. I will comment on how I found this in the conclusion, see section \ref{conclusion} on page \pageref{conclusion}.
 
 
