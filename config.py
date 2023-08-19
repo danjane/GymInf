@@ -12,7 +12,8 @@ def adjust_path_for_cxfreeze(path):
 def cx(filename):
     cxfreeze_executable_flag = getattr(sys, "frozen", False)
     if cxfreeze_executable_flag:
-        return adjust_path_for_cxfreeze(filename)
+        # return adjust_path_for_cxfreeze(filename)
+        return filename
     else:
         return filename
 
@@ -29,6 +30,11 @@ def load(filename: str) -> Dict[str, Any]:
             config[k] = cx(v)
     config = add_class_paths(config)
     return config
+
+
+def mkdir_if_nec(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)
 
 
 def save(config, filename):
@@ -71,8 +77,7 @@ def default_config(base_path):
 def setup_from_cfg(cfg):
     for field in ["config_path", "courses_path", "exam_path", "latex_path"]:
         folder = cfg[field]
-        if not os.path.isdir(folder):
-            os.mkdir(folder)
+        mkdir_if_nec(folder)
     open(cfg["comments_path"], 'w').close()
     with open(cfg["positive_comments_defaults_path"], 'w') as f:
         f.write("correct response\ngood question\nTN for Pythag\nquick work")
@@ -86,6 +91,7 @@ def setup_from_cfg(cfg):
 
 def create_default(f):
     base_path, _ = os.path.split(f)
+    mkdir_if_nec(base_path)
     config = default_config(base_path)
     setup_from_cfg(config)
     save(config, f)
