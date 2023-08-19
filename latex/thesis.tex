@@ -788,7 +788,7 @@ To avoid these issues altogether and hence promote a level 5 mindset (that testi
 \end{itemize}
 Coding is driven by testing.
 
-Let us consider an explicit example from the TAT system: running the application for the first time, when there are no files or folders pre-created. We expect the TAT application to run with no courses listed, ready for the user to add courses (and students), and we also expect that the folder structure is automatically set up to handle the future files. Currently the GUI crashes almost immediately - it does not find the expected \texttt{config.yaml} config file. So let's use TDD to write code to create a default config file. 
+Let us consider an explicit example from the TAT system: running the application for the first time, when there are no files or folders pre-created. We expect the TAT application to run with no courses listed, ready for the user to add courses (and students), and we also expect that the folder structure is automatically set up to handle the future files. Currently the GUI crashes almost immediately - it does not find the expected configuration file \texttt{config.yaml}. So let's use TDD to write code to create a default config file. 
 
 \subsubsection{Red}
 The desired code lives naturally in the module \texttt{config.py}, but first we write the test in \texttt{tests/config\_test.py}:
@@ -802,12 +802,12 @@ def test_create_default_cfg_file(tmp_path):
     config.default(f)
     assert os.path.isfile(f)
 \end{lstlisting}
-Note that \texttt{tmp\_path} is a PyTest fixture which creates a temporary folder for this test: PyTest handles setting up and tearing down the temporary folder. We run the PyTest suite and, of course, the test crashes with \texttt{AttributeError: module 'config' has no attribute 'default'}. However, this is not truly a failing test - the test \textbf{crashed} rather than an assertion failing. We need to write an empty function in \texttt{config.py}:
+Note that \texttt{tmp\_path} is a pytest fixture which creates a temporary folder for this test: pytest handles setting up and tearing down the temporary folder. We run the pytest suite and, of course, the test crashes with \texttt{AttributeError: module 'config' has no attribute 'default'}. However, this is not truly a failing test - the test \textbf{crashed} rather than an assertion failing. We need to write an empty function in \texttt{config.py}:
 \begin{lstlisting}
 def default(f):
     pass
 \end{lstlisting}
-Now PyTest fails with an \texttt{AssertionError}, so we have successfully completed the \textbf{Red} part of the cycle.
+Now pytest fails with an \texttt{AssertionError}, so we have successfully completed the \textbf{Red} part of the cycle.
 
 \subsubsection{Green}
 Now we code the function \texttt{default.py}.
@@ -852,7 +852,7 @@ def default(f):
 def setup_from_cfg_file(f):
     pass
 \end{lstlisting}
-As well as the test, I've written a placeholder for the new function. PyTest fails with an \texttt{AssertionError}, so we have completed the \textbf{Red} phase.
+As well as the test, I've written a placeholder for the new function. Pytest fails with an \texttt{AssertionError}, so we have completed the \textbf{Red} phase.
 
 \subsubsection{Green}
 We write a truly horrific bit of code to make the test pass:
@@ -867,7 +867,7 @@ def default(f):
 def setup_from_cfg_file(f):
     os.mkdir(f.replace("config.yaml", "exams"))
 \end{lstlisting}
-PyTest is happy (even if you are not), so \textbf{Green} is complete.
+Pytest is happy (even if you are not), so \textbf{Green} is complete.
 
 \subsubsection{Refactor}
 You may want to sit down at this point: there is refactoring to be done, but it's not in \texttt{config.py}. We refactor the tests in \texttt{test\_config.py}:
@@ -1283,15 +1283,11 @@ Unfortunately, at this time I have not managed to automate the process of creati
 
 \texttt{cxfreeze -c TAT.py --target-dir dist}
 
-\item Copy the \texttt{GUI\_files} directory into the new \texttt{dist} subfolder.
-\item From the \texttt{dist} subfolder, zip the following files into a single archive ready for distribution:
-\begin{itemize}
-\item The application file \texttt{TAT.exe}.
-\item The directory of packaged files \texttt{lib}.
-\item The directory of TAT options and helper files \texttt{GUI\_files}.
-\end{itemize}
 \item Double click on the \texttt{TAT.exe} file to launch the GUI. \\
 \textbf{Warning:} the first time the application is run there is still some set up to be done, and the GUI takes a while to appear.
+
+\item The first time TAT is run, the folder \texttt{GUI\_files} is created in the \texttt{Users/User/} directory.
+
 \end{enumerate}
 
 \newpage
