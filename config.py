@@ -31,6 +31,11 @@ def load(filename: str) -> Dict[str, Any]:
     return config
 
 
+def save(config, filename):
+    with open(cx(filename), 'w') as f:
+        yaml.safe_dump(config, f)
+
+
 def add_class_paths(config: Dict[str, Any]) -> Dict[str, Any]:
     folder = cx(config["courses_path"])
     courses = config["courses"]
@@ -43,5 +48,23 @@ def update_courses_in_yaml(filename, courses):
     with open(cx(filename), 'r') as f:
         config = yaml.safe_load(f)
     config["courses"] = courses
-    with open(cx(filename), 'w') as f:
-        yaml.safe_dump(config, f)
+    save(config, filename)
+
+
+def default_config(base_path):
+    return {
+        "courses": [],
+        "courses_path": base_path,
+        "exam_path": os.path.join(base_path, "exams")
+    }
+
+
+def create_default(f):
+    base_path, _ = os.path.split(f)
+    config = default_config(base_path)
+    save(config, f)
+    return config
+
+
+def setup_from_cfg(cfg):
+    os.mkdir(cfg["exam_path"])
