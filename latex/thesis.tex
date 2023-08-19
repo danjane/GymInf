@@ -187,7 +187,7 @@ TAT will not connect to the internet. TAT will not cover data privacy concerns b
 
 \
 
-All development and testing will be done on my personal machine, a MacBook Air running the OS Ventura 13.4 (22F66) on an Apple M1 chip. This should be compatible with the examiner's personal computer, but any work required to migrate to the school system will not be in the scope of this thesis.
+All development and testing will be done on my personal machine, a MacBook Air running the OS Ventura 13.4 (22F66) on an Apple M1 chip. This should be compatible with the examiner's personal computer, running Windows, but any work required to migrate to the school system will not be in the scope of this thesis.
 
 \subsection{Constraints} 
 \emph{Identify the specific constraints or restrictions that limit or place conditions on the project, especially those associated with project scope.}
@@ -262,7 +262,7 @@ The inputs clearly contain sensitive information, and the relevant laws and best
 For each class of interest, we need to have a list of students who are members of this class. For each student, it is often useful to store a "given" name with which they like to be called in class. Other information is not essential (gender, age, etc.), and so we will not store it.
 
 \subsubsection{Commentary on students}
-During the teaching process, the teacher makes useful judgements about students and groups of students. The teaching process obviously includes contact time during classes, but it can also include thoughts and decisions during the planning process, while marking homework or exams, or while evaluating a lesson \emph{ex-post}.
+During the teaching process, the teacher makes useful judgements about students and subgroups of students. The teaching process obviously includes contact time during classes, but it can also include thoughts and decisions during the planning process, while marking homework or exams, or while evaluating a lesson \emph{ex-post}.
 
 Comments could take the form
 \begin{itemize}
@@ -279,7 +279,7 @@ To each comment should be associated the student, the class and the date. Thinki
 \subsubsection{Seating plan used in class}
 Especially at the start of the year, but also just after holidays, it can be difficult to remember the given names of students. By asking the students to follow a seating plan \emph{and then having this seating plan to hand,} the teacher has an easy way to refer to students by their given name. At the start of the year this also helps the teacher in learning the names. See figure \ref{seatingplan} on page \pageref{seatingplan} for an example of a seating plan created using the tikz package of LaTeX. As far as possible, I followed the format of seating plans used during exams at Collège Rousseau : thus the seating plan layout should be familiar to both students and teachers.
 
-\begin{figure} \label{seatingplan} \centering
+\begin{figure}  \centering
 \begin{adjustbox}{width=0.8\textwidth, frame=1pt 10pt}
 \begin{tikzpicture}
 
@@ -321,7 +321,7 @@ Especially at the start of the year, but also just after holidays, it can be dif
 \end{tikzpicture}
 \end{adjustbox}
 
-\caption{Example of a seating plan, created with the Tikz package of \LaTeX}
+\caption{Example of a seating plan, created with the Tikz package of \LaTeX} \label{seatingplan}
 
 \end{figure}
 
@@ -434,7 +434,7 @@ harry.pttr \hfill \textbf{Harry} \hfill 1ma1df01
 
 By "backend" I mean the data access layer of the system. By connecting the inputs and outputs we can assess what intermediate processing will be required, and what functionality can be shared. The schematic in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a \emph{Data Flow Diagram} for the TAT system. I have used the Yourdon-Coad notation where the processes (functions) are circles and data is represented by rectangles. Flow of control (transfer of information) is represented by arrows, see \cite{Coad91}.
 
-\begin{figure}[h] \label{dataflowdiagram}
+\begin{figure}[h] 
 \begin{center}
 \begin{tikzpicture}[node distance=25mm, every node/.style={draw, text centered, minimum height=20mm, align=center, text width=15mm, font=\fontsize{8}{10}\selectfont}]
 
@@ -485,7 +485,7 @@ By "backend" I mean the data access layer of the system. By connecting the input
 \end{tikzpicture}
 
 \end{center}
-\caption{Data flow diagram for the backend of the TAT system.}
+\caption{Data flow diagram for the backend of the TAT system.} \label{dataflowdiagram}
 \end{figure}
 
 The data flow diagram in figure \ref{dataflowdiagram}, on page \pageref{dataflowdiagram}, is a very high-level description of a possible system. To make concrete decisions about how to implement the TAT system it will help to define the expected inputs and outputs. In this section I will outline a basic backend based on files.  An implementation based on files is simpler and quicker, and so more suited for a master's project, but in the future I would expect the backend to handle updates via ACID database queries. I will briefly explain the advantages of databases over files in subsection \ref{db}. I will finish this section by touching on the data privacy laws that apply in Geneva; in particular the system will use only a minimum amount of personal data.
@@ -531,9 +531,12 @@ Examples of negative comments: \\
 
 Before lines of comments there must be a line with the name of the class and, independently, the date. So a valid state for the comments file might be something like the following
 \begin{tcolorbox}[title = comments\_file\_v0.1.txt]
-\texttt{01Apr2023\\1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\2indfb01\\+George TN for Djikstra \\\\02Apr2023\\1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagore}
+\texttt{01Apr2023\\1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\2indfb01\\+George TN for Djikstra \\\\02Apr2023\\1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagoras}
 \end{tcolorbox}
 (Note that the vertical spaces are optional and aid human readability.)
+
+(TN is my shorthand for \emph{"l'élève explique au tableau noir"}.)
+
 
 Given that this is a first implementation, but that nevertheless we want an efficient backend, we can improve the parsing of this file by demanding that the first character in each line defines the information that this line will contain:
 
@@ -544,7 +547,7 @@ Given that this is a first implementation, but that nevertheless we want an effi
 \end{itemize}
 
 \begin{tcolorbox}[title = comments\_file\_v1.1.txt]
-\texttt{d01Apr2023\\c1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\c2indfb01\\+George TN for Djikstra \\\\ d02Apr2023\\c1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagore}
+\texttt{d01Apr2023\\c1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\c2indfb01\\+George TN for Djikstra \\\\ d02Apr2023\\c1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagoras}
 \end{tcolorbox}
 
 \subsubsection{Comment table}
@@ -558,7 +561,7 @@ NB: I had hoped that the TAT system would also keep track of missed homeworks (\
 \begin{landscape}
 
 \begin{tcolorbox}[title = comments\_file\_v1.1.txt]
-\texttt{d01Apr2023\\c1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\c2indfb01\\+George TN for Djikstra \\\\ d02Apr2023\\c1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagore}
+\texttt{d01Apr2023\\c1indfb01\\+Harry gives conclusion of Pythag\\+Harry, Ron correct calc litt for \$(a+b)\textasciicircum2\$\\\\c2indfb01\\+George TN for Djikstra \\\\ d02Apr2023\\c1indfb01\\-Ron DNF\\+Harry, Ron TN for Pythagoras}
 \end{tcolorbox}
 
 
@@ -572,8 +575,8 @@ harry.pttr       & 01Apr2023     & 1indfb01        & +Harry, Ron correct calc li
 ronald.wsl       & 01Apr2023     & 1indfb01        & +Harry, Ron correct calc litt for $(a+b)^2$ & 1                  & 0.9             & 1                 \\ \hline
 george.wsl       & 01Apr2023     & 2indfb01        & +George TN for Djikstra                                                     & 1                  & 0.9             & 1                 \\ \hline
 ronald.wsl       & 02Apr2023     & 1indfb01        & -Ron DNF                                                                    & -1                 & 0.0             & 0                 \\ \hline
-harry.pttr       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 3                 \\ \hline
-ronald.wsl       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagore                                                & 1                  & 1.0             & 1                 \\ \hline
+harry.pttr       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagoras                                                & 1                  & 1.0             & 3                 \\ \hline
+ronald.wsl       & 02Apr2023     & 1indfb01        & +Harry, Ron TN for Pythagoras                                                & 1                  & 1.0             & 1                 \\ \hline
 \end{tabular}
 \end{tcolorbox}
 
@@ -631,10 +634,10 @@ The algebra for the calculation of the notes was given in subsection \ref{output
 \item \texttt{"NOTE\_EOY=ROUND(AVERAGE(NOTE\_S1;NOTE\_S2)*10)/10"}.
 \end{itemize}
 
-I also made the TAT system create the workbook with conditional formatting applied to the cells, so that notes less than the passing mark of 4.0 are flagged in red. To handle missing notes (for example, when students were absent), I use a default value of -100 as I did not want to expose non-scientific users to the joys of "Not a Number". This is sufficiently negative to cause obvious problems throughout the calculations.
+I also made the TAT system create the workbook with conditional formatting applied to the cells, so that notes less than the passing mark of 4.0 are flagged in red. To handle missing notes (for example, when students were absent), I use a default value of -100 as I did not want to expose non-scientific users to the joys of \texttt{NaN}, the representation of the idea of "Not a Number". The value of -100 is sufficiently negative to cause obvious problems throughout the calculations.
 
 \subsubsection{Exam results}
-In order to shred individual exams that TAT system assumes that the notes are stored in spreadsheets named with the convention \texttt{EXAMDATE\_EXAMNAME\_Notes} with extension either \texttt{.ods}, \texttt{.xls} or \texttt{.xlsx}. The files for a single course should be grouped together in a subdirectory with the same name as the course name. Each spreadsheet should be contain a cell in the first column containing the keyword "Student", followed by a column of student-ids. There should be a cell in the first row containing the keyword "Note", and the notes are in the corresponding intersection of the student-id row and the note column. These are notes for an individual exam, and so should be rounded to the nearest multiple of 0.5.\footnote{Individual exam notes are given to the nearest half except in very special cases. One such exception is for controlled exams with an external jury: where the teacher and the jury agree to disagree, the exam note is the average (rounded to the nearest tenth) of the two notes (rounded to the nearest half).}
+In order to shred individual exams that TAT system assumes that the notes are stored in spreadsheets named with the convention \texttt{EXAMDATE\_EXAMNAME\_Notes} with extension either \texttt{.ods}, \texttt{.xls} or \texttt{.xlsx}. The files for a single course should be grouped together in a subdirectory with the same name as the course name. Each spreadsheet must contain a cell in the first column containing the keyword "Student", followed by a column of student-ids. There should be a cell in the first row containing the keyword "Note", and the notes are in the corresponding intersection of the student-id row and the note column. These are notes for an individual exam, and so should be rounded to the nearest multiple of 0.5.\footnote{Individual exam notes are given to the nearest half except in very special cases. One such exception is for controlled exams with an external jury: where the teacher and the jury agree to disagree, the exam note is the average (rounded to the nearest tenth) of the two notes (rounded to the nearest half).}
 
 So an example for an exam filename might \texttt{20Apr2020\_ExampleExam\_Notes.ods} found in the directory \texttt{.\textbackslash1indfb01}.
 
@@ -702,7 +705,7 @@ I considered the following factors when choosing the language for my project:
 \item my interest for improving my proficiency,
 \item ease for finding solutions to coding problems,
 \item readability of the code,
-\item maintainability of the code,
+\item maintainability of the code, and
 \item future applications of improved coding abilities.
 \end{itemize}
 
@@ -718,8 +721,8 @@ The teacher is expected to have a strong background in the coding language being
 \item for the pedagogical benefits of "live coding", modelling how to create code for the students to discuss and learn from \cite{Raj2018}, 
 \item creating well written code for students to study,
 \item for ease of marking and correcting (lots of) student code,
-\item for spotting mistakes in student code during class time, in order to suggest hints, and
-\item for recognising bad coding practices and explaining to students the potential pitfalls and how to avoid them,
+\item for spotting mistakes in student code during class time, in order to suggest hints,
+\item for recognising bad coding practices and explaining to students the potential pitfalls and how to avoid them, and
 \item for understanding error messages.
 \end{itemize}
 
@@ -776,6 +779,8 @@ To avoid these issues altogether and hence promote a level 5 mindset (that testi
 \item \textbf{Refactor.} Clean the code, removing duplication and renaming functions.
 \end{itemize}
 Coding is driven by testing.
+
+TODO explicit example
 
 I implemented the backed of the TAT system using test-driven development. Currently I have about 575 lines of code and 350 lines of tests. The tests were written with \textbf{pytest}, which runs all of the tests automatically. I will comment on how I found this in the conclusion, see section \ref{conclusion} on page \pageref{conclusion}.
 
@@ -922,7 +927,7 @@ Possible events:
 l used an object-oriented based system for the widgets that appear in the GUI, relying on inheritance and polymorphism. I quickly gave up with test-driven development, as there was too much initial investment required for this project. Indeed, as Nasser et al recently report this is a common problem when building GUIs \cite{Nass21}. The inheritance diagram of the objects used to model Buttons in the GUI is in figure \ref{inheritance_diagram_Buttons} on page \pageref{inheritance_diagram_Buttons}, and similarly a diagram for the desks is in figure \ref{inheritance_diagram_Desks} on page \pageref{inheritance_diagram_Desks}.
 
 
-\begin{figure}[!hbtp] \label{inheritance_diagram_Buttons}
+\begin{figure}[!hbtp] 
 \begin{center}
 \begin{tikzpicture}[node distance=18mm, every node/.style={draw, rectangle, rounded corners, text centered, minimum height=10mm, align=center, font=\fontsize{8}{10}\selectfont}]
 
@@ -949,11 +954,11 @@ l used an object-oriented based system for the widgets that appear in the GUI, r
 
 \end{tikzpicture}
 \end{center}
-\caption{Inheritance diagram for the objects modelling the Buttons in the GUI.}
+\caption{Inheritance diagram for the objects modelling the Buttons in the GUI.} \label{inheritance_diagram_Buttons}
 \end{figure}
 
 
-\begin{figure}[!hbtp] \label{inheritance_diagram_Desks}
+\begin{figure}[!hbtp]
 \begin{center}
 \begin{tikzpicture}[node distance=18mm, every node/.style={draw, rectangle, rounded corners, text centered, minimum height=10mm, align=center, font=\fontsize{8}{10}\selectfont}]
 
@@ -980,7 +985,7 @@ l used an object-oriented based system for the widgets that appear in the GUI, r
 
 \end{tikzpicture}
 \end{center}
-\caption{Inheritance diagram for the objects modelling the Buttons in the GUI.}
+\caption{Inheritance diagram for the objects modelling the Buttons in the GUI.}  \label{inheritance_diagram_Desks}
 \end{figure}
 
 \section{A single executable file} \label{executable}
@@ -994,15 +999,59 @@ Importantly, both scripts are only able to build packages for the hardware and s
 Unfortunately, at this time I have not managed to automate the process of creating a standalone package. PyInstaller has trouble linking to the pygame module, and cx-Freeze dislikes subfolders. Instead I manually create the executable as follows:
 
 \begin{enumerate}
-\item Create an empty folder.
-\item Copy all the TAT python scripts and the \texttt{requirements.txt} into this folder.
-\item Create a virtual Python environment for this directory and add the necessary python modules. This can be done at the command line using
+\item Create an empty folder and use this as the current directory. This can be done at the command line using
 
-\texttt{pip install -r requirements.txt}
+\texttt{mkdir my\_folder; cd my\_folder}
+
+\item Copy all the TAT python scripts and the \texttt{requirements.txt} into this folder.
+
+\vspace{1mm}
+
+\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize} \scriptsize
+\item TAT.py
+\item control\_view.py
+\item linkComments.py
+\item analyseNotes.py
+\item link\_gui\_backend.py
+\item config.py
+\item gui.py
+\item students.py
+\item class\_view.py
+\item icons.py
+\end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize} \scriptsize
+\item events.py
+\item desk\_functions.py
+\item constants.py
+\item examNotes.py
+\item shredComments.py
+\item analyseComments.py
+\item updateComments.py
+\item scrapeClassLists.py
+\item createSeatingPlan.py
+\item requirements.txt
+\end{itemize}
+\end{minipage}
+
+\item Create a virtual Python environment for this directory.
+
+\texttt{python3 -m venv /path/to/new/virtual/environment.}
+
+
+\item Add the necessary python modules.
+
+\texttt{pip3 install -r requirements.txt}
+
+\item Make sure the cx-Freeze module is up to date, for example with
+
+\texttt{ pip3 install --upgrade cx\_Freeze}.
 
 \item Again at the command line in this working directory, run cx-Freeze
 
-\texttt{cxfreeze -c gui.py --target-dir dist}.
+\texttt{cxfreeze -c TAT.py --target-dir dist}.
 
 \item Copy the \texttt{GUI\_files} directory into the new \texttt{dist} subfolder.
 \item From the \texttt{dist} subfolder, zip the following files into a single archive ready for distribution:
@@ -1011,6 +1060,8 @@ Unfortunately, at this time I have not managed to automate the process of creati
 \item The directory of packaged files \texttt{lib}.
 \item The directory of TAT options and helper files \texttt{GUI\_files}.
 \end{itemize}
+\item Double click on the \texttt{TAT.exe} file to launch the GUI. \\
+\textbf{Warning:} the first time the application is run there is still some set up to be done, and the GUI takes a while to appear.
 \end{enumerate}
 
 \newpage
@@ -1106,11 +1157,11 @@ This removes the course from the list of active courses. The list of students is
 
 \subsubsection{Build student reports}
 \textbf{Click on the "Build reports" button.} \\
-This will create a pdf of individual reports for each student in each class (not just the selected class).
+This will create a pdf of individual reports for each student in each class (not just the selected class). This pdf file is stored in \texttt{./latex/report.pdf} by default, and will automatically open once it has been created.
 
 \subsubsection{Collate marks and calculate semestriel notes}
 \textbf{Click on the "Calculate moyennes" button.} \\
-In the spreadsheet you can adjust the weights of each exam in rows 3, 4 and 5. The rounded notes are updated automatically in the tables to the right.
+In the spreadsheet you can adjust the weights of each exam in rows 3, 4 and 5. The rounded notes are updated automatically in the tables to the right. This xlsx file is stored in \texttt{./exams/moyennes/big\_dump.xlsx} by default, and will automatically open once it has been created.
 
 \subsubsection{Switch to the course view}
 \textbf{Select the desired course and then click on the top "Go to course" button.} \\
@@ -1161,6 +1212,8 @@ The \textbf{course view} has the seating plan on the left hand side of the view,
 \end{tikzpicture}
 \end{center}
 
+\textbf{Note:} currently the TAT system can only handle a maximum of 24 students, sat in the standard pairs format.
+
 \subsubsection{Modify the seating plan}
 \textbf{Click and drag a student.} \\
 The student will swap places with another.
@@ -1183,17 +1236,27 @@ The TAT system will identify five students who have not received a positive comm
 
 \subsubsection{Record a positive remark for students}
 \textbf{Click on the corresponding "+" button.} \\
-The comment next to the associated "+" button will flash red, and then all the students will be deselected. The comment has been stored, and will appear in the student reports with today's date. 
+The comment next to the associated "+" button will flash red, and then all the students will be deselected. The comment has been stored, and will appear in the student reports with today's date. An example:
+\begin{center}
+\begin{tikzpicture}
 
-\subsubsection{Record a negative remark for students}
-\textbf{Click on the corresponding "-" button OR double-click the comment button.} \\
-Hint: this second option is also possible for positive comments.
+\draw[thick, fill=gray!30!white] (8.75, 3.55) rectangle (9.25, 4) node[pos=0.5] {+};
+\draw[thick] (9.25, 3.55) rectangle (12, 4) node[pos=0.5] {\small Correct response};
+
+\draw[->]  (8, 3) node[below] {"+" button} -- (8.75, 3.5);
+\draw[->]  (13, 3) node[below] {comment button} -- (12, 3.5);
+
+\end{tikzpicture}
+\end{center}
+These two buttons are associated. One click on the "+" button on the left will store the positive comment \texttt{"Correct response"} against all the selected students. Double-clicking on the comment button will give the same effect.
 
 \subsubsection{Update a comment option}
-\textbf{Click on the comment button, type the new comment, and click on the button again.} \\
+\textbf{Click on the comment button, type the new comment, and click on the same comment button again.} \\
 The new comment will be immediately saved for any selected students. 
 Hint: the new comment is saved, and will be used next time you pass to the course view.
 
+\subsubsection{Record a negative remark for students}
+\textbf{Click on the corresponding "-" button OR double-click the comment button.} \\
 
 
 
@@ -1202,6 +1265,9 @@ Hint: the new comment is saved, and will be used next time you pass to the cours
 
 In roughly decreasing order of importance, in my opinion, here are the features I would like to see in the next implementation of the TAT system. Many of these features I had in mind as I was designing the system, but had to be descoped in this project due to time constraints.
 
+\subsection{Handling students who leave}
+In the current implementation, if a student leaves then they will soon be constantly suggested for focus. Unfortunately we cannot simply delete them from the list of students as the functions for "Shred Comments" would crash on an unknown student. This can be very annoying if, say, five students in the same class leave on an extramuros\ldots
+
 \subsection{Button to create a blank exam file}
 On the selected course, create a spreadsheet in the correct format with the student.ids already filled in. This exists in the backend but was not wired up in the GUI.
 
@@ -1209,13 +1275,10 @@ On the selected course, create a spreadsheet in the correct format with the stud
 The backend can already count the number of \emph{devoir non fait} and return a dictionary of counts against student.ids. I did not have time to wire this into the GUI.
 
 \subsection{Move to databases}
-We should confirm with the PPDT what extra security would be needed, see subsection \ref{dataprivacy}, and migrate the system onto a database instead of flat files. This raises other needs: it would have to be easier to review and change comments on students, for example, as simply opening the \texttt{comments.txt} file would no longer be an option. Also, should we connect to the official databases for student.ids and even course lists?
+We should confirm with the PPDT\footnote{\texttt{https://www.ge.ch/organisation/protection-donnees-transparence}} what extra security would be needed, see subsection \ref{dataprivacy} on page \pageref{dataprivacy}, and migrate the system onto a database instead of flat files. This raises other needs: it would have to be easier to review and change comments on students, for example, as simply opening the \texttt{comments.txt} file would no longer be an option. Also, should we connect to the official databases for student.ids and even course lists?
 
 \subsection{Stage the processed data}
 Currently the entire raw comments file must be shredded each time the comments are used. For example, every time the system suggests students for focus it must start from the beginning even though very little (and possibly nothing) has changed since the last calculation. Intermediate steps could be saved in the database using coherent transactions which mark which data has already been preprocessed.
-
-\subsection{Handling students who leave}
-In the current implementation, if a student leaves then they will soon be constantly suggested for focus. Unfortunately we cannot simply delete them from the list of students as the functions for "Shred Comments" would crash on an unknown student. This can be very annoying if, say, five students in the same class leave on an extramuros\ldots
 
 \subsection{Changing a name which already has comments}
 Although I have yet to see this happen in reality, if a student wanted to change their given name it would cause large headaches for the current TAT system. This seems like an edge case which it should be able to handle.
@@ -1242,7 +1305,7 @@ I would like to be able to take into account the needs of certain students. For 
 Pairs of students often asked to be sat together. The decision as to whether or not these requests are accepted should rest with the teacher, but it would be a nice to have when automatically generating seating plans.
 
 \subsection{Testing the GUI}
-It is much harder to build a testing framework for a GUI. However, to ensure future maintainability would require either a manual UAT process or, ideally, an automated harness. The latter would require high initial investment.
+It is commonly accepted that it is much harder to build a testing framework for a GUI \cite{Nass21}. However, to ensure future maintainability would require either a manual Acceptance Testing process \cite[p. 53]{Amman16} or, ideally, an automated harness. The latter would require high initial investment.
 
 \subsection{Predictions}
 It would be interesting to use the data in the system to make predictions about students. For example: their behaviour in class has changed dramatically (for the better or for the worse); students who might need extra support in order to pass the year; students who should consider accelerated learning programs. There may be issues around data privacy with such an expansion though, see subsection \ref{dataprivacy}.
@@ -1261,7 +1324,7 @@ However, I quickly gave up on TDD when implementing the GUI. This means that rou
 
 The Radon package analyses text-based python scripts to calculate
 \begin{itemize}
-\item the cyclotomic complexity of each function; roughly, the number of holes in the possibly logical pathways of a function,
+\item the cyclotomic complexity of each function; roughly, the number of holes in the possible logical pathways of a function,
 \item the number of lines of code, and
 \item the maintainability index; a rough estimate of how easy or hard the code will be to understand, modify and maintain\cite{Oman92}. The higher the maintainability index the better, with a value in the range $[0, 100]$.
 \end{itemize}
@@ -1282,7 +1345,8 @@ Avg length fns     & 7.97         & 6.36             \\ \hline
 \end{center}
 I was surprised to see that there really is no difference as far as the metrics are concerned! Rather than being disheartened notice that the backend has a strong testing framework, making changes relatively risk free. Further, we might hope that I am becoming better at naturally refactoring as I code. 
 \begin{center}
-\emph{...most people who learn TDD find that their programming practice changed for good.}\cite[p.xii]{Beck03}.
+\emph{...most people who learn TDD find that \\
+their programming practice changed for good.} \cite[p.xii]{Beck03}.
 \end{center}
 Recent research by A. Santos et al has shown that \emph{"[small projects] tend to provide less optimistic results for TDD"} and that TDD is more effective for teams.\cite{SVDU21} My aim at the start of this project was to be able to use test-driven development, not that to show that I must use TDD to write a better standard of code.
 
