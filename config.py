@@ -90,3 +90,8 @@ def create_default(f):
     setup_from_cfg(config)
     save(config, f)
     return config
+
+
+def create_default_if_nec(f):
+    if not os.path.isfile(f):
+        create_default(f)

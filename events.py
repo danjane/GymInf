@@ -1,5 +1,4 @@
 import icons
-import pygame
 
 
 def handle_mouse_button_down(x, y, desks, selected_desks):
