@@ -55,16 +55,38 @@ def default_config(base_path):
     return {
         "courses": [],
         "courses_path": base_path,
-        "exam_path": os.path.join(base_path, "exams")
+        "config_path": base_path,
+        "comments_path": os.path.join(base_path, "comments.txt"),
+        "exam_path": os.path.join(base_path, "exams"),
+        "exam_averages_path": os.path.join(base_path, "exams", "big_dump.xlsx"),
+        "positive_comments_defaults_path": os.path.join(base_path, "positive_comments_examples.txt"),
+        "negative_comments_defaults_path": os.path.join(base_path, "negative_comments_examples.txt"),
+        "latex_path": os.path.join(base_path, "latex"),
+        "report_skeleton_path": os.path.join(base_path, "latex", "report_skeleton.tex"),
+        "report_student_path": os.path.join(base_path, "latex", "report_outline_student.tex"),
+        "report_tex_path": os.path.join(base_path, "latex", "report.tex")
     }
+
+
+def setup_from_cfg(cfg):
+    for field in ["config_path", "courses_path", "exam_path", "latex_path"]:
+        folder = cfg[field]
+        if not os.path.isdir(folder):
+            os.mkdir(folder)
+    open(cfg["comments_path"], 'w').close()
+    with open(cfg["positive_comments_defaults_path"], 'w') as f:
+        f.write("correct response\ngood question\nTN for Pythag\nquick work")
+    with open(cfg["negative_comments_defaults_path"], 'w') as f:
+        f.write("DNF\nChatting")
+    with open(cfg["report_skeleton_path"], 'w') as f:
+        f.write("\\documentclass[11pt]{article}\n\\begin{document}\nSTUDENTPAGES\n\\end{document}")
+    with open(cfg["report_student_path"], 'w') as f:
+        f.write("STUDENTCODE \\hfill \\textbf{STUDENTNAME} \\hfill COURSE \\\\ \nSTUDENTCOMMENTS")
 
 
 def create_default(f):
     base_path, _ = os.path.split(f)
     config = default_config(base_path)
+    setup_from_cfg(config)
     save(config, f)
     return config
-
-
-def setup_from_cfg(cfg):
-    os.mkdir(cfg["exam_path"])

@@ -55,3 +55,17 @@ def test_tweak_structure_from_cfg_file(tmp_path):
     cfg["exam_path"] = exam_dir
     config.setup_from_cfg(cfg)
     assert os.path.isdir(exam_dir)
+
+
+def test_default_structure(tmp_path):
+    cfg, _ = create_cfg_file(tmp_path)
+
+    assert os.path.isdir(cfg["config_path"])
+    assert os.path.isdir(cfg["courses_path"])
+    assert os.path.isdir(cfg["exam_path"])
+
+    assert os.path.isfile(cfg["comments_path"])
+    assert os.path.isfile(cfg["negative_comments_defaults_path"])
+    assert os.path.isfile(cfg["positive_comments_defaults_path"])
+    assert os.path.isfile(cfg["report_skeleton_path"])
+    assert os.path.isfile(cfg["report_student_path"])
