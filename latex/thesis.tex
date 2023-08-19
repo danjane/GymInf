@@ -1268,7 +1268,7 @@ Unfortunately, at this time I have not managed to automate the process of creati
 
 \item Create a virtual Python environment for this directory.
 
-\texttt{python3 -m venv /path/to/new/virtual/environment.}
+\texttt{python3 -m venv .}
 
 
 \item Add the necessary python modules.
@@ -1277,11 +1277,11 @@ Unfortunately, at this time I have not managed to automate the process of creati
 
 \item Make sure the cx-Freeze module is up to date, for example with
 
-\texttt{ pip3 install --upgrade cx\_Freeze}.
+\texttt{ pip3 install --upgrade cx\_Freeze}
 
 \item Again at the command line in this working directory, run cx-Freeze
 
-\texttt{cxfreeze -c TAT.py --target-dir dist}.
+\texttt{cxfreeze -c TAT.py --target-dir dist}
 
 \item Copy the \texttt{GUI\_files} directory into the new \texttt{dist} subfolder.
 \item From the \texttt{dist} subfolder, zip the following files into a single archive ready for distribution:
