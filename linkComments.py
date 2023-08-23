@@ -6,6 +6,7 @@ import analyseComments
 import students
 import config
 import pandas as pd
+import datetime
 from typing import Dict, List, Tuple, Union
 
 
@@ -27,6 +28,8 @@ def load_data_from_config_path(cfg_path: str) -> Tuple[Dict[str, List[str]], Dic
 def report_dnfs(cfg_path: str, cut_off: int = 0) -> Dict[str, int]:
     cfg, courses, df = load_data_from_config_path(cfg_path)
     dnfs = analyseComments.count_dnf_greater_than(df, cut_off)
+    if not dnfs:
+        print("No DNFs to report :)")
     for student, num in dnfs.items():
         print(f"{student}: {num}")
     return dnfs
@@ -98,3 +101,14 @@ def get_students_needing_comments_from_config_path(cfg_path: str, course: str) -
     cfg, courses, df = load_data_from_config_path(cfg_path)
     ss = analyseComments.comments_needed(df, list(courses[course].keys()))
     return [courses[course][s] for s in ss]
+
+
+def print_suggested_focus(cfg_path: str, num_suggestions: int = 5) -> None:
+    cfg, courses, df = load_data_from_config_path(cfg_path)
+    print(f"d{datetime.datetime.now().strftime('%d%b%Y')}")
+    for course in courses:
+        ss = analyseComments.comments_needed(df, list(courses[course].keys()))
+        print(f"c{course}")
+        for s in ss[:num_suggestions]:
+            print(f"+{s}")
+        print("")
