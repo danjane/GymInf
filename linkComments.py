@@ -110,5 +110,5 @@ def print_suggested_focus(cfg_path: str, num_suggestions: int = 5) -> None:
         ss = analyseComments.comments_needed(df, list(courses[course].keys()))
         print(f"c{course}")
         for s in ss[:num_suggestions]:
-            print(f"+{s}")
+            print(f"+{courses[course][s]}")
         print("")
