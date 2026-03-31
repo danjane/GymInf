@@ -1,8 +1,10 @@
 import config
 import os
+from pathlib import Path
 
 
-c = config.load("../example_files/config.yaml")
+EXAMPLE_CONFIG = Path(__file__).resolve().parents[1] / "example_files" / "config.yaml"
+c = config.load(str(EXAMPLE_CONFIG))
 
 
 def test_load_class():
@@ -10,19 +12,19 @@ def test_load_class():
 
 
 def test_course_path():
-    assert c["courses_path"] == "../example_files/"
+    assert c["courses_path"] == "example_files/"
 
 
 def test_class_paths():
-    assert c["class_paths"] == ["../example_files/1ma1df01.txt", "../example_files/2ma2dfb01.txt"]
+    assert c["class_paths"] == ["example_files/1ma1df01.txt", "example_files/2ma2dfb01.txt"]
 
 
 def test_config_path():
-    assert c["config_path"] == "../example_files/"
+    assert c["config_path"] == "example_files/"
 
 
 def test_comments_path():
-    assert c["comments_path"] == "../example_files/comments.txt"
+    assert c["comments_path"] == "example_files/comments.txt"
 
 
 def test_save_cfg(tmp_path):

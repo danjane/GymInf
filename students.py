@@ -2,14 +2,15 @@ import re
 from typing import Dict, List, Tuple
 
 
-def get_code_and_name(student_code: str) -> Tuple[str, str]:
-    student_code = student_code.strip().split(', ')
-    course_code = student_code[0]
-    if len(student_code) == 1:
-        course_name = re.search(r"^[a-z\-]+", course_code).group(0).capitalize()
+def get_code_and_name(student_names: str) -> Tuple[str, str]:
+    student_names = student_names.strip().split(', ')
+    student_fullname = student_names[0].strip()
+    if len(student_names) == 1:
+        name_pieces = re.search(r'^([A-Z-]+\s)+([A-Za-z-]+)', student_fullname)
+        student_givenname = name_pieces.group(2).capitalize()
     else:
-        course_name = student_code[1]
-    return course_code, course_name
+        student_givenname = student_names[1]
+    return student_fullname, student_givenname
 
 
 def warn_about_duplicates(duplicates: set) -> None:

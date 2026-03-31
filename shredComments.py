@@ -20,6 +20,8 @@ def update(current_info, line, courses):
         current_info["Date"] = datetime.datetime.strptime(info, "%d%b%Y").date()
     elif char == 'c':
         current_info["Course"] = info
+    elif char == "" or char == "#":
+        pass
     else:
         all_students = current_students(current_info, courses)
         current_info["Students"] = find_students(info, all_students)
@@ -37,8 +39,6 @@ def update(current_info, line, courses):
             current_info["DNF"] = -10
             if not current_info["Students"]:
                 current_info["Students"] = all_students
-        elif char == "":
-            pass
         else:
             print(line)
             raise NotImplementedError("These are not the droids you're looking for!!")

@@ -158,7 +158,10 @@ def keep_student_rows(df: pd.DataFrame) -> pd.DataFrame:
 
 def remove_name_after_comma(df: pd.DataFrame) -> pd.DataFrame:
     dirty_strings = df["Student"]
-    clean_strings = [s.split(",")[0] for s in dirty_strings]
+    clean_strings = [s.split(",")[0]
+                     .strip()  # remove leading/trailing spaces
+                     .replace('\xa0', ' ')  # replace non-breaking spaces
+                     for s in dirty_strings]
     df["Student"] = clean_strings
     return df
 
@@ -173,7 +176,11 @@ def merge_notes_for_one_course(exam_folder, students):
         n = read_notes_from_filename(f)
         n = n.rename(columns={'Note': d.strftime('%d%b%Y')})
         notes.append(n)
+
     merged = pd.concat(notes, axis=1)
+    merged.index = merged.index.str.strip()
+    students = [s.strip() for s in students]
+
     loaded = pd.DataFrame(index=students).join(merged)
     return loaded, exam_names, exam_files
 

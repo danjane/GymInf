@@ -1,4 +1,4 @@
-albert.enstn
-gabriel.crmr, Gabs
-marie.cr
-richard.fynmn, Dick
+EINSTEIN Albert
+CRAMER Gabriel, Gabs
+CURIE Marie
+FEYNMANN Richard, Dick

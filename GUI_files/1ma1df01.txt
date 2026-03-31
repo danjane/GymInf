@@ -1,4 +1,4 @@
-albert.enstn
-gabriel.crmr, Gabsou
-marie.cr
-richard.fynmn, Dicky
+EINSTEIN Albert
+CRAMER Gabriel, Gabsou
+CURIE Marie
+FEYNMANN Richard, Dicky

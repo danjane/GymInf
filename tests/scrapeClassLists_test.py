@@ -1,4 +1,7 @@
 from scrapeClassLists import *
+from pathlib import Path
+
+EXAMPLE_FILES = Path(__file__).resolve().parents[1] / "example_files"
 
 fulltext = """
 Membres du groupe rousseau-classe-106
@@ -44,7 +47,7 @@ def test_ScrapeLinesFull():
 
 
 def test_LoadAndScrape():
-    string = scrape_file("../example_files/GoogleGroupMembersDump.txt")
+    string = scrape_file(str(EXAMPLE_FILES / "GoogleGroupMembersDump.txt"))
     assert string == ["marie.cr", "gabriel.crmr", "albert.enstn", "richard.fynmn"]
 
 

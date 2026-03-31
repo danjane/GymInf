@@ -1,11 +1,14 @@
 import os
 import pytest
 from updateComments import *
+from pathlib import Path
+
+EXAMPLE_FILES = Path(__file__).resolve().parents[1] / "example_files"
 
 
 @pytest.fixture(scope="function")
 def comment_file():
-    comment_test_file = "../example_files/testing_comments.txt"
+    comment_test_file = str(EXAMPLE_FILES / "testing_comments.txt")
     if os.path.exists(comment_test_file):
         os.remove(comment_test_file)
 
