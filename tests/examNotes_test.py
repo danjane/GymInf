@@ -77,7 +77,10 @@ def test_dump_all(tmp_path):
 def test_dump_all_respects_noted_exams(tmp_path):
     cfg_path = EXAMPLE_FILES / "config.yaml"
     cfg = config.load(str(cfg_path))
-    cfg["noted_exams"] = ["20Apr2020_ExampleExam_Notes.ods"]
+    cfg["noted_exams"] = [
+        "20Apr2020_ExampleExam_Notes.ods, 0.8",
+        "20May2020_SecondExam_Notes.ods, 0.2",
+    ]
 
     custom_cfg_path = tmp_path / "config_noted.yaml"
     spreadsheet_file = tmp_path / "noted_dump.xlsx"
@@ -87,7 +90,21 @@ def test_dump_all_respects_noted_exams(tmp_path):
     actual = load_raw_spreadsheet_to_dataframe(str(spreadsheet_file))
 
     s2_weight_row = actual[actual["Date"] == "S2 weight"].iloc[0]
-    assert [s2_weight_row["20Apr2020"], s2_weight_row["20May2020"]] == [1, 0]
+    assert [s2_weight_row["20Apr2020"], s2_weight_row["20May2020"]] == [0.8, 0.2]
 
     student_row = actual[actual["Date"] == "EINSTEIN Albert"].iloc[0]
     assert [student_row["20Apr2020"], student_row["20May2020"]] == [3, 3]
+
+
+def test_parse_noted_exam_weights():
+    weights = analyseNotes.parse_noted_exam_weights([
+        "20Apr2020_ExampleExam_Notes.ods, 0.8",
+        "20May2020_SecondExam_Notes.ods, 0.2",
+        "ThirdExam.ods",
+    ])
+
+    assert weights == {
+        "20Apr2020_ExampleExam_Notes.ods": 0.8,
+        "20May2020_SecondExam_Notes.ods": 0.2,
+        "ThirdExam.ods": 1.0,
+    }

@@ -41,8 +41,8 @@ def dump_all(cfg_path, output_file):
 
         num_averages = len(averages)
         weights_nip = [int(first_semester(d)) for d in exam_dates]
-        weights_s1 = [int(first_semester(d) & n) for d, n in zip(exam_dates, noted_exams)]
-        weights_s2 = [int((not first_semester(d)) & n) for d, n in zip(exam_dates, noted_exams)]
+        weights_s1 = [n if first_semester(d) else 0 for d, n in zip(exam_dates, noted_exams)]
+        weights_s2 = [n if not first_semester(d) else 0 for d, n in zip(exam_dates, noted_exams)]
         weights = [weights_nip, weights_s1, weights_s2]
 
         headers = ["Date", "Name"] + [h + " weight" for h in averages]
@@ -114,6 +114,15 @@ def dump_all(cfg_path, output_file):
 
 def identify_noted_exams_if_possible(exam_files, cfg):
     if "noted_exams" in cfg:
-        return [f in cfg["noted_exams"] for f in exam_files]
+        noted_exams = parse_noted_exam_weights(cfg["noted_exams"])
+        return [noted_exams.get(f, 0) for f in exam_files]
     else:
-        return [True] * len(exam_files)
+        return [1.0] * len(exam_files)
+
+
+def parse_noted_exam_weights(noted_exam_lines):
+    exam_weights = {}
+    for line in noted_exam_lines:
+        exam_file, *weight = [part.strip() for part in line.split(",")]
+        exam_weights[exam_file] = float(weight[0]) if weight else 1.0
+    return exam_weights
