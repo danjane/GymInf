@@ -1,5 +1,6 @@
 from examNotes import *
 import analyseNotes
+import config
 import students
 import os
 import datetime
@@ -71,3 +72,22 @@ def test_dump_all(tmp_path):
     actual = load_raw_spreadsheet_to_dataframe(spreadsheet_file)
 
     assert expected.equals(actual)
+
+
+def test_dump_all_respects_noted_exams(tmp_path):
+    cfg_path = EXAMPLE_FILES / "config.yaml"
+    cfg = config.load(str(cfg_path))
+    cfg["noted_exams"] = ["20Apr2020_ExampleExam_Notes.ods"]
+
+    custom_cfg_path = tmp_path / "config_noted.yaml"
+    spreadsheet_file = tmp_path / "noted_dump.xlsx"
+    config.save(cfg, str(custom_cfg_path))
+
+    analyseNotes.dump_all(str(custom_cfg_path), str(spreadsheet_file))
+    actual = load_raw_spreadsheet_to_dataframe(str(spreadsheet_file))
+
+    s2_weight_row = actual[actual["Date"] == "S2 weight"].iloc[0]
+    assert [s2_weight_row["20Apr2020"], s2_weight_row["20May2020"]] == [1, 0]
+
+    student_row = actual[actual["Date"] == "EINSTEIN Albert"].iloc[0]
+    assert [student_row["20Apr2020"], student_row["20May2020"]] == [3, 3]
