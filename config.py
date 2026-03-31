@@ -18,16 +18,24 @@ def cx(filename):
         return filename
 
 
-def ispath(obj):
-    return isinstance(obj, str) and len(obj) > 1 and obj[0] == "."
+def ispath_key(key, value):
+    return isinstance(value, str) and key.endswith("_path")
+
+
+def resolve_path(base_dir: str, path: str) -> str:
+    if os.path.isabs(path):
+        return path
+    return os.path.normpath(os.path.join(base_dir, path))
 
 
 def load(filename: str) -> Dict[str, Any]:
-    with open(cx(filename), 'r') as f:
+    filename = cx(filename)
+    base_dir = os.path.dirname(os.path.abspath(filename))
+    with open(filename, 'r') as f:
         config = yaml.safe_load(f)
     for k, v in config.items():
-        if ispath(v):
-            config[k] = cx(v)
+        if ispath_key(k, v):
+            config[k] = resolve_path(base_dir, cx(v))
     config = add_class_paths(config)
     return config
 
