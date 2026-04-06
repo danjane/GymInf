@@ -1,6 +1,7 @@
 import os
 import subprocess
 import platform
+import logging
 import config
 import students
 import linkComments
@@ -30,6 +31,15 @@ def setup(cfg_path: str, course: str):
 
     file_path = cfg.class_list_path(course)
     seating_state = load_or_create_seating_state(cfg, course, file_path)
+    logging.info(
+        "link_gui_backend.setup course=%s class_path=%s registry_file=%s plan_date=%s layout=%s assignment_count=%s",
+        course,
+        file_path,
+        seating_state["registry_file"],
+        seating_state["date"],
+        seating_state["layout_name"],
+        len(seating_state["assignments"]),
+    )
     seating_state["gui_places"] = _gui_places_for_desks(
         seating_state["layout_name"], seating_state["desks"]
     )
@@ -45,6 +55,14 @@ def save_seating_state(cfg_path: str, course: str, seating_state: dict, desks) -
         if desk.name:
             assignments[desk.desk_id] = desk.name
 
+    logging.info(
+        "save_seating_state course=%s registry_file=%s date=%s layout=%s assignment_count=%s",
+        course,
+        seating_state["registry_file"],
+        seating_state["date"],
+        seating_state["layout_name"],
+        len(assignments),
+    )
     seating_history.save_generated_plan(
         registry_file=seating_state["registry_file"],
         course=course,
@@ -108,16 +126,40 @@ def calculate_averages(config_file):
 def load_or_create_seating_state(cfg: config.AppConfig, course: str, class_path: Path) -> dict:
     registry_file = _registry_path(cfg)
     date = datetime.today().date().isoformat()
+    logging.info(
+        "load_or_create_seating_state course=%s registry_file=%s date=%s",
+        course,
+        registry_file,
+        date,
+    )
     registry = seating_history.load_seating_registry(registry_file)
     plan = _find_plan(registry["plans"], course, date)
 
     if plan is None:
         latest_plan = _latest_plan(registry["plans"], course)
         if latest_plan is None:
+            logging.info(
+                "load_or_create_seating_state creating initial plan course=%s date=%s",
+                course,
+                date,
+            )
             registry = _create_initial_plan(registry_file, course, class_path, date)
         else:
+            logging.info(
+                "load_or_create_seating_state cloning latest plan course=%s latest_date=%s target_date=%s",
+                course,
+                latest_plan["date"],
+                date,
+            )
             registry = seating_history.ensure_plan_for_date(registry_file, course, date)
         plan = _find_plan(registry["plans"], course, date)
+    else:
+        logging.info(
+            "load_or_create_seating_state found existing plan course=%s date=%s layout=%s",
+            course,
+            date,
+            plan["layout_name"],
+        )
 
     desks = _desks_for_layout(registry, plan["layout_name"])
     return {
@@ -140,6 +182,13 @@ def _create_initial_plan(registry_file: Path, course: str, class_path: Path, dat
         for desk, student in zip(desks, ordered_students)
         if student and student != "empty"
     }
+    logging.info(
+        "_create_initial_plan course=%s registry_file=%s date=%s assignment_count=%s",
+        course,
+        registry_file,
+        date,
+        len(assignments),
+    )
     return seating_history.save_generated_plan(
         registry_file=registry_file,
         course=course,
@@ -154,8 +203,12 @@ def _create_initial_plan(registry_file: Path, course: str, class_path: Path, dat
 def _registry_path(cfg: config.AppConfig) -> Path:
     configured_path = cfg.extras.get("seatingplans_registry_path")
     if configured_path:
-        return Path(configured_path)
-    return cfg.config_root / "seatingplans.json"
+        resolved_path = Path(configured_path)
+        logging.info("link_gui_backend using configured seating registry %s", resolved_path)
+        return resolved_path
+    resolved_path = cfg.config_root / "seatingplans.json"
+    logging.info("link_gui_backend using default seating registry %s", resolved_path)
+    return resolved_path
 
 
 def _find_plan(plans, course: str, date: str):

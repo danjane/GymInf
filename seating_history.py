@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
@@ -14,12 +15,20 @@ EMPTY_REGISTRY = {"layouts": {}, "plans": []}
 def load_seating_registry(registry_file: Union[str, Path]) -> Registry:
     registry_path = Path(registry_file)
     if not registry_path.is_file():
+        logging.info("load_seating_registry missing file=%s returning empty registry", registry_path)
         return copy.deepcopy(EMPTY_REGISTRY)
+    logging.info("load_seating_registry reading file=%s", registry_path)
     return _normalized_registry(json.loads(registry_path.read_text()))
 
 
 def save_seating_registry(registry: Registry, registry_file: Union[str, Path]) -> None:
     registry_path = Path(registry_file)
+    logging.info(
+        "save_seating_registry writing file=%s layouts=%s plans=%s",
+        registry_path,
+        len(registry.get("layouts", {})),
+        len(registry.get("plans", [])),
+    )
     registry_path.write_text(json.dumps(registry, indent=2, sort_keys=True))
 
 
@@ -32,6 +41,14 @@ def save_generated_plan(
     assignments: Dict[str, str],
     mode: str,
 ) -> Registry:
+    logging.info(
+        "save_generated_plan course=%s date=%s layout=%s mode=%s registry_file=%s",
+        course,
+        date,
+        layout_name,
+        mode,
+        registry_file,
+    )
     registry = load_seating_registry(registry_file)
     registry["layouts"][layout_name] = {"desks": [_serialize_desk(desk) for desk in desks]}
 
@@ -55,6 +72,12 @@ def save_generated_plan(
 
 
 def ensure_plan_for_date(registry_file: Union[str, Path], course: str, date: str) -> Registry:
+    logging.info(
+        "ensure_plan_for_date course=%s date=%s registry_file=%s",
+        course,
+        date,
+        registry_file,
+    )
     registry = load_seating_registry(registry_file)
     existing = _find_plan(registry["plans"], course, date)
     if existing is not None:

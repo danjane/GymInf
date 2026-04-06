@@ -1,4 +1,5 @@
 import icons
+import logging
 
 
 def handle_mouse_button_down(x, y, desks, selected_desks):
@@ -20,11 +21,20 @@ def update_swapping_desk(desks, clicked_desk, swapping_desk):
 def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
     # TODO is_swapping flag should be handled by desk object
     if swapping_desk.is_swapping:
+        logging.info(
+            "handle_mouse_button_up swap detected clicked_desk=%s swapping_desk=%s",
+            getattr(clicked_desk, "desk_id", None),
+            getattr(swapping_desk, "desk_id", None),
+        )
         clicked_desk.color = clicked_desk.color_default
         clicked_desk = clicked_desk.unclicked(swapping_desk)
         restore_selected_desk_colors(selected_desks)
         return clicked_desk, selected_desks, True
     else:
+        logging.info(
+            "handle_mouse_button_up selection toggle desk=%s",
+            getattr(clicked_desk, "desk_id", None),
+        )
         selected_desks = clicked_desk.append(selected_desks)
         new_clicked_desk = clicked_desk.unclicked(swapping_desk)
         return new_clicked_desk, selected_desks, False

@@ -81,6 +81,11 @@ def run(config_file, course, screen, clock, constants):
                 clicked_desk, selected_desks, seating_changed = \
                     events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)
                 if seating_changed:
+                    logging.info(
+                        "class_view saving seating change course=%s selected_count=%s",
+                        course,
+                        len(selected_desks),
+                    )
                     link_gui_backend.save_seating_state(config_file, course, seating_state, desks)
                 swapping_desk = icons.UnclickedDesk()
             if event.type == MOUSEMOTION and isinstance(clicked_desk, icons.Desk):
