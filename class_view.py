@@ -29,12 +29,21 @@ def create_text_editor_comment_buttons(pn, pos, size, step, file, number, commen
 
 
 def run(config_file, course, screen, clock, constants):
-    seating_plan, desk_layout, comment_file, positive_defaults, negative_defaults = link_gui_backend.setup(config_file,
-                                                                                                           course)
+    seating_state, desk_layout, comment_file, positive_defaults, negative_defaults = link_gui_backend.setup(
+        config_file, course
+    )
 
     desks = []
-    for place, student in seating_plan.items():
-        desk = icons.Desk.create_desk(place, student, desk_layout, constants.WIDTH_HEIGHT_DESKS)
+    for desk_data in seating_state["desks"]:
+        student = seating_state["assignments"].get(desk_data.desk_id, "empty")
+        gui_place = seating_state["gui_places"][desk_data.desk_id]
+        desk = icons.Desk.create_desk(
+            gui_place,
+            student,
+            desk_layout,
+            constants.WIDTH_HEIGHT_DESKS,
+            desk_id=desk_data.desk_id,
+        )
         desks.append(desk)
 
     clicked_desk = icons.UnclickedDesk()
@@ -69,8 +78,10 @@ def run(config_file, course, screen, clock, constants):
                     logging.info("class_view returning to control_view course=%s", course)
                     return "control_view", course
             if event.type == MOUSEBUTTONUP and isinstance(clicked_desk, icons.Desk):
-                clicked_desk, selected_desks = \
+                clicked_desk, selected_desks, seating_changed = \
                     events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)
+                if seating_changed:
+                    link_gui_backend.save_seating_state(config_file, course, seating_state, desks)
                 swapping_desk = icons.UnclickedDesk()
             if event.type == MOUSEMOTION and isinstance(clicked_desk, icons.Desk):
                 clicked_desk.move(*event.rel)

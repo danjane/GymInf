@@ -105,13 +105,15 @@ class UnselectedDesk(ParentDesk):
 
 
 class Desk(ParentDesk):
-    def __init__(self, place, name, desk_layout, height_width):
+    def __init__(self, place, name, desk_layout, height_width, desk_id=None):
         super().__init__()
         self.color_default = YELLOW
         self.color = self.color_default
         self.color_selected = LIGHT_BLUE
         self.size = (height_width[0] // desk_layout[0], height_width[1] // desk_layout[1])
 
+        self.place = place
+        self.desk_id = desk_id
         self.pos = screen_position_from_xy_and_size(*place, desk_layout, height_width)
         self.home = self.pos
         self.target_for_sliding = self.pos
@@ -175,21 +177,22 @@ class Desk(ParentDesk):
         self.sliding = True
         if self.changing_position:
             self.home, other.home = other.home, self.home
+            self.desk_id, other.desk_id = other.desk_id, self.desk_id
             self.unbothered()
             other.unbothered()
         return UnclickedDesk()
 
     @classmethod
-    def create_desk(cls, place, name, desk_layout, height_width):
+    def create_desk(cls, place, name, desk_layout, height_width, desk_id=None):
         if name == 'empty':
-            return EmptyDesk(place, desk_layout, height_width)
+            return EmptyDesk(place, desk_layout, height_width, desk_id=desk_id)
         else:
-            return FilledDesk(place, name, desk_layout, height_width)
+            return FilledDesk(place, name, desk_layout, height_width, desk_id=desk_id)
 
 
 class FilledDesk(Desk):
-    def __init__(self, place, name, desk_layout, height_width):
-        super().__init__(place, name, desk_layout, height_width)
+    def __init__(self, place, name, desk_layout, height_width, desk_id=None):
+        super().__init__(place, name, desk_layout, height_width, desk_id=desk_id)
 
     def clicked(self, other):
         self.color = RED
@@ -208,8 +211,8 @@ class FilledDesk(Desk):
 
 
 class EmptyDesk(Desk):
-    def __init__(self, place, desk_layout, height_width):
-        super().__init__(place, "", desk_layout, height_width)
+    def __init__(self, place, desk_layout, height_width, desk_id=None):
+        super().__init__(place, "", desk_layout, height_width, desk_id=desk_id)
         self.color_default = DARK_BLUE
         self.color = self.color_default
         self.color_selected = self.color_default

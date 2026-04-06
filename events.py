@@ -23,11 +23,11 @@ def handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks):
         clicked_desk.color = clicked_desk.color_default
         clicked_desk = clicked_desk.unclicked(swapping_desk)
         restore_selected_desk_colors(selected_desks)
-        return clicked_desk, selected_desks
+        return clicked_desk, selected_desks, True
     else:
         selected_desks = clicked_desk.append(selected_desks)
         new_clicked_desk = clicked_desk.unclicked(swapping_desk)
-        return new_clicked_desk, selected_desks
+        return new_clicked_desk, selected_desks, False
 
 
 def handle_add_course_button_click(button):
