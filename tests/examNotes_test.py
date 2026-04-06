@@ -77,7 +77,7 @@ def test_dump_all(tmp_path):
 def test_dump_all_respects_noted_exams(tmp_path):
     cfg_path = EXAMPLE_FILES / "config.yaml"
     cfg = config.load(str(cfg_path))
-    cfg["noted_exams"] = [
+    cfg.exams.noted_exams = [
         "20Apr2020_ExampleExam_Notes.ods, 0.8",
         "20May2020_SecondExam_Notes.ods, 0.2",
     ]

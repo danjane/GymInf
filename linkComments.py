@@ -7,7 +7,7 @@ import students
 import config
 import pandas as pd
 import datetime
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 
 
 def load_comments_as_dataframe(comments_path: str, courses: Dict[str, Dict[str, str]]) -> pd.DataFrame:
@@ -20,8 +20,8 @@ def load_comments_as_dataframe(comments_path: str, courses: Dict[str, Dict[str, 
 
 def load_data_from_config_path(cfg_path: str) -> Tuple[Dict[str, List[str]], Dict[str, Dict[str, str]], pd.DataFrame]:
     cfg = config.load(cfg_path)
-    courses = students.load_class_lists(cfg["courses"], cfg["class_paths"])
-    df = load_comments_as_dataframe(cfg["comments_path"], courses)
+    courses = students.load_class_lists(cfg.courses, [str(path) for path in cfg.class_paths])
+    df = load_comments_as_dataframe(str(cfg.comments.comments_file), courses)
     return cfg, courses, df
 
 
@@ -46,10 +46,10 @@ def get_student_codes_names_course_names(courses: Dict[str, Dict[str, str]]) -> 
     return student_codes, student_names, course_names
 
 
-def build_latex_report(cfg: Dict[str, Union[str, List[str]]], courses: Dict[str, Dict[str, str]], df: pd.DataFrame) -> str:
-    with open(cfg["report_student_path"]) as f:
+def build_latex_report(cfg: config.AppConfig, courses: Dict[str, Dict[str, str]], df: pd.DataFrame) -> str:
+    with open(cfg.reports.student_outline) as f:
         student_report_outline = f.read()
-    with open(cfg["report_skeleton_path"]) as f:
+    with open(cfg.reports.skeleton) as f:
         report_skeleton = f.read()
     pages = analyseComments.latex_student_pages(df, student_report_outline,
                                                 *get_student_codes_names_course_names(courses))
@@ -89,11 +89,11 @@ def latex_to_pdf(tex_file, output_directory):
 def create_report(cfg_path: str) -> str:
     report = get_latex_report_from_config_path(cfg_path)
     cfg = config.load(cfg_path)
-    report_file = cfg["report_tex_path"]
-    report_dir = os.path.dirname(report_file)
+    report_file = cfg.reports.tex_output
+    report_dir = report_file.parent
     with open(report_file, "w") as f:
         f.write(report)
-    pdf_file = latex_to_pdf(report_file, report_dir)
+    pdf_file = latex_to_pdf(str(report_file), str(report_dir))
     return pdf_file
 
 

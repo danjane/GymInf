@@ -9,23 +9,23 @@ c = config.load(str(EXAMPLE_CONFIG))
 
 
 def test_load_class():
-    assert c["courses"] == ["1ma1df01", "2ma2dfb01"]
+    assert c.courses == ["1ma1df01", "2ma2dfb01"]
 
 
 def test_course_path():
-    assert c["courses_path"] == str(EXAMPLE_DIR)
+    assert c.courses_root == EXAMPLE_DIR
 
 
 def test_class_paths():
-    assert c["class_paths"] == [str(EXAMPLE_DIR / "1ma1df01.txt"), str(EXAMPLE_DIR / "2ma2dfb01.txt")]
+    assert c.class_paths == [EXAMPLE_DIR / "1ma1df01.txt", EXAMPLE_DIR / "2ma2dfb01.txt"]
 
 
 def test_config_path():
-    assert c["config_path"] == str(EXAMPLE_DIR)
+    assert c.config_root == EXAMPLE_DIR
 
 
 def test_comments_path():
-    assert c["comments_path"] == str(EXAMPLE_DIR / "comments.txt")
+    assert c.comments.comments_file == EXAMPLE_DIR / "comments.txt"
 
 
 def test_save_cfg(tmp_path):
@@ -55,7 +55,7 @@ def test_basic_structure_from_cfg_file(tmp_path):
 def test_tweak_structure_from_cfg_file(tmp_path):
     cfg, _ = create_cfg_file(tmp_path)
     exam_dir = os.path.join(tmp_path, "exams2")
-    cfg["exam_path"] = exam_dir
+    cfg.exams.exam_root = Path(exam_dir)
     config.setup_from_cfg(cfg)
     assert os.path.isdir(exam_dir)
 
@@ -63,12 +63,12 @@ def test_tweak_structure_from_cfg_file(tmp_path):
 def test_default_structure(tmp_path):
     cfg, _ = create_cfg_file(tmp_path)
 
-    assert os.path.isdir(cfg["config_path"])
-    assert os.path.isdir(cfg["courses_path"])
-    assert os.path.isdir(cfg["exam_path"])
+    assert os.path.isdir(cfg.config_root)
+    assert os.path.isdir(cfg.courses_root)
+    assert os.path.isdir(cfg.exams.exam_root)
 
-    assert os.path.isfile(cfg["comments_path"])
-    assert os.path.isfile(cfg["negative_comments_defaults_path"])
-    assert os.path.isfile(cfg["positive_comments_defaults_path"])
-    assert os.path.isfile(cfg["report_skeleton_path"])
-    assert os.path.isfile(cfg["report_student_path"])
+    assert os.path.isfile(cfg.comments.comments_file)
+    assert os.path.isfile(cfg.comments.negative_examples)
+    assert os.path.isfile(cfg.comments.positive_examples)
+    assert os.path.isfile(cfg.reports.skeleton)
+    assert os.path.isfile(cfg.reports.student_outline)

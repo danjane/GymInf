@@ -18,12 +18,12 @@ def first_semester(date_string):
 def dump_all(cfg_path, output_file):
     cfg, courses, df = linkComments.load_data_from_config_path(cfg_path)
     if not output_file:
-        output_file = cfg["exam_averages_path"]
+        output_file = str(cfg.exams.averages_output)
 
     workbook = xlsxwriter.Workbook(output_file)
 
     for course in courses.keys():
-        exam_folder = os.path.join(cfg["exam_path"], course)
+        exam_folder = os.path.join(str(cfg.exams.exam_root), course)
         notes, exam_names, exam_files = examNotes.merge_notes_for_one_course(exam_folder, list(courses[course].keys()))
         exam_dates = notes.columns
         student_codes = list(courses[course].keys())
@@ -113,8 +113,8 @@ def dump_all(cfg_path, output_file):
 
 
 def identify_noted_exams_if_possible(exam_files, cfg):
-    if "noted_exams" in cfg:
-        noted_exams = parse_noted_exam_weights(cfg["noted_exams"])
+    if cfg.exams.noted_exams:
+        noted_exams = parse_noted_exam_weights(cfg.exams.noted_exams)
         return [noted_exams.get(f, 0) for f in exam_files]
     else:
         return [1.0] * len(exam_files)
