@@ -1,6 +1,3 @@
-import os.path
-import subprocess
-
 import shredComments
 import analyseComments
 import students
@@ -8,6 +5,8 @@ import config
 import pandas as pd
 import datetime
 from typing import Dict, List, Tuple
+
+from seating_render import latex_to_pdf as compile_latex_to_pdf
 
 
 def load_comments_as_dataframe(comments_path: str, courses: Dict[str, Dict[str, str]]) -> pd.DataFrame:
@@ -65,33 +64,19 @@ def get_latex_report_from_config_path(cfg_path: str) -> str:
 
 def latex_to_pdf(tex_file, output_directory):
     try:
-        process = subprocess.Popen(['pdflatex', '-output-directory', output_directory, tex_file],
-                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-
-        if process.returncode == 0:
-            print("Compilation successful!")
-        else:
-            print("Compilation failed. Error message:")
-            print(stderr.decode())
-
+        pdf_file = compile_latex_to_pdf(tex_file, output_directory)
+        print("Compilation successful!")
+        return str(pdf_file)
     except FileNotFoundError:
         print("pdflatex command not found. Please ensure that LaTeX is installed.")
-
+    except RuntimeError as exc:
+        print("Compilation failed. Error message:")
+        print(str(exc))
     pdf_file = tex_file[:-3] + "pdf"
     if os.path.isfile(pdf_file):
-        _cleanup_latex_auxiliary_files(output_directory, os.path.splitext(os.path.basename(tex_file))[0])
         return pdf_file
-    else:
-        print("pdf was NOT created from tex file!!")
-        return tex_file
-
-
-def _cleanup_latex_auxiliary_files(output_directory, stem):
-    for extension in (".aux", ".log"):
-        aux_file = os.path.join(output_directory, stem + extension)
-        if os.path.isfile(aux_file):
-            os.remove(aux_file)
+    print("pdf was NOT created from tex file!!")
+    return tex_file
 
 
 def create_report(cfg_path: str) -> str:

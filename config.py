@@ -7,6 +7,24 @@ import sys
 import yaml
 
 
+KNOWN_CONFIG_KEYS = {
+    "courses",
+    "courses_path",
+    "config_path",
+    "comments_path",
+    "exam_path",
+    "exam_averages_path",
+    "positive_comments_defaults_path",
+    "negative_comments_defaults_path",
+    "latex_path",
+    "report_skeleton_path",
+    "report_student_path",
+    "report_tex_path",
+    "noted_exams",
+    "rg_class",
+}
+
+
 def adjust_path_for_cxfreeze(path):
     working_dir, _ = os.path.split(sys.executable)
     return os.path.join(working_dir, path)
@@ -99,26 +117,29 @@ class AppConfig:
         return data
 
     def __getitem__(self, key: str):
-        legacy_values = {
+        legacy_values = self._legacy_values()
+        if key in legacy_values:
+            return legacy_values[key]
+        return self.extras[key]
+
+    def _legacy_values(self) -> dict[str, Any]:
+        return {
             "courses": self.courses,
             "courses_path": str(self.courses_root),
             "config_path": str(self.config_root),
             "class_paths": [str(path) for path in self.class_paths],
             "comments_path": str(self.comments.comments_file),
-            "positive_comments_defaults_path": str(self.comments.positive_examples) if self.comments.positive_examples else None,
-            "negative_comments_defaults_path": str(self.comments.negative_examples) if self.comments.negative_examples else None,
+            "positive_comments_defaults_path": _optional_path_str(self.comments.positive_examples),
+            "negative_comments_defaults_path": _optional_path_str(self.comments.negative_examples),
             "exam_path": str(self.exams.exam_root),
-            "exam_averages_path": str(self.exams.averages_output) if self.exams.averages_output else None,
+            "exam_averages_path": _optional_path_str(self.exams.averages_output),
             "report_skeleton_path": str(self.reports.skeleton),
             "report_student_path": str(self.reports.student_outline),
-            "report_tex_path": str(self.reports.tex_output) if self.reports.tex_output else None,
-            "latex_path": str(self.latex_path) if self.latex_path else None,
+            "report_tex_path": _optional_path_str(self.reports.tex_output),
+            "latex_path": _optional_path_str(self.latex_path),
             "noted_exams": self.exams.noted_exams,
             "rg_class": self.rg_class,
         }
-        if key in legacy_values:
-            return legacy_values[key]
-        return self.extras[key]
 
 
 def resolve_path(base_dir: Path, path: Optional[str]) -> Optional[Path]:
@@ -130,6 +151,10 @@ def resolve_path(base_dir: Path, path: Optional[str]) -> Optional[Path]:
     return (base_dir / path_obj).resolve()
 
 
+def _optional_path_str(path: Optional[Path]) -> Optional[str]:
+    return str(path) if path is not None else None
+
+
 def load(filename: str) -> AppConfig:
     filename = cx(filename)
     config_file = Path(filename).resolve()
@@ -137,25 +162,9 @@ def load(filename: str) -> AppConfig:
     with open(config_file, "r") as f:
         raw_config = yaml.safe_load(f) or {}
 
-    known_keys = {
-        "courses",
-        "courses_path",
-        "config_path",
-        "comments_path",
-        "exam_path",
-        "exam_averages_path",
-        "positive_comments_defaults_path",
-        "negative_comments_defaults_path",
-        "latex_path",
-        "report_skeleton_path",
-        "report_student_path",
-        "report_tex_path",
-        "noted_exams",
-        "rg_class",
-    }
     extras = {}
     for key, value in raw_config.items():
-        if key in known_keys:
+        if key in KNOWN_CONFIG_KEYS:
             continue
         if key.endswith("_path") and isinstance(value, str):
             extras[key] = str(resolve_path(base_dir, value))

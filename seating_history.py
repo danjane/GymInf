@@ -8,13 +8,14 @@ from seating_render import latex_to_pdf, write_plan_to_latex_file
 
 
 Registry = Dict[str, Any]
+EMPTY_REGISTRY = {"layouts": {}, "plans": []}
 
 
 def load_seating_registry(registry_file: Union[str, Path]) -> Registry:
     registry_path = Path(registry_file)
     if not registry_path.is_file():
-        return {"layouts": {}, "plans": []}
-    return json.loads(registry_path.read_text())
+        return copy.deepcopy(EMPTY_REGISTRY)
+    return _normalized_registry(json.loads(registry_path.read_text()))
 
 
 def save_seating_registry(registry: Registry, registry_file: Union[str, Path]) -> None:
@@ -32,11 +33,7 @@ def save_generated_plan(
     mode: str,
 ) -> Registry:
     registry = load_seating_registry(registry_file)
-    registry.setdefault("layouts", {})
-    registry.setdefault("plans", [])
-
-    serialized_desks = [_serialize_desk(desk) for desk in desks]
-    registry["layouts"][layout_name] = {"desks": serialized_desks}
+    registry["layouts"][layout_name] = {"desks": [_serialize_desk(desk) for desk in desks]}
 
     new_plan = {
         "course": course,
@@ -136,9 +133,7 @@ def _render_plan_to_pdf(
     desks = _desks_for_layout(registry["layouts"], plan["layout_name"])
     output_dir = Path(output_directory)
     output_dir.mkdir(parents=True, exist_ok=True)
-
-    skeleton_file = Path(skeleton_path)
-    skeleton_text = skeleton_file.read_text()
+    skeleton_text = Path(skeleton_path).read_text()
 
     tex_file = output_dir / "{0}_{1}.tex".format(plan["course"], plan["date"])
     write_plan_to_latex_file(
@@ -181,3 +176,11 @@ def _serialize_desk(desk):
             "enabled": desk.enabled,
         }
     return desk
+
+
+def _normalized_registry(registry: Registry) -> Registry:
+    normalized = copy.deepcopy(EMPTY_REGISTRY)
+    normalized.update(registry)
+    normalized.setdefault("layouts", {})
+    normalized.setdefault("plans", [])
+    return normalized
