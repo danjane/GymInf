@@ -78,8 +78,9 @@ def run(config_file, selected_course, screen, clock, constants):
         icons.ButtonWhichCallsFunction((700, 145), (200, 50), "Calculate moyennes",
                                        link_gui_backend.calculate_averages, config_file),
     ]
+    quit_button = icons.Button((700, 200), (200, 50), "Quit")
 
-    buttons = [[add_course_button, delete_course_button, class_view_button],
+    buttons = [[add_course_button, delete_course_button, quit_button, class_view_button],
                course_buttons, control_buttons, student_buttons]
     button = control_buttons[0]  # TODO create a proper holding button
 
@@ -98,6 +99,8 @@ def run(config_file, selected_course, screen, clock, constants):
                     *event.pos, flat_buttons, []
                 )
                 events.turn_off_editors(flat_buttons, button)
+                if button == quit_button:
+                    return "quit", None
                 if button == class_view_button and selected_course:
                     return "class_view", selected_course
                 if button == delete_course_button and selected_course:
