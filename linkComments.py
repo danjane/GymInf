@@ -80,10 +80,18 @@ def latex_to_pdf(tex_file, output_directory):
 
     pdf_file = tex_file[:-3] + "pdf"
     if os.path.isfile(pdf_file):
+        _cleanup_latex_auxiliary_files(output_directory, os.path.splitext(os.path.basename(tex_file))[0])
         return pdf_file
     else:
         print("pdf was NOT created from tex file!!")
         return tex_file
+
+
+def _cleanup_latex_auxiliary_files(output_directory, stem):
+    for extension in (".aux", ".log"):
+        aux_file = os.path.join(output_directory, stem + extension)
+        if os.path.isfile(aux_file):
+            os.remove(aux_file)
 
 
 def create_report(cfg_path: str) -> str:

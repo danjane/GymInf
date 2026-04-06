@@ -8,6 +8,19 @@ def test_alphabetic_assignment_orders_students_by_name():
     assert ordered == ["Alice", "Bob", "Chloe"]
 
 
+def test_alphabetic_assignment_uses_full_name_for_sort_but_given_name_for_display():
+    ordered = arrange_students(
+        {
+            "ZETA Alice": "Alice",
+            "BETA Chloe": "Chloe",
+            "ALPHA Bob": "Bob",
+        },
+        mode="alphabetic",
+    )
+
+    assert ordered == ["Bob", "Chloe", "Alice"]
+
+
 def test_random_assignment_is_reproducible_with_seed():
     students = ["Alice", "Bob", "Chloe", "David"]
 

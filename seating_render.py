@@ -49,4 +49,12 @@ def latex_to_pdf(tex_file: Union[str, Path], output_directory: Union[str, Path])
     pdf_file = output_dir / (tex_path.stem + ".pdf")
     if not pdf_file.is_file():
         raise FileNotFoundError("pdflatex did not create {0}".format(pdf_file))
+    _cleanup_latex_auxiliary_files(output_dir, tex_path.stem)
     return pdf_file
+
+
+def _cleanup_latex_auxiliary_files(output_directory: Path, stem: str) -> None:
+    for extension in (".aux", ".log"):
+        aux_file = output_directory / "{0}{1}".format(stem, extension)
+        if aux_file.exists():
+            aux_file.unlink()

@@ -63,7 +63,7 @@ def create_alphabetic_seating_plans_for_all_courses(
     pdf_files = []
     for course in cfg.courses:
         class_path = cfg.class_list_path(course)
-        student_names = list(students.parse_course_list(str(class_path)).values())
+        student_names = students.parse_course_list(str(class_path))
         pdf_files.append(
             create_seating_plan_pdf(
                 course=course,
