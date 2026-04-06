@@ -3,6 +3,7 @@ from pygame.locals import *
 import icons
 import events
 import link_gui_backend
+import logging
 
 DARK_GREY = (75, 75, 75)
 
@@ -91,6 +92,7 @@ def run(config_file, selected_course, screen, clock, constants):
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                logging.info("control_view received pygame.QUIT selected_course=%s", selected_course)
                 return "quit", selected_course
             if event.type == KEYDOWN and button.text_editor_active:
                 button.handle_keydown(event, [button])
@@ -100,10 +102,13 @@ def run(config_file, selected_course, screen, clock, constants):
                 )
                 events.turn_off_editors(flat_buttons, button)
                 if button == quit_button:
+                    logging.info("control_view quit button clicked")
                     return "quit", None
                 if button == class_view_button and selected_course:
+                    logging.info("control_view switching to class_view course=%s", selected_course)
                     return "class_view", selected_course
                 if button == delete_course_button and selected_course:
+                    logging.info("control_view deleting course=%s", selected_course)
                     link_gui_backend.delete_course_in_files(config_file, selected_course)
                     return "control_view", None
                 if button == add_course_button:

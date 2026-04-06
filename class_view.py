@@ -3,6 +3,7 @@ from pygame.locals import *
 import icons
 import events
 import link_gui_backend
+import logging
 
 
 def create_text_editor_comment_buttons(pn, pos, size, step, file, number, comment_file):
@@ -56,6 +57,7 @@ def run(config_file, course, screen, clock, constants):
         screen.fill(constants.BACKGROUND)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                logging.info("class_view received pygame.QUIT course=%s", course)
                 return "quit", None
             if event.type == MOUSEBUTTONDOWN:
                 clicked_desk, selected_desks = events.handle_mouse_button_down(
@@ -64,6 +66,7 @@ def run(config_file, course, screen, clock, constants):
                 if clicked_desk in buttons:
                     events.turn_off_editors(buttons, clicked_desk)
                 elif clicked_desk == control_view_button:
+                    logging.info("class_view returning to control_view course=%s", course)
                     return "control_view", course
             if event.type == MOUSEBUTTONUP and isinstance(clicked_desk, icons.Desk):
                 clicked_desk, selected_desks = \
