@@ -75,6 +75,21 @@ def test_default_structure(tmp_path):
     assert os.path.isfile(cfg.reports.student_outline)
 
 
+def test_ensure_support_files_creates_missing_optional_support_files(tmp_path):
+    cfg = config.default_config(tmp_path)
+    cfg.comments.positive_examples.unlink(missing_ok=True)
+    cfg.comments.negative_examples.unlink(missing_ok=True)
+    cfg.reports.skeleton.unlink(missing_ok=True)
+    cfg.reports.student_outline.unlink(missing_ok=True)
+
+    config.ensure_support_files(cfg)
+
+    assert cfg.comments.positive_examples.is_file()
+    assert cfg.comments.negative_examples.is_file()
+    assert cfg.reports.skeleton.is_file()
+    assert cfg.reports.student_outline.is_file()
+
+
 def test_load_resolves_extra_path_fields_relative_to_config(tmp_path):
     config_file = tmp_path / "config.yaml"
     config_file.write_text(

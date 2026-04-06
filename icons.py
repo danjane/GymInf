@@ -276,6 +276,7 @@ class Button(pygame.sprite.Sprite):
 
     def clicked(self, selected_desks):
         self.fade_from_1_to_0 = 1.
+        self.render_immediate_feedback()
         for desk in selected_desks:
             desk.color = desk.color_default
         return self, set()
@@ -284,6 +285,14 @@ class Button(pygame.sprite.Sprite):
         self.text = text
         self.text_img = font.render(text, True, (0, 0, 0))
         self.text_pos = self.text_img.get_rect(center=self.rect.center)
+
+    def render_immediate_feedback(self):
+        surface = pygame.display.get_surface()
+        if surface is None:
+            return
+        pygame.draw.rect(surface, self.color_clicked, self.rect)
+        surface.blit(self.text_img, self.text_pos)
+        pygame.display.update(self.rect)
 
 
 class ButtonWithComments(Button):
@@ -391,4 +400,3 @@ class ButtonWhichCallsFunction(Button):
         button, selected_desks = super().clicked(selected_desks)
         self.fn(self.config_file)
         return button, selected_desks
-

@@ -187,8 +187,10 @@ def load(filename: str) -> AppConfig:
         ),
         comments=CommentDefaults(
             comments_file=resolve_path(base_dir, raw_config.get("comments_path")) or base_dir / "comments.txt",
-            positive_examples=resolve_path(base_dir, raw_config.get("positive_comments_defaults_path")),
-            negative_examples=resolve_path(base_dir, raw_config.get("negative_comments_defaults_path")),
+            positive_examples=resolve_path(base_dir, raw_config.get("positive_comments_defaults_path"))
+            or base_dir / "positive_comments_examples.txt",
+            negative_examples=resolve_path(base_dir, raw_config.get("negative_comments_defaults_path"))
+            or base_dir / "negative_comments_examples.txt",
         ),
         latex_path=resolve_path(base_dir, raw_config.get("latex_path")),
         rg_class=raw_config.get("rg_class"),
@@ -200,6 +202,13 @@ def mkdir_if_nec(path: Union[Path, str]):
     path = Path(path)
     if not path.is_dir():
         path.mkdir()
+
+
+def write_default_file_if_missing(path: Union[Path, str], contents: str) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not path.exists():
+        path.write_text(contents)
 
 
 def save(cfg: AppConfig, filename):
@@ -244,13 +253,25 @@ def setup_from_cfg(cfg: AppConfig):
         mkdir_if_nec(folder)
 
     cfg.comments.comments_file.write_text("")
-    if cfg.comments.positive_examples is not None:
-        cfg.comments.positive_examples.write_text("correct response\ngood question\nTN for Pythag\nquick work")
-    if cfg.comments.negative_examples is not None:
-        cfg.comments.negative_examples.write_text("DNF\nChatting")
-    cfg.reports.skeleton.write_text("\\documentclass[11pt]{article}\n\\begin{document}\nSTUDENTPAGES\n\\end{document}")
-    cfg.reports.student_outline.write_text(
-        "STUDENTCODE \\hfill \\textbf{STUDENTNAME} \\hfill COURSE \\\\ \nSTUDENTCOMMENTS"
+    ensure_support_files(cfg)
+
+
+def ensure_support_files(cfg: AppConfig) -> None:
+    write_default_file_if_missing(
+        cfg.comments.positive_examples,
+        "correct response\ngood question\nTN for Pythag\nquick work",
+    )
+    write_default_file_if_missing(
+        cfg.comments.negative_examples,
+        "DNF\nChatting",
+    )
+    write_default_file_if_missing(
+        cfg.reports.skeleton,
+        "\\documentclass[11pt]{article}\n\\begin{document}\nSTUDENTPAGES\n\\end{document}",
+    )
+    write_default_file_if_missing(
+        cfg.reports.student_outline,
+        "STUDENTCODE \\hfill \\textbf{STUDENTNAME} \\hfill COURSE \\\\ \nSTUDENTCOMMENTS",
     )
 
 

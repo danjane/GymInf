@@ -19,6 +19,7 @@ def start_new_day(cfg: config.AppConfig, course: str):
 
 def setup(cfg_path: str, course: str):
     cfg = config.load(cfg_path)
+    config.ensure_support_files(cfg)
     start_new_day(cfg, course)
     comments_path = cfg.comments.comments_file
     positive_defaults = cfg.comments.positive_examples
