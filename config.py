@@ -153,7 +153,14 @@ def load(filename: str) -> AppConfig:
         "noted_exams",
         "rg_class",
     }
-    extras = {k: v for k, v in raw_config.items() if k not in known_keys}
+    extras = {}
+    for key, value in raw_config.items():
+        if key in known_keys:
+            continue
+        if key.endswith("_path") and isinstance(value, str):
+            extras[key] = str(resolve_path(base_dir, value))
+        else:
+            extras[key] = value
 
     return AppConfig(
         courses=list(raw_config.get("courses", [])),
