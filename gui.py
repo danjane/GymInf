@@ -14,17 +14,18 @@ def main(config_file):
     running = True
     course = None
     next_view = "control_view"
-    while running:
-        if next_view == "quit":
-            running = False
-        elif next_view == "control_view":
-            next_view, course = control_view.run(config_file, course, screen, clock, constants)
-        elif next_view == "class_view":
-            next_view, course = class_view.run(config_file, course, screen, clock, constants)
-        else:
-            raise NotImplementedError("This view yet to be seen to!!")
-
-    pygame.quit()
+    try:
+        while running:
+            if next_view == "quit":
+                running = False
+            elif next_view == "control_view":
+                next_view, course = control_view.run(config_file, course, screen, clock, constants)
+            elif next_view == "class_view":
+                next_view, course = class_view.run(config_file, course, screen, clock, constants)
+            else:
+                raise NotImplementedError("This view yet to be seen to!!")
+    finally:
+        pygame.quit()
 
 
 if __name__ == "__main__":
