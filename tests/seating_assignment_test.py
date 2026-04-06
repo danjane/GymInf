@@ -48,3 +48,21 @@ def test_assignment_raises_when_not_enough_desks():
         pass
     else:
         raise AssertionError("Expected ValueError when there are more students than desks")
+
+
+def test_arrange_students_raises_for_unknown_mode_with_list_input():
+    try:
+        arrange_students(["Alice"], mode="diagonal")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Expected ValueError for unsupported arrangement mode")
+
+
+def test_arrange_students_raises_for_unknown_mode_with_mapping_input():
+    try:
+        arrange_students({"ALPHA Alice": "Alice"}, mode="diagonal")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Expected ValueError for unsupported arrangement mode")

@@ -1,6 +1,7 @@
 import config
 import os
 from pathlib import Path
+import yaml
 
 
 EXAMPLE_CONFIG = Path(__file__).resolve().parents[1] / "example_files" / "config.yaml"
@@ -72,3 +73,49 @@ def test_default_structure(tmp_path):
     assert os.path.isfile(cfg.comments.positive_examples)
     assert os.path.isfile(cfg.reports.skeleton)
     assert os.path.isfile(cfg.reports.student_outline)
+
+
+def test_load_resolves_extra_path_fields_relative_to_config(tmp_path):
+    config_file = tmp_path / "config.yaml"
+    config_file.write_text(
+        yaml.safe_dump(
+            {
+                "courses": ["1ma1df01"],
+                "courses_path": ".",
+                "config_path": ".",
+                "comments_path": "comments.txt",
+                "exam_path": ".",
+                "report_student_path": "report_outline_student.tex",
+                "report_skeleton_path": "report_skeleton.tex",
+                "seatingplan_skeleton_path": "seatingplan_skeleton.tex",
+            }
+        )
+    )
+
+    cfg = config.load(str(config_file))
+
+    assert cfg.extras["seatingplan_skeleton_path"] == str(tmp_path / "seatingplan_skeleton.tex")
+
+
+def test_legacy_config_getitem_exposes_core_paths_and_extras(tmp_path):
+    config_file = tmp_path / "config.yaml"
+    config_file.write_text(
+        yaml.safe_dump(
+            {
+                "courses": ["1ma1df01"],
+                "courses_path": ".",
+                "config_path": ".",
+                "comments_path": "comments.txt",
+                "exam_path": ".",
+                "report_student_path": "report_outline_student.tex",
+                "report_skeleton_path": "report_skeleton.tex",
+                "custom_flag": "enabled",
+            }
+        )
+    )
+
+    cfg = config.load(str(config_file))
+
+    assert cfg["courses"] == ["1ma1df01"]
+    assert cfg["comments_path"] == str(tmp_path / "comments.txt")
+    assert cfg["custom_flag"] == "enabled"

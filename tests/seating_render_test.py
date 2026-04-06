@@ -1,5 +1,6 @@
 from seating_models import Desk
-from seating_render import render_plan_to_latex
+from seating_render import _cleanup_latex_auxiliary_files, latex_to_pdf, render_plan_to_latex
+from pathlib import Path
 
 
 def test_render_plan_inserts_course_name():
@@ -42,3 +43,35 @@ def test_render_plan_uses_given_skeleton():
 
     assert output.startswith("before")
     assert output.endswith("after")
+
+
+def test_cleanup_latex_auxiliary_files_removes_aux_and_log(tmp_path: Path):
+    aux_file = tmp_path / "plan.aux"
+    log_file = tmp_path / "plan.log"
+    aux_file.write_text("aux")
+    log_file.write_text("log")
+
+    _cleanup_latex_auxiliary_files(tmp_path, "plan")
+
+    assert not aux_file.exists()
+    assert not log_file.exists()
+
+
+def test_latex_to_pdf_raises_when_pdflatex_fails(monkeypatch, tmp_path: Path):
+    tex_file = tmp_path / "plan.tex"
+    tex_file.write_text("test")
+
+    class FakeProcess:
+        returncode = 1
+
+        def communicate(self):
+            return (b"", b"boom")
+
+    monkeypatch.setattr("seating_render.subprocess.Popen", lambda *args, **kwargs: FakeProcess())
+
+    try:
+        latex_to_pdf(tex_file, tmp_path)
+    except RuntimeError as exc:
+        assert "boom" in str(exc)
+    else:
+        raise AssertionError("Expected RuntimeError when pdflatex fails")
