@@ -22,6 +22,41 @@ def save_seating_registry(registry: Registry, registry_file: Union[str, Path]) -
     registry_path.write_text(json.dumps(registry, indent=2, sort_keys=True))
 
 
+def save_generated_plan(
+    registry_file: Union[str, Path],
+    course: str,
+    date: str,
+    layout_name: str,
+    desks,
+    assignments: Dict[str, str],
+    mode: str,
+) -> Registry:
+    registry = load_seating_registry(registry_file)
+    registry.setdefault("layouts", {})
+    registry.setdefault("plans", [])
+
+    serialized_desks = [_serialize_desk(desk) for desk in desks]
+    registry["layouts"][layout_name] = {"desks": serialized_desks}
+
+    new_plan = {
+        "course": course,
+        "date": date,
+        "layout_name": layout_name,
+        "assignments": assignments,
+        "mode": mode,
+    }
+
+    existing = _find_plan(registry["plans"], course, date)
+    if existing is None:
+        registry["plans"].append(new_plan)
+    else:
+        existing.update(new_plan)
+
+    registry["plans"] = _sorted_plans(registry["plans"])
+    save_seating_registry(registry, registry_file)
+    return registry
+
+
 def ensure_plan_for_date(registry_file: Union[str, Path], course: str, date: str) -> Registry:
     registry = load_seating_registry(registry_file)
     existing = _find_plan(registry["plans"], course, date)
@@ -131,3 +166,18 @@ def _desks_for_layout(layouts: Dict[str, Dict[str, Any]], layout_name: str) -> L
 
 def _minimal_pdf_bytes() -> bytes:
     return b"%PDF-1.1\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n"
+
+
+def _serialize_desk(desk):
+    if isinstance(desk, Desk):
+        return {
+            "desk_id": desk.desk_id,
+            "x": desk.x,
+            "y": desk.y,
+            "facing": desk.facing,
+            "group": desk.group,
+            "row": desk.row,
+            "seat_index": desk.seat_index,
+            "enabled": desk.enabled,
+        }
+    return desk

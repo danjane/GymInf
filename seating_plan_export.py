@@ -1,7 +1,9 @@
 from pathlib import Path
+import datetime
 from typing import Callable, Iterable, List, Optional
 
 import config
+import seating_history
 import students
 from seating_assignment import arrange_students, assign_students_to_desks
 from seating_layouts import create_pairs_layout
@@ -24,6 +26,9 @@ def create_seating_plan_pdf(
     layout_factory: Optional[LayoutFactory] = None,
     mode: str = "alphabetic",
     seed: Optional[int] = None,
+    registry_file: Optional[Path] = None,
+    date: Optional[str] = None,
+    layout_name: str = "pairs_4x3",
 ) -> Path:
     if layout_factory is None:
         layout_factory = lambda: create_pairs_layout(num_rows=4, pairs_per_row=3)
@@ -32,6 +37,19 @@ def create_seating_plan_pdf(
     ordered_students = arrange_students(student_names, mode=mode, seed=seed)
     assignments = assign_students_to_desks(desks, ordered_students)
     skeleton = load_skeleton_text(skeleton_path)
+
+    if registry_file is not None:
+        if date is None:
+            date = datetime.date.today().isoformat()
+        seating_history.save_generated_plan(
+            registry_file=registry_file,
+            course=course,
+            date=date,
+            layout_name=layout_name,
+            desks=desks,
+            assignments=assignments,
+            mode=mode,
+        )
 
     output_directory.mkdir(parents=True, exist_ok=True)
     tex_file = output_directory / "{0}.tex".format(course)
@@ -44,6 +62,9 @@ def create_alphabetic_seating_plans_for_all_courses(
     skeleton_path: Optional[str] = None,
     output_directory: Optional[str] = None,
     layout_factory: Optional[LayoutFactory] = None,
+    registry_file: Optional[str] = None,
+    date: Optional[str] = None,
+    layout_name: str = "pairs_4x3",
 ) -> List[Path]:
     cfg = config.load(cfg_path)
 
@@ -51,6 +72,8 @@ def create_alphabetic_seating_plans_for_all_courses(
         skeleton_path = cfg.extras.get("seatingplan_skeleton_path")
     if output_directory is None:
         output_directory = cfg.extras.get("seatingplan_output_path")
+    if registry_file is None:
+        registry_file = cfg.extras.get("seatingplans_registry_path")
 
     if skeleton_path is None:
         raise ValueError("A seating plan skeleton path is required")
@@ -59,6 +82,7 @@ def create_alphabetic_seating_plans_for_all_courses(
 
     skeleton_path = Path(skeleton_path)
     output_directory = Path(output_directory)
+    registry_path = Path(registry_file) if registry_file is not None else None
 
     pdf_files = []
     for course in cfg.courses:
@@ -72,6 +96,9 @@ def create_alphabetic_seating_plans_for_all_courses(
                 output_directory=output_directory,
                 layout_factory=layout_factory,
                 mode="alphabetic",
+                registry_file=registry_path,
+                date=date,
+                layout_name=layout_name,
             )
         )
     return pdf_files

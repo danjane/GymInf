@@ -5,6 +5,7 @@ from seating_history import (
     create_pdf_for_latest_date,
     ensure_plan_for_date,
     load_seating_registry,
+    save_generated_plan,
     save_seating_registry,
 )
 
@@ -141,3 +142,45 @@ def test_create_pdf_for_date_can_create_missing_date_by_reusing_latest_plan(tmp_
     reloaded = load_seating_registry(registry_file)
     matching = [plan for plan in reloaded["plans"] if plan["course"] == "1ma1df01" and plan["date"] == "2026-04-15"]
     assert len(matching) == 1
+
+
+def test_save_generated_plan_writes_layout_and_plan_to_registry(tmp_path: Path):
+    registry_file = tmp_path / "seatingplans.json"
+
+    updated = save_generated_plan(
+        registry_file=registry_file,
+        course="1ma1df01",
+        date="2026-04-22",
+        layout_name="pairs_4x3",
+        desks=[
+            {"desk_id": "R1D1", "x": 1.0, "y": 0.0, "facing": "front"},
+            {"desk_id": "R1D2", "x": 3.0, "y": 0.0, "facing": "front"},
+        ],
+        assignments={"R1D1": "Albert", "R1D2": "Gabs"},
+        mode="alphabetic",
+    )
+
+    assert "pairs_4x3" in updated["layouts"]
+    matching = [plan for plan in updated["plans"] if plan["course"] == "1ma1df01" and plan["date"] == "2026-04-22"]
+    assert len(matching) == 1
+    assert matching[0]["mode"] == "alphabetic"
+
+
+def test_save_generated_plan_updates_existing_plan_for_same_course_and_date(tmp_path: Path):
+    registry = sample_registry()
+    registry_file = tmp_path / "seatingplans.json"
+    save_seating_registry(registry, registry_file)
+
+    updated = save_generated_plan(
+        registry_file=registry_file,
+        course="1ma1df01",
+        date="2026-04-08",
+        layout_name="pairs_4x3",
+        desks=registry["layouts"]["pairs_4x3"]["desks"],
+        assignments={"R1D1": "Marie", "R1D2": "Albert", "R1D3": "Gabs"},
+        mode="alphabetic",
+    )
+
+    matching = [plan for plan in updated["plans"] if plan["course"] == "1ma1df01" and plan["date"] == "2026-04-08"]
+    assert len(matching) == 1
+    assert matching[0]["assignments"] == {"R1D1": "Marie", "R1D2": "Albert", "R1D3": "Gabs"}
