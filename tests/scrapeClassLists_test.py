@@ -1,5 +1,6 @@
 from scrapeClassLists import *
 from pathlib import Path
+import sys
 
 EXAMPLE_FILES = Path(__file__).resolve().parents[1] / "example_files"
 
@@ -63,3 +64,48 @@ def test_fullpaths():
     in_file, out_file = file_paths(dump_file, in_path, out_path)
     assert in_file == "C:/test/dump/rousseau-classe-106.csv"
     assert out_file == "C:/Control/rg106.txt"
+
+
+def test_text_joins_codes_with_newlines():
+    output = text([
+        "dan.jnb,,membre,,,,",
+        "dan.jna,,membre,,,,",
+    ])
+    assert output == "dan.jna\ndan.jnb"
+
+
+def test_write_codes_and_load_scrape_write(tmp_path):
+    input_file = tmp_path / "rousseau-classe-106.csv"
+    output_file = tmp_path / "rg106.txt"
+    input_file.write_text("\n".join([
+        "dan.jna,,membre,,,,",
+        "dan.jnb,,membre,,,,",
+        "dan.jnc,,proprietaire,,,,",
+    ]))
+
+    load_scrape_write(str(input_file), str(output_file))
+
+    assert output_file.read_text() == "dan.jna\ndan.jnb"
+
+
+def test_main_creates_output_directory_and_files(tmp_path, monkeypatch):
+    input_dir = tmp_path / "in"
+    output_dir = tmp_path / "out"
+    input_dir.mkdir()
+    (input_dir / "rousseau-classe-106.csv").write_text("dan.jna,,membre,,,,\n")
+
+    monkeypatch.setattr(sys, "argv", ["scrapeClassLists.py", str(input_dir), str(output_dir)])
+    main()
+
+    assert output_dir.is_dir()
+    assert (output_dir / "rg106.txt").read_text() == "dan.jna"
+
+
+def test_main_raises_for_wrong_number_of_args(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["scrapeClassLists.py"])
+    try:
+        main()
+    except RuntimeError as exc:
+        assert "Wrong number of args" in str(exc)
+    else:
+        assert False, "Expected RuntimeError"
