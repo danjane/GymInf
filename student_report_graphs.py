@@ -87,14 +87,20 @@ def build_exam_graphs(
         notes, _, exam_files = examNotes.merge_notes_for_one_course(str(exam_folder), course_students)
         exam_dates = [examNotes.file_info(exam_file)[0] for exam_file in exam_files]
         ordered_notes = notes.reindex(index=course_students)
-        series = ordered_notes.to_numpy(dtype=float)
+        series_by_student = ordered_notes.to_numpy(dtype=float)
         labels = [date.strftime("%d%b") for date in exam_dates]
+        exam_summaries = [
+            _exam_summary(series_by_student[:, exam_index])
+            for exam_index in range(series_by_student.shape[1])
+        ]
+        series = series_by_student.T
 
         for index, student in enumerate(course_students):
-            graphs[(course, student)] = render_comparison_graph(
+            graphs[(course, student)] = render_exam_graph(
                 series,
                 index,
                 labels,
+                exam_summaries,
                 title="Exam results",
                 y_min=1.5,
                 y_max=6.0,
@@ -143,11 +149,81 @@ def render_comparison_graph(
             lines.append(_reference_line(value, color, y_min, y_max))
 
     for series_index in range(series.shape[1]):
+        if series_index == highlight_index:
+            continue
         color = "black" if series_index == highlight_index else "gray!40"
         width = "0.9pt" if series_index == highlight_index else "0.35pt"
         line = _series_path(series[:, series_index], color, width, y_min, y_max)
         if line:
             lines.append(line)
+    highlight_line = _series_path(series[:, highlight_index], "black", "0.9pt", y_min, y_max)
+    if highlight_line:
+        lines.append(highlight_line)
+
+    if y_tick_labels:
+        for value, label in y_tick_labels:
+            lines.append(_y_tick(value, label, y_min, y_max))
+
+    for x_position, label in _x_tick_positions(x_labels):
+        lines.append(
+            r"\node[anchor=north, font=\scriptsize] at (%.3f, -0.15) {%s};"
+            % (x_position, _latex_escape(label))
+        )
+
+    lines.append(r"\end{tikzpicture}")
+    return "\n".join(lines)
+
+
+def render_exam_graph(
+    series: np.ndarray,
+    highlight_index: int,
+    x_labels: List[str],
+    exam_summaries: List[Dict[str, float]],
+    title: str,
+    y_min: Optional[float] = None,
+    y_max: Optional[float] = None,
+    y_tick_labels: Optional[List[Tuple[float, str]]] = None,
+    reference_lines: Optional[List[Tuple[float, str]]] = None,
+) -> str:
+    if series.size == 0:
+        return NO_DATA_BOX % "No data yet"
+
+    finite_values = series[np.isfinite(series)]
+    if finite_values.size == 0:
+        return NO_DATA_BOX % "No data yet"
+
+    if y_min is None:
+        y_min = float(np.min(finite_values))
+    if y_max is None:
+        y_max = float(np.max(finite_values))
+    if abs(y_max - y_min) < 1e-9:
+        y_min -= 1.0
+        y_max += 1.0
+
+    lines = [
+        r"\begin{tikzpicture}[x=1cm,y=1cm]",
+        _graph_frame(title),
+    ]
+
+    if reference_lines:
+        for value, color in reference_lines:
+            lines.append(_reference_line(value, color, y_min, y_max))
+
+    for exam_index, summary in enumerate(exam_summaries):
+        box_plot = _exam_box_plot(exam_index, len(x_labels), summary, y_min, y_max)
+        if box_plot:
+            lines.append(box_plot)
+
+    for series_index in range(series.shape[1]):
+        if series_index == highlight_index:
+            continue
+        points = _series_points(series[:, series_index], "gray!50", 0.8, y_min, y_max)
+        if points:
+            lines.append(points)
+
+    highlight_points = _series_points(series[:, highlight_index], "black", 1.3, y_min, y_max)
+    if highlight_points:
+        lines.append(highlight_points)
 
     if y_tick_labels:
         for value, label in y_tick_labels:
@@ -192,6 +268,19 @@ def _series_path(values: np.ndarray, color: str, width: str, y_min: float, y_max
     return r"\draw[%s, line width=%s] %s;" % (color, width, " -- ".join(points))
 
 
+def _series_points(values: np.ndarray, color: str, radius: float, y_min: float, y_max: float) -> str:
+    valid_points = [(index, value) for index, value in enumerate(values) if np.isfinite(value)]
+    if not valid_points:
+        return ""
+    return "\n".join(
+        [
+            r"\fill[%s] (%.3f, %.3f) circle (%.1fpt);"
+            % (_latex_escape(color), _scaled_x(index, len(values)), _scaled_y(value, y_min, y_max), radius)
+            for index, value in valid_points
+        ]
+    )
+
+
 def _scaled_x(index: int, count: int) -> float:
     if count <= 1:
         return GRAPH_WIDTH_CM / 2
@@ -221,6 +310,51 @@ def _x_tick_positions(labels: List[str]) -> Iterable[Tuple[float, str]]:
     else:
         indices = sorted({0, len(labels) // 2, len(labels) - 1})
     return [(_scaled_x(index, len(labels)), labels[index]) for index in indices]
+
+
+def _exam_summary(values: np.ndarray) -> Dict[str, float]:
+    finite_values = values[np.isfinite(values)]
+    if finite_values.size == 0:
+        return {}
+    return {
+        "min": float(np.min(finite_values)),
+        "q1": float(np.quantile(finite_values, 0.25)),
+        "median": float(np.quantile(finite_values, 0.5)),
+        "q3": float(np.quantile(finite_values, 0.75)),
+        "max": float(np.max(finite_values)),
+    }
+
+
+def _exam_box_plot(
+    exam_index: int,
+    exam_count: int,
+    summary: Dict[str, float],
+    y_min: float,
+    y_max: float,
+) -> str:
+    if not summary:
+        return ""
+    x_center = _scaled_x(exam_index, exam_count)
+    half_width = 0.28
+    x_left = max(0.0, x_center - half_width)
+    x_right = min(GRAPH_WIDTH_CM, x_center + half_width)
+    y_min_value = _scaled_y(summary["min"], y_min, y_max)
+    y_q1 = _scaled_y(summary["q1"], y_min, y_max)
+    y_median = _scaled_y(summary["median"], y_min, y_max)
+    y_q3 = _scaled_y(summary["q3"], y_min, y_max)
+    y_max_value = _scaled_y(summary["max"], y_min, y_max)
+    return "\n".join(
+        [
+            r"\draw[gray!55] (%.3f, %.3f) -- (%.3f, %.3f);" % (x_center, y_min_value, x_center, y_q1),
+            r"\draw[gray!55] (%.3f, %.3f) -- (%.3f, %.3f);" % (x_center, y_q3, x_center, y_max_value),
+            r"\draw[gray!55] (%.3f, %.3f) -- (%.3f, %.3f);" % (x_left, y_min_value, x_right, y_min_value),
+            r"\draw[gray!55] (%.3f, %.3f) -- (%.3f, %.3f);" % (x_left, y_max_value, x_right, y_max_value),
+            r"\filldraw[fill=gray!15, draw=gray!55] (%.3f, %.3f) rectangle (%.3f, %.3f);"
+            % (x_left, y_q1, x_right, y_q3),
+            r"\draw[gray!70, line width=0.6pt] (%.3f, %.3f) -- (%.3f, %.3f);"
+            % (x_left, y_median, x_right, y_median),
+        ]
+    )
 
 
 def _fill_missing_graphs(graphs: GraphMap, course: str, students: List[str], message: str) -> None:

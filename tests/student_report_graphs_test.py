@@ -27,6 +27,8 @@ def test_build_exam_graphs_for_example_course():
     assert "Exam results" in output
     assert "20Apr" in output
     assert "4.0" in output
+    assert "filldraw[fill=gray!15" in output
+    assert "\\fill[black]" in output
 
 
 def test_build_student_graphs_returns_both_graph_types():
@@ -70,6 +72,16 @@ def test_render_comparison_graph_handles_constant_single_value_series():
     assert "Constant" in output
 
 
+def test_render_comparison_graph_draws_highlight_last():
+    output = student_report_graphs.render_comparison_graph(
+        np.array([[1.0, 2.0], [2.0, 3.0]]),
+        1,
+        ["A", "B"],
+        "Order",
+    )
+    assert output.rfind("gray!40") < output.rfind("line width=0.9pt")
+
+
 def test_render_comparison_graph_uses_sparse_x_ticks_for_long_labels():
     output = student_report_graphs.render_comparison_graph(
         np.array([[1.0], [2.0], [3.0], [4.0], [5.0]]),
@@ -92,6 +104,18 @@ def test_series_path_returns_empty_string_for_no_valid_points():
         1.0,
     )
     assert output == ""
+
+
+def test_exam_box_plot_returns_empty_for_missing_summary():
+    output = student_report_graphs._exam_box_plot(0, 2, {}, 1.5, 6.0)
+    assert output == ""
+
+
+def test_exam_summary_computes_quartiles():
+    summary = student_report_graphs._exam_summary(np.array([2.0, 3.0, 4.0, 5.0]))
+    assert summary["min"] == 2.0
+    assert summary["max"] == 5.0
+    assert summary["median"] == 3.5
 
 
 def test_x_tick_positions_empty_labels():
