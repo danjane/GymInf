@@ -140,7 +140,7 @@ def render_comparison_graph(
         y_max += margin
 
     lines = [
-        r"\begin{tikzpicture}[x=1cm,y=1cm]",
+        r"\begin{tikzpicture}[x=7mm,y=1cm]",
         _graph_frame(title),
     ]
 
@@ -151,8 +151,8 @@ def render_comparison_graph(
     for series_index in range(series.shape[1]):
         if series_index == highlight_index:
             continue
-        color = "black" if series_index == highlight_index else "gray!40"
-        width = "0.9pt" if series_index == highlight_index else "0.35pt"
+        color = "black" if series_index == highlight_index else "gray!60"
+        width = "1.1pt" if series_index == highlight_index else "0.35pt"
         line = _series_path(series[:, series_index], color, width, y_min, y_max)
         if line:
             lines.append(line)
@@ -201,7 +201,7 @@ def render_exam_graph(
         y_max += 1.0
 
     lines = [
-        r"\begin{tikzpicture}[x=1cm,y=1cm]",
+        r"\begin{tikzpicture}[x=7mm,y=1cm]",
         _graph_frame(title),
     ]
 
@@ -217,11 +217,11 @@ def render_exam_graph(
     for series_index in range(series.shape[1]):
         if series_index == highlight_index:
             continue
-        points = _series_points(series[:, series_index], "gray!50", 0.8, y_min, y_max)
+        points = _series_points(series[:, series_index], "gray!60", 0.8, y_min, y_max)
         if points:
             lines.append(points)
 
-    highlight_points = _series_points(series[:, highlight_index], "black", 1.3, y_min, y_max)
+    highlight_points = _series_points(series[:, highlight_index], "black", 2.0, y_min, y_max)
     if highlight_points:
         lines.append(highlight_points)
 
