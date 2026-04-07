@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from typing import Dict, List
+from typing import Dict, List, Mapping, Optional, Tuple
 
 
 def sum_by_student(df: pd.DataFrame, column: str) -> Dict[str, int]:
@@ -63,19 +63,54 @@ def latex_comments(df: pd.DataFrame, student: str) -> str:
     return df.style.hide(axis="index").to_latex()
 
 
-def latex_student_page(outline: str, student: str, name: str, course: str, comments: str) -> str:
+def latex_student_page(
+    outline: str,
+    student: str,
+    name: str,
+    course: str,
+    comments: str,
+    sentiment_graph: str = "",
+    exam_graph: str = "",
+) -> str:
     text = outline
-    keywords = ["STUDENTCODE", "STUDENTNAME", "COURSE", "STUDENTCOMMENTS"]
-    for (before, after) in zip(keywords, [student, name, course, comments]):
+    keywords = [
+        "STUDENTCODE",
+        "STUDENTNAME",
+        "COURSE",
+        "STUDENTCOMMENTS",
+        "SENTIMENTGRAPH",
+        "EXAMGRAPH",
+    ]
+    for (before, after) in zip(
+        keywords,
+        [student, name, course, comments, sentiment_graph, exam_graph],
+    ):
         text = text.replace(before, after)
     return text
 
 
-def latex_student_pages(df: pd.DataFrame, outline: str, students: List[str], 
-                        given_names: List[str], courses: List[str]) -> str:
+def latex_student_pages(
+    df: pd.DataFrame,
+    outline: str,
+    students: List[str],
+    given_names: List[str],
+    courses: List[str],
+    sentiment_graphs: Optional[Mapping[Tuple[str, str], str]] = None,
+    exam_graphs: Optional[Mapping[Tuple[str, str], str]] = None,
+) -> str:
+    sentiment_graphs = sentiment_graphs or {}
+    exam_graphs = exam_graphs or {}
     pages = []
     for student, name, course in zip(students, given_names, courses):
         comments = latex_comments(df, student)
-        this_student_latex_page = latex_student_page(outline, student, name, course, comments)
+        this_student_latex_page = latex_student_page(
+            outline,
+            student,
+            name,
+            course,
+            comments,
+            sentiment_graphs.get((course, student), ""),
+            exam_graphs.get((course, student), ""),
+        )
         pages.append(this_student_latex_page)
     return "\\newpage\n\n".join(pages)

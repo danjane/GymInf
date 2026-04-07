@@ -13,14 +13,15 @@ def test_report_dnf():
 
 def test_build_latex_report():
     output = get_latex_report_from_config_path(str(EXAMPLE_CONFIG))
-    expected = r"""\documentclass[11pt]{article}
-\begin{document}
-EINSTEIN Albert (Albert) \hfill 1ma1df01 \\
-\begin{tabular}{ll}
-Date & Info \\
-13Jan2022 & DNF Albert, Marie \\"""
     assert isinstance(output, str)
-    assert output[:len(expected)] == expected
+    assert output.startswith(r"""\documentclass[11pt]{article}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{tikz}
+\begin{document}
+EINSTEIN Albert (Albert) \hfill 1ma1df01 \\""")
+    assert "Comment progress" in output
+    assert "Exam results" in output
+    assert r"\begin{tabular}{ll}" in output
 
 
 def test_students_needing_comments():

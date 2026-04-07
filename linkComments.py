@@ -1,3 +1,4 @@
+import os
 import shredComments
 import analyseComments
 import students
@@ -5,6 +6,7 @@ import config
 import pandas as pd
 import datetime
 from typing import Dict, List, Tuple
+import student_report_graphs
 
 from seating_render import latex_to_pdf as compile_latex_to_pdf
 
@@ -50,8 +52,14 @@ def build_latex_report(cfg: config.AppConfig, courses: Dict[str, Dict[str, str]]
         student_report_outline = f.read()
     with open(cfg.reports.skeleton) as f:
         report_skeleton = f.read()
-    pages = analyseComments.latex_student_pages(df, student_report_outline,
-                                                *get_student_codes_names_course_names(courses))
+    graph_blocks = student_report_graphs.build_student_graphs(cfg, courses, df)
+    pages = analyseComments.latex_student_pages(
+        df,
+        student_report_outline,
+        *get_student_codes_names_course_names(courses),
+        graph_blocks["sentiment"],
+        graph_blocks["exam"],
+    )
     report = report_skeleton.replace("STUDENTPAGES", pages)
     return report
 
@@ -82,7 +90,7 @@ def latex_to_pdf(tex_file, output_directory):
 def create_report(cfg_path: str) -> str:
     report = get_latex_report_from_config_path(cfg_path)
     cfg = config.load(cfg_path)
-    report_file = cfg.reports.tex_output
+    report_file = cfg.reports.tex_output or (cfg.config_root / "report.tex")
     report_dir = report_file.parent
     with open(report_file, "w") as f:
         f.write(report)
