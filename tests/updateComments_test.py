@@ -39,3 +39,8 @@ def test_add_negative_comment(comment_file):
 def test_add_positive_comment_empty(comment_file):
     add_negative_comments(comment_file, [])
     assert check_file_contents(comment_file, "")
+
+
+def test_add_positive_comment_with_extra_text(comment_file):
+    add_positive_comments(comment_file, ["Julian"], "good effort")
+    assert check_file_contents(comment_file, "+Julian good effort\n")

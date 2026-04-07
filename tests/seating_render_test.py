@@ -1,6 +1,7 @@
 from seating_models import Desk
 from seating_render import _cleanup_latex_auxiliary_files, latex_to_pdf, render_plan_to_latex
 from pathlib import Path
+import pytest
 
 
 def test_render_plan_inserts_course_name():
@@ -75,3 +76,19 @@ def test_latex_to_pdf_raises_when_pdflatex_fails(monkeypatch, tmp_path: Path):
         assert "boom" in str(exc)
     else:
         raise AssertionError("Expected RuntimeError when pdflatex fails")
+
+
+def test_latex_to_pdf_raises_when_pdf_not_created(monkeypatch, tmp_path: Path):
+    tex_file = tmp_path / "plan.tex"
+    tex_file.write_text("test")
+
+    class FakeProcess:
+        returncode = 0
+
+        def communicate(self):
+            return (b"", b"")
+
+    monkeypatch.setattr("seating_render.subprocess.Popen", lambda *args, **kwargs: FakeProcess())
+
+    with pytest.raises(FileNotFoundError):
+        latex_to_pdf(tex_file, tmp_path)
