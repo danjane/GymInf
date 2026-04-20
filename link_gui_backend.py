@@ -8,6 +8,7 @@ import linkComments
 import analyseNotes
 import desk_functions
 import seating_history
+import seating_plan_export
 from seating_layouts import create_pairs_layout
 from seating_models import Desk
 from datetime import datetime
@@ -45,6 +46,26 @@ def setup(cfg_path: str, course: str):
     )
     desk_layout = _desk_layout_bounds(seating_state["gui_places"].values())
     return seating_state, desk_layout, comments_path, positive_defaults, negative_defaults
+
+
+def desks_from_seating_state(seating_state: dict, width_height_desks):
+    import icons
+
+    desk_layout = _desk_layout_bounds(seating_state["gui_places"].values())
+    desks = []
+    for desk_data in seating_state["desks"]:
+        student = seating_state["assignments"].get(desk_data.desk_id, "empty")
+        gui_place = seating_state["gui_places"][desk_data.desk_id]
+        desks.append(
+            icons.Desk.create_desk(
+                gui_place,
+                student,
+                desk_layout,
+                width_height_desks,
+                desk_id=desk_data.desk_id,
+            )
+        )
+    return desks, desk_layout
 
 
 def save_seating_state(cfg_path: str, course: str, seating_state: dict, desks) -> None:
@@ -244,3 +265,12 @@ def _gui_places_for_desks(layout_name: str, desks) -> dict[str, tuple[float, flo
             for desk, position in zip(ordered_desks, positions)
         }
     return {desk.desk_id: (desk.x, desk.y) for desk in desks}
+
+
+def seating_plan_export_paths(cfg: config.AppConfig):
+    return seating_plan_export.resolve_export_paths(
+        cfg,
+        cfg.extras.get("seatingplan_skeleton_path"),
+        cfg.extras.get("seatingplan_output_path"),
+        cfg.extras.get("seatingplans_registry_path"),
+    )[:2]

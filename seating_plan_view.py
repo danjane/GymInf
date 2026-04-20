@@ -12,24 +12,9 @@ import seating_plan_gui_backend
 
 def run(config_file, course, screen, clock, constants):
     seating_state = seating_plan_gui_backend.load_plan(config_file, course)
-    desk_layout = (
-        max(position[0] for position in seating_state["gui_places"].values()) + 1,
-        max(position[1] for position in seating_state["gui_places"].values()) + 1,
+    desks, desk_layout = link_gui_backend.desks_from_seating_state(
+        seating_state, constants.WIDTH_HEIGHT_DESKS
     )
-
-    desks = []
-    for desk_data in seating_state["desks"]:
-        student = seating_state["assignments"].get(desk_data.desk_id, "empty")
-        gui_place = seating_state["gui_places"][desk_data.desk_id]
-        desks.append(
-            icons.Desk.create_desk(
-                gui_place,
-                student,
-                desk_layout,
-                constants.WIDTH_HEIGHT_DESKS,
-                desk_id=desk_data.desk_id,
-            )
-        )
 
     clicked_desk = icons.UnclickedDesk()
     swapping_desk = icons.UnclickedDesk()

@@ -32,19 +32,9 @@ def run(config_file, course, screen, clock, constants):
     seating_state, desk_layout, comment_file, positive_defaults, negative_defaults = link_gui_backend.setup(
         config_file, course
     )
-
-    desks = []
-    for desk_data in seating_state["desks"]:
-        student = seating_state["assignments"].get(desk_data.desk_id, "empty")
-        gui_place = seating_state["gui_places"][desk_data.desk_id]
-        desk = icons.Desk.create_desk(
-            gui_place,
-            student,
-            desk_layout,
-            constants.WIDTH_HEIGHT_DESKS,
-            desk_id=desk_data.desk_id,
-        )
-        desks.append(desk)
+    desks, desk_layout = link_gui_backend.desks_from_seating_state(
+        seating_state, constants.WIDTH_HEIGHT_DESKS
+    )
 
     clicked_desk = icons.UnclickedDesk()
     swapping_desk = icons.UnclickedDesk()

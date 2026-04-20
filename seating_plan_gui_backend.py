@@ -23,12 +23,11 @@ def save_plan(cfg_path: str, course: str, seating_state: dict, desks) -> None:
 
 def dump_plan_pdf(cfg_path: str, course: str, seating_state: dict):
     cfg = config.load(cfg_path)
-    skeleton_path = Path(
-        cfg.extras.get("seatingplan_skeleton_path", cfg.config_root / "seatingplan_skeleton.tex")
-    )
-    output_directory = Path(
-        cfg.extras.get("seatingplan_output_path", cfg.config_root / "seatingplans")
-    )
+    try:
+        skeleton_path, output_directory = link_gui_backend.seating_plan_export_paths(cfg)
+    except ValueError:
+        skeleton_path = Path(cfg.config_root / "seatingplan_skeleton.tex")
+        output_directory = Path(cfg.config_root / "seatingplans")
     return seating_history.create_pdf_for_date(
         seating_state["registry_file"],
         course,
