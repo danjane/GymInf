@@ -79,3 +79,123 @@ def test_dump_plan_pdf_exports_current_date(monkeypatch):
     assert output == Path("plan.pdf")
     assert calls["course"] == "1ma1df01"
     assert calls["date"] == "2026-04-20"
+
+
+def test_randomize_plan_reassigns_students(monkeypatch):
+    seating_plan_gui_backend = importlib.import_module("seating_plan_gui_backend")
+
+    seating_state = {
+        "desks": [
+            SimpleNamespace(desk_id="R1D1"),
+            SimpleNamespace(desk_id="R1D2"),
+        ],
+        "assignments": {"R1D1": "Albert", "R1D2": "Gabs"},
+    }
+
+    monkeypatch.setattr(
+        seating_plan_gui_backend,
+        "arrange_students",
+        lambda students, mode, seed=None: ["Gabs", "Albert"],
+    )
+
+    assignments = seating_plan_gui_backend.randomize_plan(
+        str(EXAMPLE_CONFIG),
+        "1ma1df01",
+        seating_state,
+        seed=7,
+    )
+
+    assert assignments == {"R1D1": "Gabs", "R1D2": "Albert"}
+
+
+def test_alphabetic_plan_uses_class_list_ordering():
+    seating_plan_gui_backend = importlib.import_module("seating_plan_gui_backend")
+
+    seating_state = {
+        "desks": [
+            SimpleNamespace(desk_id="R1D1"),
+            SimpleNamespace(desk_id="R1D2"),
+            SimpleNamespace(desk_id="R1D3"),
+            SimpleNamespace(desk_id="R1D4"),
+        ],
+        "assignments": {},
+    }
+
+    assignments = seating_plan_gui_backend.alphabetic_plan(
+        str(EXAMPLE_CONFIG),
+        "1ma1df01",
+        seating_state,
+    )
+
+    assert assignments == {
+        "R1D1": "Gabs",
+        "R1D2": "Marie",
+        "R1D3": "Albert",
+        "R1D4": "Dick",
+    }
+
+
+def test_alphabetic_plan_starts_at_front_left_and_leaves_empty_desks_at_back():
+    seating_plan_gui_backend = importlib.import_module("seating_plan_gui_backend")
+
+    seating_state = {
+        "desks": [
+            SimpleNamespace(desk_id="back_left"),
+            SimpleNamespace(desk_id="front_left"),
+            SimpleNamespace(desk_id="front_right"),
+            SimpleNamespace(desk_id="back_right"),
+        ],
+        "gui_places": {
+            "back_left": (0, 0),
+            "front_left": (0, 6),
+            "front_right": (1, 6),
+            "back_right": (1, 0),
+        },
+        "assignments": {},
+    }
+
+    assignments = seating_plan_gui_backend.alphabetic_plan(
+        str(EXAMPLE_CONFIG),
+        "1ma1df01",
+        seating_state,
+    )
+
+    assert assignments["front_left"] == "Gabs"
+    assert assignments["front_right"] == "Marie"
+    assert assignments["back_left"] == "Albert"
+    assert assignments["back_right"] == "Dick"
+
+
+def test_randomize_plan_moves_empty_desks_to_back(monkeypatch):
+    seating_plan_gui_backend = importlib.import_module("seating_plan_gui_backend")
+
+    seating_state = {
+        "desks": [
+            SimpleNamespace(desk_id="back_left"),
+            SimpleNamespace(desk_id="front_left"),
+            SimpleNamespace(desk_id="front_right"),
+        ],
+        "gui_places": {
+            "back_left": (0, 0),
+            "front_left": (0, 6),
+            "front_right": (1, 6),
+        },
+        "assignments": {"back_left": "Albert", "front_left": "Gabs", "front_right": ""},
+    }
+
+    monkeypatch.setattr(
+        seating_plan_gui_backend,
+        "arrange_students",
+        lambda students, mode, seed=None: ["Albert", "Gabs"],
+    )
+
+    assignments = seating_plan_gui_backend.randomize_plan(
+        str(EXAMPLE_CONFIG),
+        "1ma1df01",
+        seating_state,
+        seed=3,
+    )
+
+    assert assignments["front_left"] == "Albert"
+    assert assignments["front_right"] == "Gabs"
+    assert assignments["back_left"] == ""

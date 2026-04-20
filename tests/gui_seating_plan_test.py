@@ -84,3 +84,214 @@ def test_gui_main_dispatches_to_seating_plan_view(monkeypatch):
     gui.main("config.yaml")
 
     assert calls["seating_plan"] == 1
+
+
+def test_seating_plan_view_randomize_button_calls_backend(monkeypatch):
+    import pygame
+    pygame.init()
+    import seating_plan_view
+
+    created_buttons = {}
+    calls = {"randomize": 0}
+
+    class FakeButton:
+        def __init__(self, text):
+            self.text = text
+            self.color_default = (0, 0, 0)
+            self.color_selected = (1, 1, 1)
+            self.color_unclicked = self.color_default
+            self.text_editor_active = False
+
+        def update(self, screen):
+            pass
+
+    def fake_button(pos, size, text):
+        button = FakeButton(text)
+        created_buttons[text] = button
+        return button
+
+    seating_state = {
+        "gui_places": {},
+        "desks": [],
+        "assignments": {},
+    }
+
+    event_calls = {"count": 0}
+
+    def fake_event_get():
+        event_calls["count"] += 1
+        if event_calls["count"] == 1:
+            return [SimpleNamespace(type=seating_plan_view.MOUSEBUTTONDOWN, pos=(0, 0))]
+        if event_calls["count"] == 2:
+            return [SimpleNamespace(type=seating_plan_view.pygame.QUIT)]
+        return []
+
+    monkeypatch.setattr(seating_plan_view.seating_plan_gui_backend, "load_plan", lambda *args: seating_state)
+    monkeypatch.setattr(
+        seating_plan_view.link_gui_backend,
+        "desks_from_seating_state",
+        lambda seating_state, width_height_desks: ([], (8, 7)),
+    )
+    monkeypatch.setattr(
+        seating_plan_view.seating_plan_gui_backend,
+        "randomize_plan",
+        lambda *args, **kwargs: calls.__setitem__("randomize", calls["randomize"] + 1) or {},
+    )
+    monkeypatch.setattr(seating_plan_view.icons, "Button", fake_button)
+    monkeypatch.setattr(
+        seating_plan_view.events,
+        "handle_mouse_button_down",
+        lambda x, y, buttons, selected: (created_buttons["Randomize"], selected),
+    )
+    monkeypatch.setattr(seating_plan_view.pygame.event, "get", fake_event_get)
+    monkeypatch.setattr(seating_plan_view.pygame.display, "flip", lambda: None)
+
+    screen = SimpleNamespace(fill=lambda *args, **kwargs: None)
+    clock = SimpleNamespace(tick=lambda *args, **kwargs: None)
+    constants = SimpleNamespace(BACKGROUND=(0, 0, 0), WIDTH_HEIGHT_DESKS=(640, 350))
+
+    seating_plan_view.run("config.yaml", "1ma1df01", screen, clock, constants)
+
+    assert calls["randomize"] == 1
+
+
+def test_seating_plan_view_alphabetic_button_calls_backend(monkeypatch):
+    import pygame
+    pygame.init()
+    import seating_plan_view
+
+    created_buttons = {}
+    calls = {"alphabetic": 0}
+
+    class FakeButton:
+        def __init__(self, text):
+            self.text = text
+            self.color_default = (0, 0, 0)
+            self.color_selected = (1, 1, 1)
+            self.color_unclicked = self.color_default
+            self.text_editor_active = False
+
+        def update(self, screen):
+            pass
+
+    def fake_button(pos, size, text):
+        button = FakeButton(text)
+        created_buttons[text] = button
+        return button
+
+    seating_state = {
+        "gui_places": {},
+        "desks": [],
+        "assignments": {},
+    }
+
+    event_calls = {"count": 0}
+
+    def fake_event_get():
+        event_calls["count"] += 1
+        if event_calls["count"] == 1:
+            return [SimpleNamespace(type=seating_plan_view.MOUSEBUTTONDOWN, pos=(0, 0))]
+        if event_calls["count"] == 2:
+            return [SimpleNamespace(type=seating_plan_view.pygame.QUIT)]
+        return []
+
+    monkeypatch.setattr(seating_plan_view.seating_plan_gui_backend, "load_plan", lambda *args: seating_state)
+    monkeypatch.setattr(
+        seating_plan_view.link_gui_backend,
+        "desks_from_seating_state",
+        lambda seating_state, width_height_desks: ([], (8, 7)),
+    )
+    monkeypatch.setattr(
+        seating_plan_view.seating_plan_gui_backend,
+        "alphabetic_plan",
+        lambda *args, **kwargs: calls.__setitem__("alphabetic", calls["alphabetic"] + 1) or {},
+    )
+    monkeypatch.setattr(seating_plan_view.icons, "Button", fake_button)
+    monkeypatch.setattr(
+        seating_plan_view.events,
+        "handle_mouse_button_down",
+        lambda x, y, buttons, selected: (created_buttons["Alphabetic"], selected),
+    )
+    monkeypatch.setattr(seating_plan_view.pygame.event, "get", fake_event_get)
+    monkeypatch.setattr(seating_plan_view.pygame.display, "flip", lambda: None)
+
+    screen = SimpleNamespace(fill=lambda *args, **kwargs: None)
+    clock = SimpleNamespace(tick=lambda *args, **kwargs: None)
+    constants = SimpleNamespace(BACKGROUND=(0, 0, 0), WIDTH_HEIGHT_DESKS=(640, 350))
+
+    seating_plan_view.run("config.yaml", "1ma1df01", screen, clock, constants)
+
+    assert calls["alphabetic"] == 1
+
+
+def test_seating_plan_view_syncs_live_assignments_before_randomize(monkeypatch):
+    import pygame
+    pygame.init()
+    import seating_plan_view
+
+    created_buttons = {}
+    captured_assignments = {}
+
+    class FakeButton:
+        def __init__(self, text):
+            self.text = text
+            self.color_default = (0, 0, 0)
+            self.color_selected = (1, 1, 1)
+            self.color_unclicked = self.color_default
+            self.text_editor_active = False
+
+        def update(self, screen):
+            pass
+
+    def fake_button(pos, size, text):
+        button = FakeButton(text)
+        created_buttons[text] = button
+        return button
+
+    desks = [
+        SimpleNamespace(desk_id="front_left", name="Albert", update=lambda screen: None),
+        SimpleNamespace(desk_id="back_left", name="", update=lambda screen: None),
+    ]
+    seating_state = {
+        "gui_places": {},
+        "desks": [],
+        "assignments": {"front_left": "", "back_left": "Albert"},
+    }
+
+    event_calls = {"count": 0}
+
+    def fake_event_get():
+        event_calls["count"] += 1
+        if event_calls["count"] == 1:
+            return [SimpleNamespace(type=seating_plan_view.MOUSEBUTTONDOWN, pos=(0, 0))]
+        if event_calls["count"] == 2:
+            return [SimpleNamespace(type=seating_plan_view.pygame.QUIT)]
+        return []
+
+    monkeypatch.setattr(seating_plan_view.seating_plan_gui_backend, "load_plan", lambda *args: seating_state)
+    monkeypatch.setattr(
+        seating_plan_view.link_gui_backend,
+        "desks_from_seating_state",
+        lambda seating_state, width_height_desks: (desks, (8, 7)),
+    )
+    monkeypatch.setattr(
+        seating_plan_view.seating_plan_gui_backend,
+        "randomize_plan",
+        lambda cfg_path, course, state, seed=None: captured_assignments.update(state["assignments"]) or state["assignments"],
+    )
+    monkeypatch.setattr(seating_plan_view.icons, "Button", fake_button)
+    monkeypatch.setattr(
+        seating_plan_view.events,
+        "handle_mouse_button_down",
+        lambda x, y, buttons, selected: (created_buttons["Randomize"], selected),
+    )
+    monkeypatch.setattr(seating_plan_view.pygame.event, "get", fake_event_get)
+    monkeypatch.setattr(seating_plan_view.pygame.display, "flip", lambda: None)
+
+    screen = SimpleNamespace(fill=lambda *args, **kwargs: None)
+    clock = SimpleNamespace(tick=lambda *args, **kwargs: None)
+    constants = SimpleNamespace(BACKGROUND=(0, 0, 0), WIDTH_HEIGHT_DESKS=(640, 350))
+
+    seating_plan_view.run("config.yaml", "1ma1df01", screen, clock, constants)
+
+    assert captured_assignments == {"front_left": "Albert", "back_left": ""}

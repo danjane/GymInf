@@ -10,6 +10,41 @@ import link_gui_backend
 import seating_plan_gui_backend
 
 
+def apply_assignments_to_desks(desks, seating_state: dict, assignments: dict):
+    seating_state["assignments"] = assignments
+    for desk in desks:
+        desk.name = assignments.get(desk.desk_id, "")
+        desk.name_img = icons.font.render(desk.name, True, (0, 0, 0))
+
+
+def sync_assignments_from_desks(desks, seating_state: dict):
+    seating_state["assignments"] = {
+        desk.desk_id: desk.name
+        for desk in desks
+        if getattr(desk, "desk_id", None)
+    }
+
+
+class _FallbackSpriteContainer:
+    def __init__(self, sprites):
+        self._sprites = list(sprites)
+
+    def sprites(self):
+        return list(self._sprites)
+
+    def update(self, screen):
+        for sprite in self._sprites:
+            if hasattr(sprite, "update"):
+                sprite.update(screen)
+
+
+def build_sprite_container(sprites):
+    try:
+        return pygame.sprite.Group(sprites)
+    except (TypeError, AttributeError):
+        return _FallbackSpriteContainer(sprites)
+
+
 def run(config_file, course, screen, clock, constants):
     seating_state = seating_plan_gui_backend.load_plan(config_file, course)
     desks, desk_layout = link_gui_backend.desks_from_seating_state(
@@ -24,8 +59,14 @@ def run(config_file, course, screen, clock, constants):
     control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
     dump_to_pdf_button = icons.Button((700, 90), (200, 50), "Dump to pdf")
     save_button = icons.Button((700, 145), (200, 50), "Save")
-    buttons = [control_view_button, dump_to_pdf_button, save_button]
-    sprites = pygame.sprite.Group(desks + buttons)
+    randomize_button = icons.Button((700, 200), (200, 50), "Randomize")
+    alphabetic_button = icons.Button((700, 255), (200, 50), "Alphabetic")
+    buttons = [control_view_button, dump_to_pdf_button, save_button, randomize_button, alphabetic_button]
+    arrangement_buttons = {
+        randomize_button: seating_plan_gui_backend.randomize_plan,
+        alphabetic_button: seating_plan_gui_backend.alphabetic_plan,
+    }
+    sprites = build_sprite_container(desks + buttons)
 
     while True:
         screen.fill(constants.BACKGROUND)
@@ -43,6 +84,12 @@ def run(config_file, course, screen, clock, constants):
                 if clicked_desk == save_button:
                     seating_plan_gui_backend.save_plan(config_file, course, seating_state, desks)
                     unsaved_changes = False
+                    clicked_desk = icons.UnclickedDesk()
+                elif clicked_desk in arrangement_buttons:
+                    sync_assignments_from_desks(desks, seating_state)
+                    assignments = arrangement_buttons[clicked_desk](config_file, course, seating_state)
+                    apply_assignments_to_desks(desks, seating_state, assignments)
+                    unsaved_changes = True
                     clicked_desk = icons.UnclickedDesk()
                 elif clicked_desk == dump_to_pdf_button:
                     if unsaved_changes:
