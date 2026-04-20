@@ -48,7 +48,6 @@ def nearest_desk(loadsa_desks, xy):
 class ParentDesk(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.name = "not these droids"
         self.home = (1e10, 1e10)
         self.sliding = False
         self.is_swapping = False
@@ -87,6 +86,12 @@ class ParentDesk(pygame.sprite.Sprite):
     def handle_keydown(self, event, selected_desks):
         pass
 
+    def student_name(self):
+        return ""
+
+    def set_student_name(self, name):
+        raise TypeError(f"{type(self).__name__} cannot be assigned a student")
+
 
 class UnclickedDesk(ParentDesk):
     def __init__(self):
@@ -110,6 +115,8 @@ class Desk(ParentDesk):
         self.color_default = YELLOW
         self.color = self.color_default
         self.color_selected = LIGHT_BLUE
+        self.desk_layout = desk_layout
+        self.height_width = height_width
         self.size = (height_width[0] // desk_layout[0], height_width[1] // desk_layout[1])
 
         self.place = place
@@ -117,8 +124,6 @@ class Desk(ParentDesk):
         self.pos = screen_position_from_xy_and_size(*place, desk_layout, height_width)
         self.home = self.pos
         self.target_for_sliding = self.pos
-
-        self.name = name
         self.name_img = font.render(name, True, (0, 0, 0))
         self.button_down = False
         self.rect = pygame.Rect(*self.pos, *self.size)
@@ -126,7 +131,10 @@ class Desk(ParentDesk):
         self.changing_position = False
 
     def __str__(self):
-        return "Desk: " + self.name
+        student_name = self.student_name()
+        if student_name:
+            return "Desk: " + student_name
+        return type(self).__name__
 
     def update(self, surface):
         if self.sliding:
@@ -189,10 +197,33 @@ class Desk(ParentDesk):
         else:
             return FilledDesk(place, name, desk_layout, height_width, desk_id=desk_id)
 
+    def _copy_state_to(self, other):
+        other.pos = self.pos
+        other.home = self.home
+        other.target_for_sliding = self.target_for_sliding
+        other.button_down = self.button_down
+        other.sliding = self.sliding
+        other.changing_position = self.changing_position
+        other.rect = pygame.Rect(*other.pos, *other.size)
+        return other
+
 
 class FilledDesk(Desk):
     def __init__(self, place, name, desk_layout, height_width, desk_id=None):
         super().__init__(place, name, desk_layout, height_width, desk_id=desk_id)
+        self.name = name
+
+    def student_name(self):
+        return self.name
+
+    def set_student_name(self, name):
+        if not name:
+            return self._copy_state_to(
+                EmptyDesk(self.place, self.desk_layout, self.height_width, desk_id=self.desk_id)
+            )
+        self.name = name
+        self.name_img = font.render(name, True, (0, 0, 0))
+        return self
 
     def clicked(self, other):
         self.color = RED
@@ -217,6 +248,13 @@ class EmptyDesk(Desk):
         self.color = self.color_default
         self.color_selected = self.color_default
         # TODO make the empty desk smaller - will require Desk.pos being center
+
+    def set_student_name(self, name):
+        if not name:
+            return self
+        return self._copy_state_to(
+            FilledDesk(self.place, name, self.desk_layout, self.height_width, desk_id=self.desk_id)
+        )
 
 
 class Button(pygame.sprite.Sprite):
@@ -311,7 +349,7 @@ class PositiveButton(ButtonWithComments):
 
     def clicked(self, selected_desks):
         updateComments.add_positive_comments(self.comments_path,
-                                             [desk.name for desk in selected_desks],
+                                             [desk.student_name() for desk in selected_desks if desk.student_name()],
                                              self.linked_button.text)
         self.linked_button.fade_from_1_to_0 = 1.
         super().clicked(selected_desks)
@@ -324,7 +362,7 @@ class NegativeButton(ButtonWithComments):
 
     def clicked(self, selected_desks):
         updateComments.add_negative_comments(self.comments_path,
-                                             [desk.name for desk in selected_desks],
+                                             [desk.student_name() for desk in selected_desks if desk.student_name()],
                                              self.linked_button.text)
         self.linked_button.fade_from_1_to_0 = 1.
         super().clicked(selected_desks)
@@ -344,7 +382,9 @@ class SuggestFocusButton(ButtonWithComments):
         students_for_comments = students_for_comments[:5]
         for desk in selected_desks:
             desk.color = desk.color_default
-        selected_desks = set(desk for desk in self.desks if desk.name in students_for_comments)
+        selected_desks = set(
+            desk for desk in self.desks if desk.student_name() in students_for_comments
+        )
         for desk in selected_desks:
             desk.color = desk.color_selected
         return UnclickedDesk(), selected_desks

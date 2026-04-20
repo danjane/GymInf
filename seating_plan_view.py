@@ -10,16 +10,32 @@ import link_gui_backend
 import seating_plan_gui_backend
 
 
+def desk_student_name(desk):
+    if hasattr(desk, "student_name"):
+        return desk.student_name()
+    return getattr(desk, "name", "")
+
+
 def apply_assignments_to_desks(desks, seating_state: dict, assignments: dict):
     seating_state["assignments"] = assignments
+    new_desks = []
     for desk in desks:
-        desk.name = assignments.get(desk.desk_id, "")
-        desk.name_img = icons.font.render(desk.name, True, (0, 0, 0))
+        if not getattr(desk, "desk_id", None):
+            new_desks.append(desk)
+            continue
+        name = assignments.get(desk.desk_id, "")
+        if hasattr(desk, "set_student_name"):
+            new_desks.append(desk.set_student_name(name))
+        else:
+            desk.name = name
+            desk.name_img = icons.font.render(name, True, (0, 0, 0))
+            new_desks.append(desk)
+    return new_desks
 
 
 def sync_assignments_from_desks(desks, seating_state: dict):
     seating_state["assignments"] = {
-        desk.desk_id: desk.name
+        desk.desk_id: desk_student_name(desk)
         for desk in desks
         if getattr(desk, "desk_id", None)
     }
@@ -88,7 +104,9 @@ def run(config_file, course, screen, clock, constants):
                 elif clicked_desk in arrangement_buttons:
                     sync_assignments_from_desks(desks, seating_state)
                     assignments = arrangement_buttons[clicked_desk](config_file, course, seating_state)
-                    apply_assignments_to_desks(desks, seating_state, assignments)
+                    desks = apply_assignments_to_desks(desks, seating_state, assignments)
+                    sprites = build_sprite_container(desks + buttons)
+                    selected_desks = set()
                     unsaved_changes = True
                     clicked_desk = icons.UnclickedDesk()
                 elif clicked_desk == dump_to_pdf_button:

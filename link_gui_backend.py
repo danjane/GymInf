@@ -68,13 +68,20 @@ def desks_from_seating_state(seating_state: dict, width_height_desks):
     return desks, desk_layout
 
 
+def _desk_student_name(desk) -> str:
+    if hasattr(desk, "student_name"):
+        return desk.student_name()
+    return getattr(desk, "name", "")
+
+
 def save_seating_state(cfg_path: str, course: str, seating_state: dict, desks) -> None:
     assignments = {}
     for desk in desks:
         if not getattr(desk, "desk_id", None):
             continue
-        if desk.name:
-            assignments[desk.desk_id] = desk.name
+        student_name = _desk_student_name(desk)
+        if student_name:
+            assignments[desk.desk_id] = student_name
 
     logging.info(
         "save_seating_state course=%s registry_file=%s date=%s layout=%s assignment_count=%s",
