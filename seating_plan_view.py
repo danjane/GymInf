@@ -1,10 +1,12 @@
 import logging
+from pathlib import Path
 
 import pygame
 from pygame.locals import KEYDOWN, MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION
 
 import events
 import icons
+import link_gui_backend
 import seating_plan_gui_backend
 
 
@@ -61,7 +63,8 @@ def run(config_file, course, screen, clock, constants):
                     if unsaved_changes:
                         seating_plan_gui_backend.save_plan(config_file, course, seating_state, desks)
                         unsaved_changes = False
-                    seating_plan_gui_backend.dump_plan_pdf(config_file, course, seating_state)
+                    pdf_file = seating_plan_gui_backend.dump_plan_pdf(config_file, course, seating_state)
+                    link_gui_backend.open_file(str(Path(pdf_file).parent))
                     clicked_desk = icons.UnclickedDesk()
             if event.type == MOUSEBUTTONUP and isinstance(clicked_desk, icons.Desk):
                 clicked_desk, selected_desks, seating_changed = events.handle_mouse_button_up(
