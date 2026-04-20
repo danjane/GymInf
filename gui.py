@@ -6,7 +6,7 @@ import traceback
 
 pygame.init()
 
-import class_view, control_view
+import class_view, control_view, seating_plan_view
 
 
 LOG_FILE = Path(__file__).resolve().parent / "gui_debug.log"
@@ -36,6 +36,8 @@ def main(config_file):
                 next_view, course = control_view.run(config_file, course, screen, clock, constants)
             elif next_view == "class_view":
                 next_view, course = class_view.run(config_file, course, screen, clock, constants)
+            elif next_view == "seating_plan_view":
+                next_view, course = seating_plan_view.run(config_file, course, screen, clock, constants)
             else:
                 logging.error("gui.main unknown next_view=%s", next_view)
                 raise NotImplementedError("This view yet to be seen to!!")
