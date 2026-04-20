@@ -153,7 +153,7 @@ def _render_plan_to_pdf(
     skeleton_path: Union[str, Path],
     output_directory: Union[str, Path],
 ) -> Path:
-    desks = _desks_for_layout(registry["layouts"], plan["layout_name"])
+    desks = _pdf_oriented_desks(_desks_for_layout(registry["layouts"], plan["layout_name"]))
     output_dir = Path(output_directory)
     output_dir.mkdir(parents=True, exist_ok=True)
     skeleton_text = Path(skeleton_path).read_text()
@@ -180,6 +180,25 @@ def _desks_for_layout(layouts: Dict[str, Dict[str, Any]], layout_name: str) -> L
     if layout_name not in layouts:
         raise ValueError("Unknown layout {0}".format(layout_name))
     return [Desk(**desk_data) for desk_data in layouts[layout_name]["desks"]]
+
+
+def _pdf_oriented_desks(desks: List[Desk]) -> List[Desk]:
+    if not desks:
+        return []
+    max_y = max(desk.y for desk in desks)
+    return [
+        Desk(
+            desk_id=desk.desk_id,
+            x=desk.x,
+            y=max_y - desk.y,
+            facing=desk.facing,
+            group=desk.group,
+            row=desk.row,
+            seat_index=desk.seat_index,
+            enabled=desk.enabled,
+        )
+        for desk in desks
+    ]
 
 
 def _minimal_pdf_bytes() -> bytes:

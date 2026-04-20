@@ -102,6 +102,52 @@ def test_create_pdf_for_date_creates_pdf_for_requested_date(tmp_path: Path):
     assert pdf_file.name == "1ma1df01_2026-04-08.pdf"
 
 
+def test_create_pdf_for_date_flips_rows_for_pdf_output(tmp_path: Path, monkeypatch):
+    registry = {
+        "layouts": {
+            "pairs_4x3": {
+                "desks": [
+                    {"desk_id": "R1D1", "x": 1.0, "y": 0.0, "facing": "front"},
+                    {"desk_id": "R2D1", "x": 1.0, "y": 4.5, "facing": "front"},
+                ]
+            }
+        },
+        "plans": [
+            {
+                "course": "1ma1df01",
+                "date": "2026-04-08",
+                "layout_name": "pairs_4x3",
+                "assignments": {"R1D1": "Front", "R2D1": "Back"},
+                "mode": "manual",
+            }
+        ],
+    }
+    registry_file = tmp_path / "seatingplans.json"
+    skeleton_file = tmp_path / "skeleton.tex"
+    output_dir = tmp_path / "output"
+    save_seating_registry(registry, registry_file)
+    skeleton_file.write_text("CourseNameHere\nDesksHere")
+
+    def fake_latex_to_pdf(tex_file, output_directory):
+        pdf_file = Path(output_directory) / (Path(tex_file).stem + ".pdf")
+        pdf_file.write_bytes(b"%PDF-1.1\n%%EOF\n")
+        return pdf_file
+
+    monkeypatch.setattr("seating_history.latex_to_pdf", fake_latex_to_pdf)
+
+    create_pdf_for_date(
+        registry_file=registry_file,
+        course="1ma1df01",
+        date="2026-04-08",
+        skeleton_path=skeleton_file,
+        output_directory=output_dir,
+    )
+
+    tex_output = (output_dir / "1ma1df01_2026-04-08.tex").read_text()
+    assert r"\node[desk] at (1.000000,4.500000) {Front};" in tex_output
+    assert r"\node[desk] at (1.000000,0.000000) {Back};" in tex_output
+
+
 def test_create_pdf_for_latest_date_uses_latest_plan(tmp_path: Path):
     registry = sample_registry()
     registry_file = tmp_path / "seatingplans.json"
