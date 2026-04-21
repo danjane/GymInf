@@ -39,8 +39,10 @@ def run(config_file, course, screen, clock, constants):
     clicked_desk = icons.UnclickedDesk()
     swapping_desk = icons.UnclickedDesk()
     selected_desks = set()
+    absence_mode = False
 
     control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
+    absences_button = icons.Button((700, 330), (200, 50), "Absences")
 
     buttons = [
                   icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file,
@@ -48,7 +50,8 @@ def run(config_file, course, screen, clock, constants):
               ] + create_text_editor_comment_buttons("+", (700, 90), (200, 20), 25,
                                                      positive_defaults, 4, comment_file) + \
               create_text_editor_comment_buttons("-", (700, 200), (200, 20), 25,
-                                                 negative_defaults, 2,comment_file)
+                                                 negative_defaults, 2,comment_file) + \
+              [absences_button]
 
     sprites = pygame.sprite.Group(desks + buttons + [control_view_button])
 
@@ -62,7 +65,20 @@ def run(config_file, course, screen, clock, constants):
                 clicked_desk, selected_desks = events.handle_mouse_button_down(
                     *event.pos, sprites.sprites(), selected_desks
                 )
-                if clicked_desk in buttons:
+                if clicked_desk == absences_button:
+                    absence_mode = not absence_mode
+                    absences_button.color_unclicked = (
+                        icons.LIGHT_BLUE if absence_mode else absences_button.color_default
+                    )
+                    clicked_desk = icons.UnclickedDesk()
+                elif absence_mode and isinstance(clicked_desk, icons.FilledDesk):
+                    clicked_desk.toggle_absent()
+                    if clicked_desk.is_absent():
+                        seating_state.setdefault("absent_students", set()).add(clicked_desk.student_name())
+                    else:
+                        seating_state.setdefault("absent_students", set()).discard(clicked_desk.student_name())
+                    clicked_desk = icons.UnclickedDesk()
+                elif clicked_desk in buttons:
                     events.turn_off_editors(buttons, clicked_desk)
                 elif clicked_desk == control_view_button:
                     logging.info("class_view returning to control_view course=%s", course)

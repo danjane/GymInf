@@ -92,6 +92,12 @@ class ParentDesk(pygame.sprite.Sprite):
     def set_student_name(self, name):
         raise TypeError(f"{type(self).__name__} cannot be assigned a student")
 
+    def is_absent(self):
+        return False
+
+    def toggle_absent(self):
+        return self
+
 
 class UnclickedDesk(ParentDesk):
     def __init__(self):
@@ -140,6 +146,8 @@ class Desk(ParentDesk):
         if self.sliding:
             self.slide()
         self.rect = pygame.Rect(*self.pos, *self.size)
+        if not hasattr(surface, "blit"):
+            return
         pygame.draw.rect(surface, self.color, self.rect)
         center_pos = (self.rect.left + self.rect.width // 2, self.rect.top + self.rect.height // 2)
         name_pos = (center_pos[0] - self.name_img.get_width() // 2, center_pos[1] - self.name_img.get_height() // 2)
@@ -212,6 +220,7 @@ class FilledDesk(Desk):
     def __init__(self, place, name, desk_layout, height_width, desk_id=None):
         super().__init__(place, name, desk_layout, height_width, desk_id=desk_id)
         self.name = name
+        self.absent_today = False
 
     def student_name(self):
         return self.name
@@ -223,6 +232,21 @@ class FilledDesk(Desk):
             )
         self.name = name
         self.name_img = font.render(name, True, (0, 0, 0))
+        return self
+
+    def is_absent(self):
+        return self.absent_today
+
+    def toggle_absent(self):
+        self.absent_today = not self.absent_today
+        if self.absent_today:
+            self.color_default = WHITE
+            self.color_selected = WHITE
+            self.color = WHITE
+        else:
+            self.color_default = YELLOW
+            self.color_selected = LIGHT_BLUE
+            self.color = YELLOW
         return self
 
     def clicked(self, other):
@@ -278,6 +302,8 @@ class Button(pygame.sprite.Sprite):
         self.cursor_blink_timer = 0
 
     def update(self, surface):
+        if not hasattr(surface, "blit"):
+            return
         if self.fade_from_1_to_0 < 0.01:
             color = self.color_unclicked
         else:
@@ -383,7 +409,8 @@ class SuggestFocusButton(ButtonWithComments):
         for desk in selected_desks:
             desk.color = desk.color_default
         selected_desks = set(
-            desk for desk in self.desks if desk.student_name() in students_for_comments
+            desk for desk in self.desks
+            if desk.student_name() in students_for_comments and not desk.is_absent()
         )
         for desk in selected_desks:
             desk.color = desk.color_selected
