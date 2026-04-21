@@ -1,6 +1,38 @@
 from types import SimpleNamespace
 
 
+def test_class_view_buttons_fit_within_screen_height(monkeypatch):
+    import pygame
+    pygame.init()
+    import class_view
+
+    created_buttons = {}
+
+    class FakeButton:
+        def __init__(self, pos, size, text):
+            self.pos = pos
+            self.size = size
+            self.text = text
+
+    monkeypatch.setattr(
+        class_view.icons,
+        "Button",
+        lambda pos, size, text: created_buttons.setdefault(text, FakeButton(pos, size, text)),
+    )
+    monkeypatch.setattr(
+        class_view.icons,
+        "SuggestFocusButton",
+        lambda pos, size, desks, comment_file, config_file, course:
+        created_buttons.setdefault("suggestions", FakeButton(pos, size, "suggestions")),
+    )
+    monkeypatch.setattr(class_view, "create_text_editor_comment_buttons", lambda *args: [])
+
+    class_view.create_class_view_buttons("comments.txt", "positive.txt", "negative.txt", "cfg", "course", [])
+
+    assert created_buttons["Absences"].pos[1] + created_buttons["Absences"].size[1] <= 350
+    assert created_buttons["suggestions"].pos[1] < created_buttons["Absences"].pos[1]
+
+
 def test_filled_desk_can_toggle_absent_visual_state():
     import pygame
     pygame.init()
@@ -45,6 +77,33 @@ def test_suggest_focus_button_ignores_absent_students(monkeypatch):
 
     assert present_desk in selected_desks
     assert absent_desk not in selected_desks
+
+
+def test_suggest_focus_button_adds_one_more_eligible_student_each_click(monkeypatch):
+    import pygame
+    pygame.init()
+    import icons
+
+    first_desk = icons.FilledDesk((0, 0), "Albert", (8, 7), (640, 350), desk_id="R1D1")
+    absent_desk = icons.FilledDesk((1, 0), "Gabs", (8, 7), (640, 350), desk_id="R1D2")
+    third_desk = icons.FilledDesk((2, 0), "Marie", (8, 7), (640, 350), desk_id="R1D3")
+    absent_desk.toggle_absent()
+
+    button = icons.SuggestFocusButton(
+        (0, 0), (50, 20), [first_desk, absent_desk, third_desk], "comments.txt", "cfg", "course"
+    )
+
+    monkeypatch.setattr(
+        icons.linkComments,
+        "get_students_needing_comments_from_config_path",
+        lambda cfg, course: ["Albert", "Gabs", "Marie"],
+    )
+
+    _, selected_desks = button.clicked(set())
+    assert selected_desks == {first_desk}
+
+    _, selected_desks = button.clicked(selected_desks)
+    assert selected_desks == {first_desk, third_desk}
 
 
 def test_class_view_absences_button_marks_student_absent(monkeypatch):

@@ -418,16 +418,27 @@ class SuggestFocusButton(ButtonWithComments):
     def clicked(self, selected_desks):
         students_for_comments = linkComments.get_students_needing_comments_from_config_path(
             self.config_path, self.course)
-        students_for_comments = students_for_comments[:5]
+        selected_count = len(selected_desks)
+        target_count = selected_count + 1
+        ordered_desks = self._ordered_suggested_desks(students_for_comments)
         for desk in selected_desks:
             desk.color = desk.color_default
-        selected_desks = set(
-            desk for desk in self.desks
-            if desk.student_name() in students_for_comments and not desk.is_absent()
-        )
+        selected_desks = set(ordered_desks[:target_count])
         for desk in selected_desks:
             desk.color = desk.color_selected
         return UnclickedDesk(), selected_desks
+
+    def _ordered_suggested_desks(self, students_for_comments):
+        desks_by_student = {
+            desk.student_name(): desk
+            for desk in self.desks
+            if desk.student_name() and not desk.is_absent()
+        }
+        return [
+            desks_by_student[student_name]
+            for student_name in students_for_comments
+            if student_name in desks_by_student
+        ]
 
 
 class TextButtonLinkedToFile(Button):

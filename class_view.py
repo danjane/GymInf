@@ -6,8 +6,14 @@ import link_gui_backend
 import logging
 
 
-ABSENCES_BUTTON_POS = (700, 330)
-ABSENCES_BUTTON_SIZE = (200, 50)
+CONTROL_BUTTON_POS = (700, 25)
+LARGE_BUTTON_SIZE = (200, 40)
+SUGGESTIONS_BUTTON_POS = (700, 255)
+ABSENCES_BUTTON_POS = (700, 300)
+COMMENT_POSITIVE_START = (700, 80)
+COMMENT_NEGATIVE_START = (700, 180)
+COMMENT_BUTTON_SIZE = (200, 20)
+COMMENT_STEP = 25
 
 
 def create_text_editor_comment_buttons(pn, pos, size, step, file, number, comment_file):
@@ -33,11 +39,13 @@ def create_text_editor_comment_buttons(pn, pos, size, step, file, number, commen
 
 
 def create_class_view_buttons(comment_file, positive_defaults, negative_defaults, config_file, course, desks):
-    absences_button = icons.Button(ABSENCES_BUTTON_POS, ABSENCES_BUTTON_SIZE, "Absences")
+    absences_button = icons.Button(ABSENCES_BUTTON_POS, LARGE_BUTTON_SIZE, "Absences")
     action_buttons = [
-        icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file, config_file, course),
-        *create_text_editor_comment_buttons("+", (700, 90), (200, 20), 25, positive_defaults, 4, comment_file),
-        *create_text_editor_comment_buttons("-", (700, 200), (200, 20), 25, negative_defaults, 2, comment_file),
+        icons.SuggestFocusButton(SUGGESTIONS_BUTTON_POS, LARGE_BUTTON_SIZE, desks, comment_file, config_file, course),
+        *create_text_editor_comment_buttons("+", COMMENT_POSITIVE_START, COMMENT_BUTTON_SIZE, COMMENT_STEP,
+                                            positive_defaults, 4, comment_file),
+        *create_text_editor_comment_buttons("-", COMMENT_NEGATIVE_START, COMMENT_BUTTON_SIZE, COMMENT_STEP,
+                                            negative_defaults, 2, comment_file),
         absences_button,
     ]
     return action_buttons, absences_button
@@ -86,7 +94,7 @@ def run(config_file, course, screen, clock, constants):
     selected_desks = set()
     absence_mode = False
 
-    control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
+    control_view_button = icons.Button(CONTROL_BUTTON_POS, LARGE_BUTTON_SIZE, "Go to control")
     buttons, absences_button = create_class_view_buttons(
         comment_file, positive_defaults, negative_defaults, config_file, course, desks
     )
