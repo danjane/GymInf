@@ -6,6 +6,10 @@ import link_gui_backend
 import logging
 
 
+ABSENCES_BUTTON_POS = (700, 330)
+ABSENCES_BUTTON_SIZE = (200, 50)
+
+
 def create_text_editor_comment_buttons(pn, pos, size, step, file, number, comment_file):
     buttons = []
     x_pos, y_pos = pos
@@ -28,6 +32,47 @@ def create_text_editor_comment_buttons(pn, pos, size, step, file, number, commen
     return buttons
 
 
+def create_class_view_buttons(comment_file, positive_defaults, negative_defaults, config_file, course, desks):
+    absences_button = icons.Button(ABSENCES_BUTTON_POS, ABSENCES_BUTTON_SIZE, "Absences")
+    action_buttons = [
+        icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file, config_file, course),
+        *create_text_editor_comment_buttons("+", (700, 90), (200, 20), 25, positive_defaults, 4, comment_file),
+        *create_text_editor_comment_buttons("-", (700, 200), (200, 20), 25, negative_defaults, 2, comment_file),
+        absences_button,
+    ]
+    return action_buttons, absences_button
+
+
+def set_absence_mode(absences_button, enabled: bool) -> bool:
+    absences_button.color_unclicked = icons.LIGHT_BLUE if enabled else absences_button.color_default
+    return enabled
+
+
+def toggle_desk_absence(desk, seating_state):
+    desk.toggle_absent()
+    absent_students = seating_state.setdefault("absent_students", set())
+    if desk.is_absent():
+        absent_students.add(desk.student_name())
+    else:
+        absent_students.discard(desk.student_name())
+
+
+def handle_button_or_mode_click(clicked_desk, buttons, control_view_button, absences_button, absence_mode,
+                                seating_state, course):
+    if clicked_desk == absences_button:
+        return icons.UnclickedDesk(), set_absence_mode(absences_button, not absence_mode), None
+    if absence_mode and isinstance(clicked_desk, icons.FilledDesk):
+        toggle_desk_absence(clicked_desk, seating_state)
+        return icons.UnclickedDesk(), absence_mode, None
+    if clicked_desk in buttons:
+        events.turn_off_editors(buttons, clicked_desk)
+        return clicked_desk, absence_mode, None
+    if clicked_desk == control_view_button:
+        logging.info("class_view returning to control_view course=%s", course)
+        return clicked_desk, absence_mode, ("control_view", course)
+    return clicked_desk, absence_mode, None
+
+
 def run(config_file, course, screen, clock, constants):
     seating_state, desk_layout, comment_file, positive_defaults, negative_defaults = link_gui_backend.setup(
         config_file, course
@@ -42,16 +87,9 @@ def run(config_file, course, screen, clock, constants):
     absence_mode = False
 
     control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
-    absences_button = icons.Button((700, 330), (200, 50), "Absences")
-
-    buttons = [
-                  icons.SuggestFocusButton((700, 270), (200, 50), desks, comment_file,
-                                           config_file, course)
-              ] + create_text_editor_comment_buttons("+", (700, 90), (200, 20), 25,
-                                                     positive_defaults, 4, comment_file) + \
-              create_text_editor_comment_buttons("-", (700, 200), (200, 20), 25,
-                                                 negative_defaults, 2,comment_file) + \
-              [absences_button]
+    buttons, absences_button = create_class_view_buttons(
+        comment_file, positive_defaults, negative_defaults, config_file, course, desks
+    )
 
     sprites = pygame.sprite.Group(desks + buttons + [control_view_button])
 
@@ -65,24 +103,17 @@ def run(config_file, course, screen, clock, constants):
                 clicked_desk, selected_desks = events.handle_mouse_button_down(
                     *event.pos, sprites.sprites(), selected_desks
                 )
-                if clicked_desk == absences_button:
-                    absence_mode = not absence_mode
-                    absences_button.color_unclicked = (
-                        icons.LIGHT_BLUE if absence_mode else absences_button.color_default
-                    )
-                    clicked_desk = icons.UnclickedDesk()
-                elif absence_mode and isinstance(clicked_desk, icons.FilledDesk):
-                    clicked_desk.toggle_absent()
-                    if clicked_desk.is_absent():
-                        seating_state.setdefault("absent_students", set()).add(clicked_desk.student_name())
-                    else:
-                        seating_state.setdefault("absent_students", set()).discard(clicked_desk.student_name())
-                    clicked_desk = icons.UnclickedDesk()
-                elif clicked_desk in buttons:
-                    events.turn_off_editors(buttons, clicked_desk)
-                elif clicked_desk == control_view_button:
-                    logging.info("class_view returning to control_view course=%s", course)
-                    return "control_view", course
+                clicked_desk, absence_mode, transition = handle_button_or_mode_click(
+                    clicked_desk,
+                    buttons,
+                    control_view_button,
+                    absences_button,
+                    absence_mode,
+                    seating_state,
+                    course,
+                )
+                if transition:
+                    return transition
             if event.type == MOUSEBUTTONUP and isinstance(clicked_desk, icons.Desk):
                 clicked_desk, selected_desks, seating_changed = \
                     events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)

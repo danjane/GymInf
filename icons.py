@@ -239,6 +239,20 @@ class FilledDesk(Desk):
 
     def toggle_absent(self):
         self.absent_today = not self.absent_today
+        self._apply_attendance_colors()
+        return self
+
+    def mark_absent(self):
+        self.absent_today = True
+        self._apply_attendance_colors()
+        return self
+
+    def mark_present(self):
+        self.absent_today = False
+        self._apply_attendance_colors()
+        return self
+
+    def _apply_attendance_colors(self):
         if self.absent_today:
             self.color_default = WHITE
             self.color_selected = WHITE
@@ -247,7 +261,6 @@ class FilledDesk(Desk):
             self.color_default = YELLOW
             self.color_selected = LIGHT_BLUE
             self.color = YELLOW
-        return self
 
     def clicked(self, other):
         self.color = RED
