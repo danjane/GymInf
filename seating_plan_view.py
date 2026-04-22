@@ -5,6 +5,7 @@ import pygame
 from pygame.locals import KEYDOWN, MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION
 
 import events
+import gui_layout
 import icons
 import link_gui_backend
 import seating_plan_gui_backend
@@ -72,11 +73,11 @@ def run(config_file, course, screen, clock, constants):
     selected_desks = set()
     unsaved_changes = False
 
-    control_view_button = icons.Button((700, 25), (200, 50), "Go to control")
-    dump_to_pdf_button = icons.Button((700, 90), (200, 50), "Dump to pdf")
-    save_button = icons.Button((700, 145), (200, 50), "Save")
-    randomize_button = icons.Button((700, 200), (200, 50), "Randomize")
-    alphabetic_button = icons.Button((700, 255), (200, 50), "Alphabetic")
+    control_view_button = icons.Button(*gui_layout.right_action_button(0), "Go to control")
+    dump_to_pdf_button = icons.Button(*gui_layout.right_action_button(1), "Dump to pdf")
+    save_button = icons.Button(*gui_layout.right_action_button(2), "Save")
+    randomize_button = icons.Button(*gui_layout.right_action_button(3), "Randomize")
+    alphabetic_button = icons.Button(*gui_layout.right_action_button(4), "Alphabetic")
     buttons = [control_view_button, dump_to_pdf_button, save_button, randomize_button, alphabetic_button]
     arrangement_buttons = {
         randomize_button: seating_plan_gui_backend.randomize_plan,

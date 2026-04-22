@@ -5,16 +5,16 @@ import pygame
 from pygame.locals import *
 import icons
 import events
+import gui_layout
 import link_gui_backend
 import logging
 
 
-CONTROL_BUTTON_POS = (700, 25)
-LARGE_BUTTON_SIZE = (200, 40)
-SUGGESTIONS_BUTTON_POS = (700, 255)
-ABSENCES_BUTTON_POS = (700, 300)
-COMMENT_POSITIVE_START = (700, 80)
-COMMENT_NEGATIVE_START = (700, 180)
+CONTROL_BUTTON_POS, LARGE_BUTTON_SIZE = gui_layout.right_action_button(0)
+SUGGESTIONS_BUTTON_POS, _ = gui_layout.right_action_button(5)
+ABSENCES_BUTTON_POS, _ = gui_layout.right_action_button(6)
+COMMENT_POSITIVE_START = (gui_layout.RIGHT_PANEL_X, 70)
+COMMENT_NEGATIVE_START = (gui_layout.RIGHT_PANEL_X, 170)
 COMMENT_BUTTON_SIZE = (200, 20)
 COMMENT_STEP = 25
 

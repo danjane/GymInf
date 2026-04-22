@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import icons
 import events
+import gui_layout
 import link_gui_backend
 import logging
 
@@ -71,16 +72,16 @@ def run(config_file, selected_course, screen, clock, constants):
             select_course_button(course_button, course_buttons)
         course_y_pos += 30
 
-    class_view_button = icons.Button((700, 25), (200, 50), "Go to class view")
-    seating_plan_view_button = icons.Button((700, 80), (200, 50), "Go to seating plan")
+    class_view_button = icons.Button(*gui_layout.right_action_button(0), "Go to class view")
+    seating_plan_view_button = icons.Button(*gui_layout.right_action_button(1), "Go to seating plan")
 
     control_buttons = [
-        icons.ButtonWhichCallsFunction((700, 145), (200, 50), "Build reports",
+        icons.ButtonWhichCallsFunction(*gui_layout.right_action_button(2), "Build reports",
                                        link_gui_backend.build_reports, config_file),
-        icons.ButtonWhichCallsFunction((700, 200), (200, 50), "Calculate moyennes",
+        icons.ButtonWhichCallsFunction(*gui_layout.right_action_button(3), "Calculate moyennes",
                                        link_gui_backend.calculate_averages, config_file),
     ]
-    quit_button = icons.Button((700, 255), (200, 50), "Quit")
+    quit_button = icons.Button(*gui_layout.right_action_button(4), "Quit")
 
     buttons = [[add_course_button, delete_course_button, quit_button, class_view_button, seating_plan_view_button],
                course_buttons, control_buttons, student_buttons]
