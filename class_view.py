@@ -21,7 +21,7 @@ COMMENT_STEP = 25
 
 class ClassViewMode(Enum):
     NORMAL = auto()
-    ABSENCE = auto()
+    UPDATE_ABSENCES = auto()
 
 
 @dataclass
@@ -73,7 +73,7 @@ def set_absence_mode(absences_button, enabled: bool) -> bool:
 
 def sync_absence_button(state: ClassViewState, absences_button):
     absences_button.color_unclicked = (
-        icons.LIGHT_BLUE if state.mode == ClassViewMode.ABSENCE else absences_button.color_default
+        icons.LIGHT_BLUE if state.mode == ClassViewMode.UPDATE_ABSENCES else absences_button.color_default
     )
 
 
@@ -83,10 +83,10 @@ def set_mode(state: ClassViewState, mode: ClassViewMode, absences_button):
 
 
 def toggle_absence_mode(state: ClassViewState, absences_button):
-    if state.mode == ClassViewMode.ABSENCE:
+    if state.mode == ClassViewMode.UPDATE_ABSENCES:
         set_mode(state, ClassViewMode.NORMAL, absences_button)
     else:
-        set_mode(state, ClassViewMode.ABSENCE, absences_button)
+        set_mode(state, ClassViewMode.UPDATE_ABSENCES, absences_button)
 
 
 def toggle_desk_absence(desk, state: ClassViewState, seating_state):
@@ -104,7 +104,7 @@ def handle_button_or_mode_click(clicked_desk, buttons, control_view_button, abse
     if clicked_desk == absences_button:
         toggle_absence_mode(state, absences_button)
         return icons.UnclickedDesk(), None
-    if state.mode == ClassViewMode.ABSENCE and isinstance(clicked_desk, icons.FilledDesk):
+    if state.mode == ClassViewMode.UPDATE_ABSENCES and isinstance(clicked_desk, icons.FilledDesk):
         toggle_desk_absence(clicked_desk, state, seating_state)
         return icons.UnclickedDesk(), None
     if clicked_desk in buttons:
