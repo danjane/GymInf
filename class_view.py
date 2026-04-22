@@ -1,3 +1,6 @@
+from dataclasses import dataclass, field
+from enum import Enum, auto
+
 import pygame
 from pygame.locals import *
 import icons
@@ -14,6 +17,18 @@ COMMENT_POSITIVE_START = (700, 80)
 COMMENT_NEGATIVE_START = (700, 180)
 COMMENT_BUTTON_SIZE = (200, 20)
 COMMENT_STEP = 25
+
+
+class ClassViewMode(Enum):
+    NORMAL = auto()
+    ABSENCE = auto()
+
+
+@dataclass
+class ClassViewState:
+    mode: ClassViewMode = ClassViewMode.NORMAL
+    selected_desks: set = field(default_factory=set)
+    absent_students: set[str] = field(default_factory=set)
 
 
 def create_text_editor_comment_buttons(pn, pos, size, step, file, number, comment_file):
@@ -56,29 +71,51 @@ def set_absence_mode(absences_button, enabled: bool) -> bool:
     return enabled
 
 
-def toggle_desk_absence(desk, seating_state):
+def sync_absence_button(state: ClassViewState, absences_button):
+    absences_button.color_unclicked = (
+        icons.LIGHT_BLUE if state.mode == ClassViewMode.ABSENCE else absences_button.color_default
+    )
+
+
+def set_mode(state: ClassViewState, mode: ClassViewMode, absences_button):
+    state.mode = mode
+    sync_absence_button(state, absences_button)
+
+
+def toggle_absence_mode(state: ClassViewState, absences_button):
+    if state.mode == ClassViewMode.ABSENCE:
+        set_mode(state, ClassViewMode.NORMAL, absences_button)
+    else:
+        set_mode(state, ClassViewMode.ABSENCE, absences_button)
+
+
+def toggle_desk_absence(desk, state: ClassViewState, seating_state):
     desk.toggle_absent()
-    absent_students = seating_state.setdefault("absent_students", set())
+    absent_students = seating_state.setdefault("absent_students", state.absent_students)
     if desk.is_absent():
         absent_students.add(desk.student_name())
     else:
         absent_students.discard(desk.student_name())
+    state.absent_students = absent_students
 
 
-def handle_button_or_mode_click(clicked_desk, buttons, control_view_button, absences_button, absence_mode,
+def handle_button_or_mode_click(clicked_desk, buttons, control_view_button, absences_button, state,
                                 seating_state, course):
     if clicked_desk == absences_button:
-        return icons.UnclickedDesk(), set_absence_mode(absences_button, not absence_mode), None
-    if absence_mode and isinstance(clicked_desk, icons.FilledDesk):
-        toggle_desk_absence(clicked_desk, seating_state)
-        return icons.UnclickedDesk(), absence_mode, None
+        toggle_absence_mode(state, absences_button)
+        return icons.UnclickedDesk(), None
+    if state.mode == ClassViewMode.ABSENCE and isinstance(clicked_desk, icons.FilledDesk):
+        toggle_desk_absence(clicked_desk, state, seating_state)
+        return icons.UnclickedDesk(), None
     if clicked_desk in buttons:
+        if getattr(clicked_desk, "text", "") == "suggestions":
+            set_mode(state, ClassViewMode.NORMAL, absences_button)
         events.turn_off_editors(buttons, clicked_desk)
-        return clicked_desk, absence_mode, None
+        return clicked_desk, None
     if clicked_desk == control_view_button:
         logging.info("class_view returning to control_view course=%s", course)
-        return clicked_desk, absence_mode, ("control_view", course)
-    return clicked_desk, absence_mode, None
+        return clicked_desk, ("control_view", course)
+    return clicked_desk, None
 
 
 def run(config_file, course, screen, clock, constants):
@@ -91,13 +128,13 @@ def run(config_file, course, screen, clock, constants):
 
     clicked_desk = icons.UnclickedDesk()
     swapping_desk = icons.UnclickedDesk()
-    selected_desks = set()
-    absence_mode = False
+    state = ClassViewState(absent_students=seating_state.get("absent_students", set()))
 
     control_view_button = icons.Button(CONTROL_BUTTON_POS, LARGE_BUTTON_SIZE, "Go to control")
     buttons, absences_button = create_class_view_buttons(
         comment_file, positive_defaults, negative_defaults, config_file, course, desks
     )
+    sync_absence_button(state, absences_button)
 
     sprites = pygame.sprite.Group(desks + buttons + [control_view_button])
 
@@ -108,35 +145,35 @@ def run(config_file, course, screen, clock, constants):
                 logging.info("class_view received pygame.QUIT course=%s", course)
                 return "quit", None
             if event.type == MOUSEBUTTONDOWN:
-                clicked_desk, selected_desks = events.handle_mouse_button_down(
-                    *event.pos, sprites.sprites(), selected_desks
+                clicked_desk, state.selected_desks = events.handle_mouse_button_down(
+                    *event.pos, sprites.sprites(), state.selected_desks
                 )
-                clicked_desk, absence_mode, transition = handle_button_or_mode_click(
+                clicked_desk, transition = handle_button_or_mode_click(
                     clicked_desk,
                     buttons,
                     control_view_button,
                     absences_button,
-                    absence_mode,
+                    state,
                     seating_state,
                     course,
                 )
                 if transition:
                     return transition
             if event.type == MOUSEBUTTONUP and isinstance(clicked_desk, icons.Desk):
-                clicked_desk, selected_desks, seating_changed = \
-                    events.handle_mouse_button_up(clicked_desk, swapping_desk, selected_desks)
+                clicked_desk, state.selected_desks, seating_changed = \
+                    events.handle_mouse_button_up(clicked_desk, swapping_desk, state.selected_desks)
                 if seating_changed:
                     logging.info(
                         "class_view saving seating change course=%s selected_count=%s",
                         course,
-                        len(selected_desks),
+                        len(state.selected_desks),
                     )
                     link_gui_backend.save_seating_state(config_file, course, seating_state, desks)
                 swapping_desk = icons.UnclickedDesk()
             if event.type == MOUSEMOTION and isinstance(clicked_desk, icons.Desk):
                 clicked_desk.move(*event.rel)
             if event.type == KEYDOWN:
-                clicked_desk.handle_keydown(event, selected_desks)
+                clicked_desk.handle_keydown(event, state.selected_desks)
 
         if isinstance(clicked_desk, icons.Desk):
             swapping_desk = events.update_swapping_desk(desks, clicked_desk, swapping_desk)

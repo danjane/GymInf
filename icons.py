@@ -416,6 +416,8 @@ class SuggestFocusButton(ButtonWithComments):
         self.course = course
 
     def clicked(self, selected_desks):
+        self.fade_from_1_to_0 = 1.
+        self.render_immediate_feedback()
         students_for_comments = linkComments.get_students_needing_comments_from_config_path(
             self.config_path, self.course)
         selected_count = len(selected_desks)
@@ -426,7 +428,7 @@ class SuggestFocusButton(ButtonWithComments):
         selected_desks = set(ordered_desks[:target_count])
         for desk in selected_desks:
             desk.color = desk.color_selected
-        return UnclickedDesk(), selected_desks
+        return self, selected_desks
 
     def _ordered_suggested_desks(self, students_for_comments):
         desks_by_student = {
