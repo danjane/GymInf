@@ -10,6 +10,8 @@ RED = (255, 0, 0)
 ORANGE = (255, 100, 0)
 WHITE = (240, 240, 240)
 
+if not pygame.font.get_init():
+    pygame.font.init()
 font = pygame.font.SysFont('chalkduster.ttf', 18)
 
 
